@@ -1,0 +1,2581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}* { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+</style>
+<title>ICTPRG302 Data Types &amp; Strings Lab</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>Aa</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky topic tabs; each topic is a stack of activity panels, code on the left, a simulated board on the right. */
+:root {
+  --bg: #eef2ef;
+  --surface: #ffffff;
+  --sunk: #f5f8f6;
+  --ink: #16201b;
+  --muted: #56645d;
+  --line: #d3ddd7;
+  --accent: #1b5fa8;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2ecf7;
+  --hl: #fff2b8;
+  --ok: #1d7a45;
+  --ok-soft: #dff2e6;
+  --bad: #b3261e;
+  --bad-soft: #fbe3e1;
+  --t-kw: #8a2b9c;
+  --t-str: #1f7a3a;
+  --t-num: #b35400;
+  --t-fn: #1b5fa8;
+  --t-com: #7b8a83;
+  --board: #1c2422;
+  --board-edge: #2c3734;
+  --led: #ff3b2f;
+  --led-glow: rgba(255, 70, 50, .65);
+  --led-off: #3a2422;
+  --btn: #3b4441;
+  --btn-press: #626d69;
+  --btn-label: #e8eeeb;
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101513; --surface: #182019; --sunk: #121915; --ink: #e4ebe7; --muted: #9aa9a1; --line: #2b3631;
+    --accent: #6eaef0; --accent-ink: #0b1a2b; --accent-soft: #1a2c40; --hl: #3d3517;
+    --ok: #63c98c; --ok-soft: #173426; --bad: #f08a80; --bad-soft: #3d1c1a;
+    --t-kw: #d49be0; --t-str: #8fd19e; --t-num: #f0a868; --t-fn: #8cc1f5; --t-com: #74847c;
+    --board: #0b0f0e; --board-edge: #26302d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101513; --surface: #182019; --sunk: #121915; --ink: #e4ebe7; --muted: #9aa9a1; --line: #2b3631;
+  --accent: #6eaef0; --accent-ink: #0b1a2b; --accent-soft: #1a2c40; --hl: #3d3517;
+  --ok: #63c98c; --ok-soft: #173426; --bad: #f08a80; --bad-soft: #3d1c1a;
+  --t-kw: #d49be0; --t-str: #8fd19e; --t-num: #f0a868; --t-fn: #8cc1f5; --t-com: #74847c;
+  --board: #0b0f0e; --board-edge: #26302d;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--f-body); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+code, .mono { font-family: var(--f-mono); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- top bar ---------- */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.top-inner {
+  max-width: 1120px; margin: 0 auto; padding: 12px 16px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand h1 { font-size: 1.15rem; font-weight: 800; letter-spacing: -.01em; }
+.brand span { font-family: var(--f-mono); font-size: .75rem; color: var(--muted); }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.tab {
+  font: 700 .95rem var(--f-body); color: var(--ink); background: transparent;
+  border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px;
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.tab:hover { border-color: var(--accent); }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.tab .count { font: 600 .72rem var(--f-mono); opacity: .8; font-variant-numeric: tabular-nums; }
+
+/* ---------- page ---------- */
+main { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; }
+.topic { display: grid; gap: 22px; }
+.intro { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px 36px; align-items: end; padding-bottom: 6px; }
+.eyebrow { font: 600 .75rem var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.intro h2 { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 800; letter-spacing: -.025em; line-height: 1.02; }
+.intro .lead { margin-top: 12px; max-width: 58ch; color: var(--muted); font-size: 1.05rem; }
+.keys { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.keys li { display: grid; grid-template-columns: minmax(7.5em, auto) 1fr; gap: 10px; font-size: .93rem; align-items: baseline; }
+.keys code { font-size: .85rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; justify-self: start; }
+
+/* ---------- activity ---------- */
+.act { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
+.act-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.act-tag { font: 600 .74rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.act-head h3 { font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; }
+.status { margin-left: auto; font: 600 .74rem var(--f-mono); padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.status.done { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.brief { max-width: 72ch; }
+.split { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.side { display: grid; gap: 12px; min-width: 0; }
+
+/* code */
+.codebox { border: 1px solid var(--line); border-radius: 10px; background: var(--sunk); min-width: 0; overflow: hidden; }
+.codebar { display: flex; justify-content: space-between; gap: 8px; padding: 6px 12px; border-bottom: 1px solid var(--line); font: 600 .75rem var(--f-mono); color: var(--muted); }
+.codescroll { overflow-x: auto; }
+ol.code { list-style: none; margin: 0; padding: 8px 0; font: 13.5px/1.7 var(--f-mono); min-width: max-content; }
+ol.code li { display: flex; align-items: center; padding-right: 14px; position: relative; transition: background .12s; }
+ol.code .ln { width: 3.2em; text-align: right; padding-right: 1.1em; color: var(--t-com); user-select: none; flex: none; font-variant-numeric: tabular-nums; }
+ol.code code { white-space: pre; }
+ol.code li.cur { background: var(--hl); }
+ol.code li.cur .ln { color: var(--ink); font-weight: 600; }
+ol.code li.cur .ln::before { content: "▸"; position: absolute; left: 6px; }
+ol.code li.never code { opacity: .45; text-decoration: line-through; text-decoration-color: var(--bad); }
+ol.code li.flash { animation: flash 900ms ease-out; }
+@keyframes flash { from { background: var(--accent-soft); } to { background: transparent; } }
+.t-kw { color: var(--t-kw); font-weight: 600; } .t-str { color: var(--t-str); } .t-num { color: var(--t-num); } .t-fn { color: var(--t-fn); } .t-com { color: var(--t-com); font-style: italic; }
+.tag { font: 600 .68rem var(--f-mono); padding: 1px 7px; border-radius: 999px; margin-left: 12px; white-space: nowrap; }
+.tag.never { background: var(--bad-soft); color: var(--bad); }
+.indent-btn { flex: none; width: 1.9em; margin-right: 4px; font: 600 12px var(--f-mono); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 5px; cursor: pointer; padding: 0; line-height: 1.5; }
+.indent-btn:hover { border-color: var(--accent); color: var(--accent); }
+.indent-pad { flex: none; width: 1.9em; margin-right: 4px; }
+
+/* board */
+.board { display: flex; align-items: center; justify-content: center; gap: 16px; background: var(--board); border: 2px solid var(--board-edge); border-radius: 16px; padding: 20px 16px; }
+.leds { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; width: min(180px, 100%); aspect-ratio: 1; flex: none; }
+.led { display: grid; place-items: center; }
+.led::before { content: ""; width: 34%; height: 62%; border-radius: 2px; background: var(--led-off); transition: background 60ms, box-shadow 60ms; }
+.led.on::before { background: var(--led); box-shadow: 0 0 9px 2px var(--led-glow); opacity: var(--b, 1); }
+.mb-btn { flex: none; width: 50px; height: 50px; border-radius: 50%; border: 0; background: var(--btn); color: var(--btn-label); font: 800 1rem var(--f-display); cursor: pointer; box-shadow: inset 0 -4px 0 rgba(0,0,0,.35); touch-action: none; user-select: none; -webkit-user-select: none; }
+.mb-btn.held { background: var(--btn-press); box-shadow: inset 0 2px 0 rgba(0,0,0,.35); transform: translateY(2px); }
+
+/* panels on the side */
+.panel { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--sunk); min-width: 0; }
+.panel-title { font: 600 .72rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.vars { display: flex; flex-wrap: wrap; gap: 8px; }
+.var { display: grid; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; min-width: 72px; }
+.var b { font: 600 .74rem var(--f-mono); padding: 3px 9px; border-bottom: 1px dashed var(--line); color: var(--muted); }
+.var span { font: 600 1.05rem var(--f-mono); padding: 4px 9px; font-variant-numeric: tabular-nums; }
+.var.changed { animation: changed 900ms ease-out; }
+@keyframes changed { from { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); } to { box-shadow: 0 0 0 0 transparent; } }
+.empty { color: var(--muted); font-size: .9rem; font-style: italic; }
+.serial { font: 13px/1.6 var(--f-mono); max-height: 170px; overflow-y: auto; white-space: pre-wrap; margin: 0; min-height: 1.6em; }
+.serial .err { color: var(--bad); }
+.stack { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 600 .82rem var(--f-mono); }
+.stack span { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+.stack span:last-child { border-color: var(--accent); color: var(--accent); }
+.stack i { color: var(--muted); font-style: normal; }
+.stat { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; font-size: .92rem; }
+.stat strong { font: 800 1.5rem var(--f-display); font-variant-numeric: tabular-nums; }
+
+/* controls */
+.controls { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
+.controls label { font-weight: 700; font-size: .92rem; }
+.btn { font: 700 .92rem var(--f-body); border-radius: 8px; padding: 8px 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn:hover:not(:disabled) { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.small { padding: 4px 10px; font-size: .82rem; }
+input[type="text"], input[type="number"], select { font: 600 .95rem var(--f-mono); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 7px 10px; min-width: 0; }
+input[type="text"] { width: 11em; } input[type="number"] { width: 6em; }
+input[type="range"] { accent-color: var(--accent); width: min(220px, 100%); }
+.rounds { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.rounds .lbl { font-size: .85rem; color: var(--muted); margin-right: 4px; }
+.pill { font: 600 .82rem var(--f-mono); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 3px 12px; cursor: pointer; }
+.pill[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.pill.ok::after { content: " ✓"; color: var(--ok); }
+
+.feedback { border-radius: 10px; padding: 10px 14px; font-size: .95rem; max-width: 80ch; }
+.feedback:empty { display: none; }
+.feedback.ok { background: var(--ok-soft); color: var(--ink); border-left: 4px solid var(--ok); }
+.feedback.bad { background: var(--bad-soft); color: var(--ink); border-left: 4px solid var(--bad); }
+.feedback.info { background: var(--accent-soft); color: var(--ink); border-left: 4px solid var(--accent); }
+.feedback strong { font-weight: 700; }
+
+.goals { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .92rem; }
+.goals li::before { content: "○"; display: inline-block; width: 1.4em; color: var(--muted); }
+.goals li.met::before { content: "●"; color: var(--ok); }
+.goals li.met { color: var(--ok); }
+
+/* arrows + chips */
+.arrows { display: flex; gap: 6px; flex-wrap: wrap; }
+.arrows .btn { min-width: 3.2em; }
+.seq { display: flex; flex-wrap: wrap; gap: 4px; min-height: 30px; align-items: center; }
+.seq span { font: 600 .8rem var(--f-mono); border: 1px solid var(--line); background: var(--surface); padding: 2px 8px; border-radius: 6px; }
+.calls { display: grid; gap: 6px; }
+.call { display: flex; gap: 8px; align-items: center; justify-content: space-between; font: 13px var(--f-mono); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 4px 6px 4px 10px; }
+.call button { border: 0; background: transparent; color: var(--muted); font-size: 1.1rem; cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 4px; }
+.call button:hover { color: var(--bad); }
+
+/* quiz */
+.quiz { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.q { border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.q pre { margin: 0; font: 13px/1.6 var(--f-mono); background: var(--sunk); border-radius: 8px; padding: 8px 10px; overflow-x: auto; }
+.q-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.q-opts .btn { font-family: var(--f-mono); font-weight: 600; font-size: .85rem; }
+.q-opts .btn.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.q-opts .btn.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.q .why { font-size: .88rem; color: var(--muted); }
+
+/* parsons */
+.parsons { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.plist { display: grid; gap: 6px; align-content: start; min-height: 120px; border: 1px dashed var(--line); border-radius: 10px; padding: 10px; min-width: 0; }
+.plist.target { background: var(--sunk); border-style: solid; }
+.pline { font: 13px var(--f-mono); white-space: pre; text-align: left; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 7px; padding: 6px 10px; cursor: pointer; overflow-x: auto; }
+.pline:hover { border-color: var(--accent); }
+.pline.fixed { cursor: default; color: var(--muted); border-style: dashed; }
+.pline.wrongline { border-color: var(--bad); background: var(--bad-soft); }
+
+/* return machine */
+.machine { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font: 600 .95rem var(--f-mono); }
+.machine .arrow { color: var(--muted); }
+.machine .box { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; background: var(--surface); }
+.machine .box.out { border-color: var(--accent); min-width: 4em; text-align: center; }
+
+/* take it further */
+.further { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 18px; border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: var(--sunk); }
+.further h3 { font-size: 1.2rem; font-weight: 800; }
+.further ol { margin: 8px 0 0; padding-left: 1.3em; display: grid; gap: 4px; }
+.further pre { margin: 0; font: 13px/1.6 var(--f-mono); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px; overflow-x: auto; }
+.further .controls { margin-top: 10px; }
+a { color: var(--accent); font-weight: 700; }
+
+/* spot the bug */
+.pickable ol.code li { cursor: pointer; }
+.pickable ol.code li:hover { background: var(--accent-soft); }
+ol.code li.wrongpick { background: var(--bad-soft); }
+ol.code li.rightpick { background: var(--hl); }
+.fixes { display: grid; gap: 8px; }
+.fixes .btn { white-space: pre; text-align: left; max-width: 100%; overflow-x: auto; }
+
+/* real micro:bit challenges */
+.real { display: grid; gap: 16px; border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: var(--sunk); }
+.real-head { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+.real-head h3 { font-size: 1.35rem; font-weight: 800; }
+.real-intro { color: var(--muted); max-width: 64ch; margin-top: 4px; }
+.real-side { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.real-side a.btn { text-decoration: none; }
+.real-count { font: 600 .78rem var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.challenges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.ch { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.ch.done { border-color: var(--ok); }
+.ch-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.ch-head h4 { margin: 0; font: 800 1.08rem var(--f-display); }
+.lvl { font: 600 .68rem var(--f-mono); letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.lvl.core { color: var(--accent); border-color: var(--accent); }
+.lvl.stretch { color: var(--t-kw); border-color: var(--t-kw); }
+.ch-num { margin-left: auto; font: 600 .74rem var(--f-mono); color: var(--muted); }
+.ch ol { margin: 0; padding-left: 1.3em; display: grid; gap: 3px; font-size: .93rem; }
+.ch pre { margin: 0; font: 12.5px/1.6 var(--f-mono); background: var(--sunk); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; }
+.ch .sol-label { font: 600 .72rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ok); }
+.ch .tip { font-size: .88rem; color: var(--muted); }
+.ch .tip strong { color: var(--ink); }
+.ch-done { display: flex; gap: 8px; align-items: center; font-weight: 700; font-size: .92rem; cursor: pointer; }
+.ch-done input { width: 18px; height: 18px; accent-color: var(--ok); }
+@media (max-width: 820px) { .challenges { grid-template-columns: minmax(0, 1fr); } }
+
+footer { max-width: 1120px; margin: 0 auto; padding: 0 16px 40px; color: var(--muted); font-size: .85rem; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+footer button { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+@media (max-width: 820px) {
+  .intro, .split, .further, .parsons, .quiz { grid-template-columns: minmax(0, 1fr); }
+  .tabs { margin-left: 0; }
+}
+@media (max-width: 480px) {
+  .act { padding: 16px; }
+  .board { gap: 10px; padding: 16px 10px; }
+  .mb-btn { width: 42px; height: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before { animation: none !important; transition: none !important; }
+}
+
+/* selection lab additions */
+.tag.true { background: var(--ok-soft); color: var(--ok); }
+.tag.false { background: var(--bad-soft); color: var(--bad); }
+ol.code li.will { box-shadow: inset 4px 0 0 var(--ok); }
+.sound-btn { font: 700 .85rem var(--f-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.sound-btn[aria-pressed="true"] { border-color: var(--ok); color: var(--ok); }
+.sensors { display: grid; gap: 10px; }
+.sensor { display: grid; grid-template-columns: minmax(7.5em, auto) minmax(0, 1fr) 3.4em; gap: 8px; align-items: center; font-size: .88rem; }
+.sensor label { font-weight: 700; }
+.sensor input[type="range"] { width: 100%; }
+.sensor output { font: 600 .85rem var(--f-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.sensor-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: .88rem; }
+.speaker { display: flex; align-items: center; gap: 10px; font: 600 .9rem var(--f-mono); min-height: 1.8em; }
+.speaker .cone { width: 14px; height: 14px; border-radius: 50%; background: var(--line); flex: none; }
+.speaker.on .cone { background: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
+.speaker .count { margin-left: auto; color: var(--muted); font-size: .8rem; }
+.ask { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ask input[type="text"] { width: 12em; }
+.pick-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.slider-row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.slider-row input[type="range"] { width: min(320px, 100%); }
+.slider-row output { font: 800 1.4rem var(--f-display); min-width: 2.5em; font-variant-numeric: tabular-nums; }
+.optrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.optrow .btn { font-family: var(--f-mono); font-size: .85rem; }
+.optrow .btn.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.optrow .btn.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.compare { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.compare th, .compare td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.compare th { font: 600 .72rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.compare code { font-size: .85rem; }
+
+/* flowcharts */
+.fcbox { border: 1px solid var(--line); border-radius: 10px; background: var(--sunk); padding: 10px; overflow-x: auto; min-width: 0; }
+.fc { display: block; width: 100%; min-width: 460px; height: auto; }
+.fc-node > :first-child { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; transition: fill .15s; }
+.fc-dec > :first-child { fill: var(--accent-soft); }
+.fc-term > :first-child { fill: var(--sunk); }
+.fc-join > :first-child { fill: var(--muted); stroke: none; }
+.fc-text { fill: var(--ink); font: 13px var(--f-mono); }
+.fc-edge { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.fc-edge.active { stroke: var(--accent); stroke-width: 3; }
+.fc-arrowhead { fill: var(--muted); }
+.fc-label { fill: var(--muted); font: 700 11px var(--f-mono); }
+.fc-node.active > :first-child { fill: var(--hl); stroke: var(--accent); stroke-width: 3; }
+.fc-node.blank > :first-child { fill: var(--surface); stroke: var(--accent); stroke-dasharray: 6 4; }
+.fc-blanktext { fill: var(--accent); font: 800 20px var(--f-display); }
+.fc-node.right > :first-child { fill: var(--ok-soft); stroke: var(--ok); }
+.fc-node.wrong > :first-child { fill: var(--bad-soft); stroke: var(--bad); }
+.fc-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .85rem; color: var(--muted); }
+.fc-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.fc-legend svg { width: 46px; height: 20px; }
+.fc-legend rect, .fc-legend polygon { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
+.fc-split { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.fc-split2 { grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); }
+.fc-picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
+.fc-pick { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; background: var(--surface); min-width: 0; }
+.fc-pick label { font: 800 1.1rem var(--f-display); color: var(--accent); width: 1.2em; flex: none; }
+.fc-pick select { flex: 1; min-width: 0; }
+.fc-pick.right { border-color: var(--ok); background: var(--ok-soft); }
+.fc-pick.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.code-opts { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.code-opt { text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 8px 10px; cursor: pointer; display: grid; gap: 4px; min-width: 0; font: inherit; }
+.code-opt:hover:not(:disabled) { border-color: var(--accent); }
+.code-opt:disabled { cursor: default; }
+.code-opt pre { margin: 0; font: 12.5px/1.55 var(--f-mono); overflow-x: auto; }
+.code-opt-tag { font: 600 .72rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.code-opt.right { border-color: var(--ok); background: var(--ok-soft); }
+.code-opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+@media (max-width: 820px) { .fc-split, .fc-split2 { grid-template-columns: minmax(0, 1fr); } }
+
+/* pseudocode */
+.ps-legend { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+.ps-legend .panel-title { margin: 0 6px 0 0; }
+.ps-legend code { font-size: .8rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; color: var(--t-kw); }
+.ps-rows { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.ps-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; background: var(--surface); min-width: 0; }
+.ps-line { font: 13px var(--f-mono); white-space: pre; overflow-x: auto; min-width: 0; }
+.ps-arrow { color: var(--muted); }
+.ps-row select { width: 100%; min-width: 0; font-size: .82rem; }
+.ps-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.ps-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+@media (max-width: 640px) { .ps-row { grid-template-columns: minmax(0, 1fr); } .ps-arrow { display: none; } }
+
+/* pseudocode: dry run, find the error, complete the plan */
+.trace-wrap { overflow-x: auto; }
+table.trace { border-collapse: collapse; width: 100%; min-width: 420px; font: 13px var(--f-mono); font-variant-numeric: tabular-nums; }
+.trace th, .trace td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; }
+.trace th { font: 600 .72rem var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--sunk); }
+.trace tr.new td { animation: changed 900ms ease-out; }
+.trace td.out { color: var(--ok); font-weight: 600; }
+.trace tbody:empty::after { content: "The trace table fills in as the plan runs."; display: block; padding: 8px; color: var(--muted); font: italic .85rem var(--f-body); }
+.ps-blank { font: 600 12.5px var(--f-mono); padding: 1px 4px; margin: 0 2px; border-radius: 6px; border: 1px dashed var(--accent); background: var(--surface); color: var(--ink); }
+.ps-blank.right { border: 1px solid var(--ok); background: var(--ok-soft); }
+.ps-blank.wrong { border: 1px solid var(--bad); background: var(--bad-soft); }
+.optrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.optrow .btn { font-family: var(--f-mono); font-size: .85rem; }
+.optrow .btn.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.optrow .btn.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+
+/* loops lab */
+.tag.role-track { background: var(--accent-soft); color: var(--accent); }
+.tag.role-check { background: var(--hl); color: var(--ink); }
+.tag.role-update { background: var(--ok-soft); color: var(--ok); }
+.range-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: end; }
+.range-row label { display: grid; gap: 4px; font: 600 .78rem var(--f-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.range-row input { width: 5.5em; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-height: 2.2em; }
+.chip { font: 700 1rem var(--f-mono); background: var(--accent-soft); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-variant-numeric: tabular-nums; }
+.chip-count { margin-left: 6px; font: 600 .8rem var(--f-mono); color: var(--muted); }
+.err-text { color: var(--bad); font: 600 .9rem var(--f-mono); }
+.guess-row { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
+
+/* data types & strings lab */
+.var b { display: flex; gap: 6px; align-items: center; justify-content: space-between; }
+.type { font: 700 .62rem var(--f-mono); font-style: normal; padding: 0 6px; border-radius: 999px; text-transform: none; }
+.type-int { background: var(--accent-soft); color: var(--accent); }
+.type-float { background: var(--hl); color: var(--ink); }
+.type-str { background: var(--ok-soft); color: var(--ok); }
+.type-bool, .type-NoneType, .type-type { background: var(--sunk); color: var(--muted); border: 1px solid var(--line); }
+.charboxes { display: flex; flex-wrap: wrap; gap: 4px; min-height: 2.6em; align-items: flex-start; }
+.charbox { display: grid; justify-items: center; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); min-width: 1.9em; padding: 2px 4px; }
+.charbox b { font: 700 1.05rem var(--f-mono); }
+.charbox i { font: 600 .62rem var(--f-mono); font-style: normal; color: var(--muted); }
+.charbox.space { background: var(--hl); }
+.explorer { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+.explorer label { display: grid; gap: 4px; font: 600 .78rem var(--f-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.explorer input[type="text"] { width: min(18em, 100%); }
+.explorer .small input[type="text"] { width: 9em; }
+.result { font: 700 1.05rem var(--f-mono); white-space: pre-wrap; word-break: break-word; min-height: 1.4em; }
+.toggle-row { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: .92rem; cursor: pointer; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* ---------- course navigation and print summary ---------- */
+.home-link { font: 600 .8rem var(--f-mono); color: var(--accent); text-decoration: none; white-space: nowrap; }
+.home-link:hover { text-decoration: underline; }
+footer a { color: var(--accent); }
+footer .next-lab { margin-left: auto; font-weight: 700; text-decoration: none; }
+footer .next-lab:hover { text-decoration: underline; }
+footer label { display: inline-flex; align-items: center; gap: 6px; }
+footer input { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; width: 14em; max-width: 100%; }
+.print-sheet { display: none; }
+@media print {
+  .top, main, footer { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .print-sheet { display: block; color: #000; font: 11pt/1.45 var(--f-body); }
+  .print-sheet h1 { font-size: 18pt; margin: 0 0 4pt; }
+  .print-sheet h2 { font-size: 13pt; margin: 16pt 0 6pt; }
+  .print-sheet dl { display: grid; grid-template-columns: max-content 1fr; gap: 2pt 12pt; margin: 8pt 0 0; }
+  .print-sheet dt { font-weight: 700; }
+  .print-sheet dd { margin: 0; }
+  .print-sheet table { width: 100%; border-collapse: collapse; }
+  .print-sheet th, .print-sheet td { text-align: left; border-bottom: 1px solid #999; padding: 4pt 6pt; vertical-align: top; }
+  .print-sheet td:last-child { white-space: nowrap; }
+  .print-sheet tr { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="top-inner">
+    <a class="home-link" href="../index.html">← All labs</a>
+    <div class="brand"><h1>ICTPRG302 Data Types &amp; Strings Lab</h1><span>micro:bit · Python</span></div>
+    <nav class="tabs" role="tablist" aria-label="Topics">
+      <button class="tab" role="tab" id="tab-data-types" aria-controls="data-types" data-topic="data-types">Data types <span class="count" data-count="data-types"></span></button>
+      <button class="tab" role="tab" id="tab-strings" aria-controls="strings" data-topic="strings">Strings <span class="count" data-count="strings"></span></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="topic" id="data-types" role="tabpanel" aria-labelledby="tab-data-types">
+  <div class="intro">
+    <div>
+      <p class="eyebrow">Topic 08</p>
+      <h2>Letters and numbers</h2>
+      <p class="lead">Use numbers to calculate and strings for text. Python decides the type from the value you write, and quotes make all the difference.</p>
+    </div>
+  </div>
+
+  <article class="act" data-act="d1">
+    <header class="act-head"><p class="act-tag">Activity 1</p><h3>What type is it?</h3><span class="status"></span></header>
+    <p class="brief">Integers are whole numbers, floats have a decimal point, and strings are text in quotes. Sort each value: watch out for numbers in quotes.</p>
+    <div class="quiz" data-quiz></div>
+  </article>
+
+  <article class="act" data-act="d2">
+    <header class="act-head"><p class="act-tag">Activity 2</p><h3>Add or join?</h3><span class="status"></span></header>
+    <p class="brief">+ adds numbers but joins strings, and * repeats strings. Predict what each program prints, then run it. The Variables panel shows each value's type.</p>
+    <div class="rounds" data-rounds><span class="lbl">Program</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div data-board></div>
+        <div class="panel"><p class="panel-title">Variables</p><div class="vars" data-vars></div></div>
+        <div class="panel"><p class="panel-title">Serial</p><pre class="serial" data-serial></pre></div>
+      </div>
+    </div>
+    <p class="panel-title" data-q></p>
+    <div class="optrow" data-opts></div>
+    <div class="controls"><button class="btn" type="button" data-next hidden>Next program →</button></div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="d8">
+    <header class="act-head"><p class="act-tag">Activity 3</p><h3>What type is the result?</h3><span class="status"></span></header>
+    <p class="brief">Each line works something out. Decide what type the answer is: int, float or str. Answer all of them correctly to finish.</p>
+    <div class="quiz" data-quiz></div>
+  </article>
+
+  <article class="act" data-act="d3">
+    <header class="act-head"><p class="act-tag">Activity 4</p><h3>Type casting</h3><span class="status"></span></header>
+    <p class="brief">Each program needs one expression where the ??? is. Pick the one that meets the goal. Wrong choices run too, so you can see exactly what goes wrong.</p>
+    <div class="rounds" data-rounds><span class="lbl">Goal</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div class="panel"><p class="panel-title">Goal</p><p data-goal></p></div>
+        <div data-board></div>
+        <div class="panel"><p class="panel-title">Variables</p><div class="vars" data-vars></div></div>
+        <div class="panel"><p class="panel-title">Serial</p><pre class="serial" data-serial></pre></div>
+      </div>
+    </div>
+    <p class="panel-title">Replace ??? with</p>
+    <div class="optrow" data-opts></div>
+    <div class="controls"><button class="btn" type="button" data-next hidden>Next goal →</button></div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="d4">
+    <header class="act-head"><p class="act-tag">Activity 5</p><h3>Input is always a string</h3><span class="status"></span></header>
+    <p class="brief">input() always gives back text, even when you type a number. Run each program, type answers in the serial pane, and hit every target. Use the switch to remove the conversion and see what breaks.</p>
+    <div class="rounds" data-rounds><span class="lbl">Program</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div data-board></div>
+        <div class="panel">
+          <p class="panel-title">Serial</p>
+          <pre class="serial" data-serial></pre>
+          <form class="ask" data-ask hidden>
+            <label class="sr-only" for="d4-answer">Your answer</label>
+            <input type="text" id="d4-answer" autocomplete="off" placeholder="type here">
+            <button class="btn small primary" type="submit">Enter</button>
+          </form>
+        </div>
+        <div class="panel"><p class="panel-title">Variables</p><div class="vars" data-vars></div></div>
+        <div class="panel"><p class="panel-title">Targets</p><ul class="goals" data-goals></ul></div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn primary" type="button" data-run>▶ Run</button>
+      <label class="toggle-row" for="d4-toggle" data-toggle><input type="checkbox" id="d4-toggle"> <span></span></label>
+    </div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="d5">
+    <header class="act-head"><p class="act-tag">Activity 6</p><h3>Assemble the program</h3><span class="status"></span></header>
+    <p class="brief" data-task></p>
+    <div class="rounds" data-rounds><span class="lbl">Puzzle</span></div>
+    <div class="parsons">
+      <div><p class="panel-title">Lines to use (two are traps)</p><div class="plist" data-bank></div></div>
+      <div><p class="panel-title">Your program</p><div class="plist target" data-target></div></div>
+    </div>
+    <div class="split">
+      <div class="controls"><button class="btn primary" type="button" data-check>Check &amp; run</button><button class="btn" type="button" data-reset>Start again</button></div>
+      <div data-board></div>
+    </div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="d6">
+    <header class="act-head"><p class="act-tag">Activity 7</p><h3>Quick quiz: data types</h3><span class="status"></span></header>
+    <p class="brief">Numbers, strings and converting between them. Answer all of them correctly to finish.</p>
+    <div class="quiz" data-quiz></div>
+  </article>
+
+  <article class="act" data-act="d7">
+    <header class="act-head"><p class="act-tag">Activity 8</p><h3>Spot the bug</h3><span class="status"></span></header>
+    <p class="brief">Each program mixes up its types somewhere. Click the line with the bug, then choose the fix.</p>
+    <div class="rounds" data-rounds><span class="lbl">Bug</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span><span data-hint>Click the line with the bug</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div data-board></div>
+        <div class="panel"><p class="panel-title">It should</p><p data-goal></p></div>
+        <div class="panel"><p class="panel-title">What actually happens</p><pre class="serial" data-symptom></pre></div>
+      </div>
+    </div>
+    <div class="fixes" data-fixes hidden><p class="panel-title" data-fixtitle></p><div class="q-opts" data-opts></div></div>
+    <div class="controls"><button class="btn" type="button" data-next hidden>Next bug →</button></div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <section class="real" aria-labelledby="real-d">
+    <div class="real-head">
+      <div>
+        <p class="eyebrow">On a real micro:bit</p>
+        <h3 id="real-d">Data types challenges</h3>
+        <p class="real-intro">Class activity 8.6: create a program that takes input with input(), then works with what was typed.</p>
+      </div>
+      <div class="real-side">
+        <a class="btn primary" href="https://python.microbit.org/v/3" target="_blank" rel="noopener">Open the editor ↗</a>
+        <span class="real-count" data-realcount="d"></span>
+      </div>
+    </div>
+    <div class="challenges" data-challenges="d"></div>
+  </section>
+</section>
+
+<section class="topic" id="strings" role="tabpanel" aria-labelledby="tab-strings" hidden>
+  <div class="intro">
+    <div>
+      <p class="eyebrow">Topic 09</p>
+      <h2>Strings</h2>
+      <p class="lead">A string is a sequence of characters. Python has built-in functions and methods to measure it, change its case and replace part of it.</p>
+    </div>
+  </div>
+
+  <article class="act" data-act="s1">
+    <header class="act-head"><p class="act-tag">Activity 1</p><h3>String function explorer</h3><span class="status"></span></header>
+    <p class="brief">Type any text, choose a function and see the result straight away, with the Python that does it. Hit every target.</p>
+    <div class="explorer">
+      <label for="s1-text">text<input type="text" id="s1-text" value="Hello, World!" data-text autocomplete="off"></label>
+      <label for="s1-fn">function<select id="s1-fn" data-fn><option value="len">len(text)</option><option value="upper">text.upper()</option><option value="lower">text.lower()</option><option value="replace">text.replace(old, new)</option></select></label>
+      <span class="explorer small" data-replwrap hidden>
+        <label for="s1-old">old<input type="text" id="s1-old" value="World" data-old autocomplete="off"></label>
+        <label for="s1-new">new<input type="text" id="s1-new" value="micro:bit" data-new autocomplete="off"></label>
+      </span>
+    </div>
+    <div class="split">
+      <div class="side">
+        <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+        <div class="panel"><p class="panel-title">Result</p><p class="result" data-result></p></div>
+      </div>
+      <div class="panel"><p class="panel-title">Targets</p><ul class="goals" data-goals></ul></div>
+    </div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="s2">
+    <header class="act-head"><p class="act-tag">Activity 2</p><h3>Count the characters</h3><span class="status"></span></header>
+    <p class="brief">How many characters does len() count? Type your answer and check. Every character is then shown in its own box, and spaces are highlighted.</p>
+    <div class="rounds" data-rounds><span class="lbl">String</span></div>
+    <div class="split">
+      <div class="side">
+        <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+        <div class="guess-row"><label for="s2-guess">len(text) is</label><input type="number" id="s2-guess" min="0" max="50" placeholder="?"><button class="btn primary" type="button" data-check>Check</button><button class="btn" type="button" data-next hidden>Next string →</button></div>
+      </div>
+      <div class="panel"><p class="panel-title">Every character</p><div class="charboxes" data-boxes></div></div>
+    </div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="s3">
+    <header class="act-head"><p class="act-tag">Activity 3</p><h3>Predict the output</h3><span class="status"></span></header>
+    <p class="brief">What does each string function give back? Predict, then run it and check the Variables panel.</p>
+    <div class="rounds" data-rounds><span class="lbl">Program</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div data-board></div>
+        <div class="panel"><p class="panel-title">Variables</p><div class="vars" data-vars></div></div>
+        <div class="panel"><p class="panel-title">Serial</p><pre class="serial" data-serial></pre></div>
+      </div>
+    </div>
+    <p class="panel-title" data-q></p>
+    <div class="optrow" data-opts></div>
+    <div class="controls"><button class="btn" type="button" data-next hidden>Next program →</button></div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="s8">
+    <header class="act-head"><p class="act-tag">Activity 4</p><h3>Pick the expression</h3><span class="status"></span></header>
+    <p class="brief">Each program needs one expression where the ??? is. Pick the one that prints exactly the goal. Wrong choices run too, so you can see what they really do.</p>
+    <div class="rounds" data-rounds><span class="lbl">Goal</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div class="panel"><p class="panel-title">Goal</p><p data-goal></p></div>
+        <div data-board></div>
+        <div class="panel"><p class="panel-title">Variables</p><div class="vars" data-vars></div></div>
+        <div class="panel"><p class="panel-title">Serial</p><pre class="serial" data-serial></pre></div>
+      </div>
+    </div>
+    <p class="panel-title">Replace ??? with</p>
+    <div class="optrow" data-opts></div>
+    <div class="controls"><button class="btn" type="button" data-next hidden>Next goal →</button></div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="s4">
+    <header class="act-head"><p class="act-tag">Activity 5</p><h3>Strings and input</h3><span class="status"></span></header>
+    <p class="brief">Programs that use string functions on what the user types, starting with two from the slides. Hit every target, then use the switch to remove the function and see what breaks.</p>
+    <div class="rounds" data-rounds><span class="lbl">Program</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div data-board></div>
+        <div class="panel">
+          <p class="panel-title">Serial</p>
+          <pre class="serial" data-serial></pre>
+          <form class="ask" data-ask hidden>
+            <label class="sr-only" for="s4-answer">Your answer</label>
+            <input type="text" id="s4-answer" autocomplete="off" placeholder="type here">
+            <button class="btn small primary" type="submit">Enter</button>
+          </form>
+        </div>
+        <div class="panel"><p class="panel-title">Variables</p><div class="vars" data-vars></div></div>
+        <div class="panel"><p class="panel-title">Targets</p><ul class="goals" data-goals></ul></div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn primary" type="button" data-run>▶ Run</button>
+      <label class="toggle-row" for="s4-toggle" data-toggle><input type="checkbox" id="s4-toggle"> <span></span></label>
+    </div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="s5">
+    <header class="act-head"><p class="act-tag">Activity 6</p><h3>Assemble the program</h3><span class="status"></span></header>
+    <p class="brief" data-task></p>
+    <div class="rounds" data-rounds><span class="lbl">Puzzle</span></div>
+    <div class="parsons">
+      <div><p class="panel-title">Lines to use (two are traps)</p><div class="plist" data-bank></div></div>
+      <div><p class="panel-title">Your program</p><div class="plist target" data-target></div></div>
+    </div>
+    <div class="split">
+      <div class="controls"><button class="btn primary" type="button" data-check>Check &amp; run</button><button class="btn" type="button" data-reset>Start again</button></div>
+      <div data-board></div>
+    </div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <article class="act" data-act="s6">
+    <header class="act-head"><p class="act-tag">Activity 7</p><h3>Quick quiz: strings</h3><span class="status"></span></header>
+    <p class="brief">len(), upper(), lower() and replace(). Answer all of them correctly to finish.</p>
+    <div class="quiz" data-quiz></div>
+  </article>
+
+  <article class="act" data-act="s7">
+    <header class="act-head"><p class="act-tag">Activity 8</p><h3>Spot the bug</h3><span class="status"></span></header>
+    <p class="brief">Each program uses a string function wrongly. Click the line with the bug, then choose the fix.</p>
+    <div class="rounds" data-rounds><span class="lbl">Bug</span></div>
+    <div class="split">
+      <div class="codebox"><div class="codebar"><span>main.py</span><span data-hint>Click the line with the bug</span></div><div class="codescroll" data-code></div></div>
+      <div class="side">
+        <div data-board></div>
+        <div class="panel"><p class="panel-title">It should</p><p data-goal></p></div>
+        <div class="panel"><p class="panel-title">What actually happens</p><pre class="serial" data-symptom></pre></div>
+      </div>
+    </div>
+    <div class="fixes" data-fixes hidden><p class="panel-title" data-fixtitle></p><div class="q-opts" data-opts></div></div>
+    <div class="controls"><button class="btn" type="button" data-next hidden>Next bug →</button></div>
+    <p class="feedback" data-fb></p>
+  </article>
+
+  <section class="real" aria-labelledby="real-s">
+    <div class="real-head">
+      <div>
+        <p class="eyebrow">On a real micro:bit</p>
+        <h3 id="real-s">String challenges</h3>
+        <p class="real-intro">Practise the four string functions on a real micro:bit. Type answers in the serial pane under the simulator.</p>
+      </div>
+      <div class="real-side">
+        <a class="btn primary" href="https://python.microbit.org/v/3" target="_blank" rel="noopener">Open the editor ↗</a>
+        <span class="real-count" data-realcount="s"></span>
+      </div>
+    </div>
+    <div class="challenges" data-challenges="s"></div>
+  </section>
+</section>
+</main>
+
+<footer>
+  <span>Code runs in a simulator on this page. Test it on a real board in the micro:bit Python editor.</span>
+  <button type="button" data-resetprogress>Reset my progress</button>
+  <label>Your name <input type="text" data-printname autocomplete="name"></label>
+  <button type="button" data-print>Print my results</button>
+  <a class="next-lab" href="../lists-lab/index.html">Next: Lists Lab →</a>
+</footer>
+
+<div class="print-sheet" data-printsheet aria-hidden="true"></div>
+
+<script>
+(function () {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const CANCEL = Symbol("cancel");
+const ignoreCancel = e => { if (e !== CANCEL) throw e; };
+
+/* ---------- micro:bit images and font ---------- */
+const IMAGES = {
+  HEART: "09090:99999:99999:09990:00900",
+  HAPPY: "00000:09090:00000:90009:09990",
+  SAD: "00000:09090:00000:09990:90009",
+  SURPRISED: "09090:00000:00900:09090:00900",
+  ASLEEP: "00000:99099:00000:09990:00000",
+  SQUARE: "99999:90009:90009:90009:99999",
+  DIAMOND: "00900:09090:90009:09090:00900",
+  YES: "00000:00009:00090:90900:09000",
+  NO: "90009:09090:00900:09090:90009",
+  ARROW_N: "00900:09990:90909:00900:00900",
+  ARROW_E: "00900:00090:99999:00090:00900",
+  ARROW_S: "00900:00900:90909:09990:00900",
+  ARROW_W: "00900:09000:99999:09000:00900"
+};
+const FONT = {
+  "0": [".##.", "#..#", "#..#", "#..#", ".##."], "1": [".#.", "##.", ".#.", ".#.", "###"],
+  "2": ["###.", "...#", ".##.", "#...", "####"], "3": ["###.", "...#", ".##.", "...#", "###."],
+  "4": ["..#.", ".##.", "#.#.", "####", "..#."], "5": ["####", "#...", "###.", "...#", "###."],
+  "6": [".##.", "#...", "###.", "#..#", ".##."], "7": ["####", "...#", "..#.", ".#..", ".#.."],
+  "8": [".##.", "#..#", ".##.", "#..#", ".##."], "9": [".##.", "#..#", ".###", "...#", ".##."],
+  A: [".##.", "#..#", "####", "#..#", "#..#"], B: ["###.", "#..#", "###.", "#..#", "###."],
+  C: [".###", "#...", "#...", "#...", ".###"], D: ["###.", "#..#", "#..#", "#..#", "###."],
+  E: ["####", "#...", "###.", "#...", "####"], F: ["####", "#...", "###.", "#...", "#..."],
+  G: [".###", "#...", "#.##", "#..#", ".###"], H: ["#..#", "#..#", "####", "#..#", "#..#"],
+  I: ["###", ".#.", ".#.", ".#.", "###"], J: ["..##", "...#", "...#", "#..#", ".##."],
+  K: ["#..#", "#.#.", "##..", "#.#.", "#..#"], L: ["#...", "#...", "#...", "#...", "####"],
+  M: ["#...#", "##.##", "#.#.#", "#...#", "#...#"], N: ["#..#", "##.#", "#.##", "#..#", "#..#"],
+  O: [".##.", "#..#", "#..#", "#..#", ".##."], P: ["###.", "#..#", "###.", "#...", "#..."],
+  Q: [".##.", "#..#", "#..#", "#.#.", ".#.#"], R: ["###.", "#..#", "###.", "#.#.", "#..#"],
+  S: [".###", "#...", ".##.", "...#", "###."], T: ["#####", "..#..", "..#..", "..#..", "..#.."],
+  U: ["#..#", "#..#", "#..#", "#..#", ".##."], V: ["#...#", "#...#", "#...#", ".#.#.", "..#.."],
+  W: ["#...#", "#...#", "#.#.#", "##.##", "#...#"], X: ["#..#", "#..#", ".##.", "#..#", "#..#"],
+  Y: ["#...#", ".#.#.", "..#..", "..#..", "..#.."], Z: ["####", "...#", "..#.", ".#..", "####"],
+  " ": ["..", "..", "..", "..", ".."], "!": ["#", "#", "#", ".", "#"], "-": ["...", "...", "###", "...", "..."],
+  "?": [".##.", "#..#", "..#.", "....", "..#."], ":": [".", "#", ".", "#", "."], "'": ["#", "#", ".", ".", "."],
+  ".": [".", ".", ".", ".", "#"], ",": ["..", "..", "..", ".#", "#."]
+};
+
+function runner() {
+  let gen = 0;
+  return {
+    start() {
+      const g = ++gen;
+      return {
+        sleep: ms => new Promise((res, rej) => setTimeout(() => (g === gen ? res() : rej(CANCEL)), Math.max(0, ms))),
+        get live() { return g === gen; }
+      };
+    },
+    stop() { gen++; }
+  };
+}
+
+function makeBoard(host, opts = {}) {
+  const wrap = document.createElement("div");
+  wrap.className = "board";
+  const grid = document.createElement("div");
+  grid.className = "leds";
+  grid.setAttribute("role", "img");
+  grid.setAttribute("aria-label", "micro:bit LED display");
+  const cells = [];
+  for (let i = 0; i < 25; i++) { const c = document.createElement("span"); c.className = "led"; grid.append(c); cells.push(c); }
+  const mkBtn = l => { const b = document.createElement("button"); b.type = "button"; b.className = "mb-btn"; b.textContent = l; b.setAttribute("aria-label", "Button " + l); return b; };
+  let btnA = null, btnB = null;
+  if (opts.buttons) { btnA = mkBtn("A"); btnB = mkBtn("B"); wrap.append(btnA, grid, btnB); } else wrap.append(grid);
+  host.append(wrap);
+  function setRows(rows) {
+    rows.forEach((row, r) => [...row].forEach((d, c) => {
+      const v = +d, cell = cells[r * 5 + c];
+      cell.classList.toggle("on", v > 0);
+      cell.style.setProperty("--b", (0.35 + 0.65 * v / 9).toFixed(2));
+    }));
+  }
+  const clear = () => setRows(["00000", "00000", "00000", "00000", "00000"]);
+  return {
+    btnA, btnB, setRows, clear,
+    show(name) { setRows(IMAGES[name].split(":")); },
+    showChar(ch) {
+      const g = FONT[String(ch).toUpperCase()] || FONT["?"], w = g[0].length, left = Math.floor((5 - w) / 2);
+      setRows(g.map(row => [0, 1, 2, 3, 4].map(c => (row[c - left] === "#" ? "9" : "0")).join("")));
+    },
+    async scroll(text, s, delay = 90) {
+      const blank = [0, 0, 0, 0, 0];
+      const cols = [blank, blank, blank, blank, blank];
+      for (const ch of String(text).toUpperCase()) {
+        const g = FONT[ch] || FONT["?"];
+        for (let c = 0; c < g[0].length; c++) cols.push(g.map(r => (r[c] === "#" ? 9 : 0)));
+        cols.push(blank);
+      }
+      for (let i = 0; i < 4; i++) cols.push(blank);
+      for (let start = 0; start <= cols.length - 5; start++) {
+        setRows([0, 1, 2, 3, 4].map(r => [0, 1, 2, 3, 4].map(c => cols[start + c][r]).join("")));
+        await s.sleep(delay);
+      }
+      clear();
+    }
+  };
+}
+
+/* ---------- sound ---------- */
+let soundOn = false, actx = null;
+const soundBtn = $("[data-sound]");
+if (soundBtn) soundBtn.addEventListener("click", () => {
+  soundOn = !soundOn;
+  soundBtn.setAttribute("aria-pressed", String(soundOn));
+  soundBtn.textContent = soundOn ? "Sound on" : "Sound off";
+  try { if (soundOn) { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume(); } } catch (e) { /* no audio */ }
+});
+function tone(freq, ms) {
+  if (!soundOn || !actx) return;
+  try {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = "square"; o.frequency.value = freq; g.gain.value = 0.035;
+    o.connect(g); g.connect(actx.destination);
+    o.start(); o.stop(actx.currentTime + ms / 1000);
+  } catch (e) { /* ignore */ }
+}
+function makeSpeaker(host) {
+  const el = document.createElement("div");
+  el.className = "speaker";
+  el.innerHTML = '<span class="cone"></span><span data-note>Silent</span><span class="count" data-beeps>0 beeps</span>';
+  host.append(el);
+  let beeps = 0, timer = null;
+  return {
+    play(freq, ms) {
+      beeps++;
+      el.classList.add("on");
+      $("[data-note]", el).textContent = `♪ ${freq} Hz · ${ms} ms`;
+      $("[data-beeps]", el).textContent = beeps === 1 ? "1 beep" : beeps + " beeps";
+      tone(freq, ms);
+      clearTimeout(timer);
+      timer = setTimeout(() => el.classList.remove("on"), ms);
+    },
+    reset() { beeps = 0; el.classList.remove("on"); $("[data-note]", el).textContent = "Silent"; $("[data-beeps]", el).textContent = "0 beeps"; },
+    get beeps() { return beeps; }
+  };
+}
+
+/* ---------- simulated sensors ---------- */
+function makeSensors(board, host, show = []) {
+  const s = { a: false, b: false, aLatch: false, bLatch: false, light: 60, pin1: 800, clap: 200, threshold: 150, loud: false, temp: 21, onClap: null };
+  const rows = {
+    light: ["Light level", 0, 255, "light"],
+    pin1: ["Pin 1 (distance)", 0, 1023, "pin1"],
+    clap: ["Clap loudness", 0, 255, "clap"]
+  };
+  const inputs = {};
+  if (host) {
+    const wrap = document.createElement("div");
+    wrap.className = "sensors";
+    for (const key of ["light", "pin1", "clap"]) {
+      const [label, min, max, prop] = rows[key];
+      const id = "sens-" + Math.random().toString(36).slice(2, 8);
+      const row = document.createElement("div");
+      row.className = "sensor";
+      row.dataset.sensor = key;
+      row.innerHTML = `<label for="${id}">${label}</label><input type="range" id="${id}" min="${min}" max="${max}" value="${s[prop]}"><output>${s[prop]}</output>`;
+      const input = $("input", row), out = $("output", row);
+      input.addEventListener("input", () => { s[prop] = +input.value; out.textContent = input.value; });
+      inputs[key] = row;
+      wrap.append(row);
+      if (key === "clap") {
+        const clapRow = document.createElement("div");
+        clapRow.className = "sensor-row";
+        clapRow.dataset.sensor = "clap";
+        clapRow.innerHTML = '<button class="btn small" type="button">👏 Clap</button><span class="tip" data-clapmsg></span>';
+        $("button", clapRow).addEventListener("click", () => {
+          const loud = s.clap > s.threshold;
+          if (loud) s.loud = true;
+          $("[data-clapmsg]", clapRow).textContent = loud ? `Loud (${s.clap} > ${s.threshold})` : `Too quiet (${s.clap} ≤ ${s.threshold})`;
+          if (s.onClap) s.onClap(loud);
+        });
+        inputs.clapBtn = clapRow;
+        wrap.append(clapRow);
+      }
+    }
+    host.append(wrap);
+  }
+  s.only = list => { for (const [k, row] of Object.entries(inputs)) row.hidden = !list.includes(k === "clapBtn" ? "clap" : k); };
+  if (host) s.only(show);
+  s.press = (k, on) => {
+    s[k] = on;
+    if (on) s[k + "Latch"] = true;
+    const btn = k === "a" ? board.btnA : board.btnB;
+    if (btn) btn.classList.toggle("held", on);
+  };
+  if (board.btnA) {
+    [["a", board.btnA], ["b", board.btnB]].forEach(([k, b]) => {
+      b.addEventListener("pointerdown", e => { e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ } s.press(k, true); });
+      ["pointerup", "pointercancel", "lostpointercapture"].forEach(ev => b.addEventListener(ev, () => { if (s[k]) s.press(k, false); }));
+      b.addEventListener("keydown", e => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); s.press(k, true); } });
+      b.addEventListener("keyup", e => { if (e.key === " " || e.key === "Enter") s.press(k, false); });
+    });
+  }
+  return s;
+}
+// The A and B keys press the buttons of whichever program is running
+let activeSensors = null;
+document.addEventListener("keydown", e => {
+  if (!activeSensors || e.repeat || e.ctrlKey || e.metaKey || e.altKey || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+  const k = e.key.toLowerCase();
+  if (k === "a" || k === "b") activeSensors.press(k, true);
+});
+document.addEventListener("keyup", e => {
+  const k = e.key.toLowerCase();
+  if (activeSensors && (k === "a" || k === "b") && activeSensors[k]) activeSensors.press(k, false);
+});
+
+/* ---------- code rendering ---------- */
+function hl(src) {
+  const re = /(#.*$)|("[^"]*"|'[^']*')|\b(def|return|while|if|elif|else|break|for|in|from|import|True|False|None|pass|and|or|not)\b|\b(\d+)\b|\b([A-Za-z_]\w*)(?=\()/gm;
+  let out = "", last = 0, m;
+  while ((m = re.exec(src))) {
+    out += esc(src.slice(last, m.index));
+    const cls = m[1] ? "t-com" : m[2] ? "t-str" : m[3] ? "t-kw" : m[4] ? "t-num" : "t-fn";
+    out += `<span class="${cls}">${esc(m[0])}</span>`;
+    last = re.lastIndex;
+  }
+  return out + esc(src.slice(last));
+}
+function renderCode(host, lines, decorate) {
+  host.innerHTML = "";
+  const ol = document.createElement("ol");
+  ol.className = "code";
+  const lis = lines.map((ln, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="ln">${i + 1}</span><code>${hl(ln) || " "}</code>`;
+    if (decorate) decorate(li, i + 1);
+    ol.append(li);
+    return li;
+  });
+  host.append(ol);
+  let cur = null;
+  return {
+    lis,
+    mark(n) {
+      if (cur) cur.classList.remove("cur");
+      cur = n ? lis[n - 1] : null;
+      if (cur) cur.classList.add("cur");
+    },
+    flash(n) { const li = lis[n - 1]; if (!li) return; li.classList.remove("flash"); void li.offsetWidth; li.classList.add("flash"); },
+    cond(n, v) {
+      const li = lis[n - 1]; if (!li) return;
+      let t = $(".ctag", li);
+      if (!t) { t = document.createElement("span"); li.append(t); }
+      t.className = "tag ctag " + (v ? "true" : "false");
+      t.textContent = v ? "True" : "False";
+    },
+    clearConds() { lis.forEach(li => { const t = $(".ctag", li); if (t) t.remove(); }); },
+    will(lines) { lis.forEach((li, i) => li.classList.toggle("will", lines.includes(i + 1))); }
+  };
+}
+function renderVars(host, vars, changed = []) {
+  const names = Object.keys(vars);
+  if (!names.length) { host.innerHTML = '<span class="empty">No variables yet</span>'; return; }
+  host.innerHTML = names.map(n => { const v = vars[n], t = pyType(v); return `<div class="var${changed.includes(n) ? " changed" : ""}"><b>${esc(n)} <i class="type type-${t}">${t}</i></b><span>${esc(pyRepr(v))}</span></div>`; }).join("");
+}
+function feedback(el, kind, html) { el.className = "feedback" + (kind ? " " + kind : ""); el.innerHTML = html || ""; }
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function pills(host, n, onPick) {
+  for (let k = 0; k < n; k++) {
+    const b = document.createElement("button");
+    b.className = "pill"; b.type = "button"; b.textContent = k + 1;
+    b.addEventListener("click", () => onPick(k));
+    host.append(b);
+  }
+  return (cur, done) => $$(".pill", host).forEach((x, j) => { x.setAttribute("aria-pressed", String(j === cur)); x.classList.toggle("ok", done.has(j)); });
+}
+
+/* ---------- progress ---------- */
+const KEY = "ictprg302-datatypes-progress";
+const CH_KEY = "ictprg302-datatypes-challenges";
+const TOPICS = { "data-types": ["d1", "d2", "d8", "d3", "d4", "d5", "d6", "d7"], "strings": ["s1", "s2", "s3", "s8", "s4", "s5", "s6", "s7"] };
+let done = new Set();
+try { done = new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); } catch (e) { /* storage unavailable */ }
+function save() { try { localStorage.setItem(KEY, JSON.stringify([...done])); } catch (e) { /* ignore */ } }
+function markDone(id) { if (!done.has(id)) { done.add(id); save(); } paintProgress(); }
+function paintProgress() {
+  $$(".act").forEach(a => {
+    const st = $(".status", a), d = done.has(a.dataset.act);
+    st.textContent = d ? "Done" : "To do";
+    st.classList.toggle("done", d);
+  });
+  for (const [t, ids] of Object.entries(TOPICS)) $(`[data-count="${t}"]`).textContent = `${ids.filter(i => done.has(i)).length}/${ids.length}`;
+}
+$("[data-resetprogress]").addEventListener("click", () => {
+  done.clear(); save();
+  try { localStorage.setItem(CH_KEY, "[]"); } catch (e) { /* ignore */ }
+  location.reload();
+});
+
+/* ---------- tabs ---------- */
+const tabHooks = [];
+function showTopic(id) {
+  if (!TOPICS[id]) id = "data-types";
+  $$(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.topic === id)));
+  $$(".topic").forEach(s => { s.hidden = s.id !== id; });
+  tabHooks.forEach(h => h(id));
+}
+$$(".tab").forEach(t => t.addEventListener("click", () => {
+  showTopic(t.dataset.topic);
+  try { history.replaceState(null, "", "#" + t.dataset.topic); } catch (e) { /* ignore */ }
+  window.scrollTo({ top: 0 });
+}));
+
+/* =========================================================
+   A small Python interpreter: enough for if / elif / else,
+   while True, comparisons, input() and the micro:bit calls
+   used in these lessons. It reports real Python error types.
+   ========================================================= */
+const BREAK = Symbol("break");
+class PyErr { constructor(type, msg, line) { this.type = type; this.msg = msg; this.line = line; } }
+const syntaxErr = line => new PyErr("SyntaxError", "invalid syntax", line);
+
+function tokenize(s, line) {
+  const t = [];
+  let i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (c === " " || c === "\t") { i++; continue; }
+    if (c === "#") break;
+    if (/\d/.test(c)) { let j = i; while (j < s.length && /[\d.]/.test(s[j])) j++; const txt = s.slice(i, j); if ((txt.match(/\./g) || []).length > 1) throw syntaxErr(line); t.push({ k: "num", v: parseFloat(txt), float: txt.includes(".") }); i = j; continue; }
+    if (c === '"' || c === "'") { let j = i + 1; while (j < s.length && s[j] !== c) j++; if (j >= s.length) throw syntaxErr(line); t.push({ k: "str", v: s.slice(i + 1, j) }); i = j + 1; continue; }
+    if (/[A-Za-z_]/.test(c)) { let j = i; while (j < s.length && /\w/.test(s[j])) j++; t.push({ k: "name", v: s.slice(i, j) }); i = j; continue; }
+    const two = s.slice(i, i + 2);
+    if (["==", "!=", ">=", "<="].includes(two)) { t.push({ k: "op", v: two }); i += 2; continue; }
+    if ("+-*/%<>(),.=:".includes(c)) { t.push({ k: "op", v: c }); i++; continue; }
+    throw syntaxErr(line);
+  }
+  return t;
+}
+function parseExpr(src, line) {
+  const tokens = tokenize(src, line);
+  let i = 0;
+  const fail = () => { throw syntaxErr(line); };
+  const isOp = v => tokens[i] && tokens[i].k === "op" && tokens[i].v === v;
+  const isKw = v => tokens[i] && tokens[i].k === "name" && tokens[i].v === v;
+  const or = () => { let a = and(); while (isKw("or")) { i++; a = { t: "or", a, b: and() }; } return a; };
+  const and = () => { let a = not(); while (isKw("and")) { i++; a = { t: "and", a, b: not() }; } return a; };
+  const not = () => { if (isKw("not")) { i++; return { t: "not", a: not() }; } return cmp(); };
+  const cmp = () => {
+    const a = add(), t = tokens[i];
+    if (t && t.k === "op" && ["==", "!=", "<", ">", "<=", ">="].includes(t.v)) { i++; return { t: "cmp", op: t.v, a, b: add() }; }
+    return a;
+  };
+  const add = () => { let a = mul(); while (isOp("+") || isOp("-")) { const op = tokens[i++].v; a = { t: "bin", op, a, b: mul() }; } return a; };
+  const mul = () => { let a = unary(); while (isOp("*") || isOp("/") || isOp("%")) { const op = tokens[i++].v; a = { t: "bin", op, a, b: unary() }; } return a; };
+  const unary = () => { if (isOp("-")) { i++; return { t: "neg", a: unary() }; } return post(); };
+  const post = () => {
+    let a = atom();
+    for (;;) {
+      if (isOp(".")) { i++; const n = tokens[i++]; if (!n || n.k !== "name") fail(); a = { t: "attr", obj: a, name: n.v }; }
+      else if (isOp("(")) {
+        i++;
+        const args = [];
+        if (!isOp(")")) { for (;;) { args.push(or()); if (isOp(",")) { i++; continue; } break; } }
+        if (!isOp(")")) fail();
+        i++;
+        a = { t: "call", fn: a, args };
+      } else return a;
+    }
+  };
+  const atom = () => {
+    const t = tokens[i++];
+    if (!t) fail();
+    if (t.k === "num") return { t: "num", v: t.v, float: t.float };
+    if (t.k === "str") return { t: "str", v: t.v };
+    if (t.k === "name") { if (["and", "or", "not", "if", "elif", "else", "while", "def", "return", "import", "from"].includes(t.v)) fail(); return { t: "name", v: t.v }; }
+    if (t.k === "op" && t.v === "(") { const e = or(); if (!isOp(")")) fail(); i++; return e; }
+    fail();
+  };
+  const e = or();
+  if (i < tokens.length) fail();
+  return e;
+}
+function parseStmt(text, line) {
+  const t = text.replace(/\s+#[^"']*$/, "");
+  const ex = s => parseExpr(s, line);
+  let m;
+  if (/^(from|import)\b/.test(t)) return { kind: "pass" };
+  if ((m = t.match(/^while\s+(.+):$/))) return { kind: "while", cond: ex(m[1]) };
+  if ((m = t.match(/^if\s+(.+):$/))) return { kind: "if", cond: ex(m[1]) };
+  if ((m = t.match(/^elif\s+(.+):$/))) return { kind: "elif", cond: ex(m[1]) };
+  if (/^else\s*:$/.test(t)) return { kind: "else" };
+  if ((m = t.match(/^for\s+([A-Za-z_]\w*)\s+in\s+(.+):$/))) return { kind: "for", name: m[1], iter: ex(m[2]) };
+  if (/^(if|elif|else|while|for)\b/.test(t)) throw syntaxErr(line);
+  if (t === "break") return { kind: "break" };
+  if (t === "pass") return { kind: "pass" };
+  if ((m = t.match(/^([A-Za-z_]\w*)\s*([+\-*])=\s*(.+)$/))) return { kind: "assign", name: m[1], value: { t: "bin", op: m[2], a: { t: "name", v: m[1] }, b: ex(m[3]) } };
+  if ((m = t.match(/^([A-Za-z_]\w*)\s*=(?!=)\s*(.+)$/))) return { kind: "assign", name: m[1], value: ex(m[2]) };
+  return { kind: "expr", value: ex(t) };
+}
+function compile(lines) {
+  const items = [];
+  lines.forEach((raw, idx) => {
+    const text = raw.replace(/\s+$/, ""), stripped = text.trim();
+    if (!stripped || stripped.startsWith("#")) return;
+    const sp = text.length - text.trimStart().length;
+    items.push({ line: idx + 1, ind: Math.round(sp / 4), text: stripped });
+  });
+  const opensBlock = t => t.replace(/\s+#[^"']*$/, "").endsWith(":");
+  // Line by line, like Python: indentation of this line, then its syntax, then else/elif placement
+  const blocks = [{ ind: 0, last: null }];
+  let opens = false;
+  for (const it of items) {
+    const top = blocks[blocks.length - 1];
+    if (opens) { if (it.ind <= top.ind) throw new PyErr("IndentationError", "expected an indented block", it.line); blocks.push({ ind: it.ind, last: null }); }
+    else if (it.ind > top.ind) throw new PyErr("IndentationError", "unexpected indent", it.line);
+    else if (it.ind < top.ind) {
+      while (blocks[blocks.length - 1].ind > it.ind) blocks.pop();
+      if (blocks[blocks.length - 1].ind !== it.ind) throw new PyErr("IndentationError", "unindent does not match any outer indentation level", it.line);
+    }
+    it.st = parseStmt(it.text, it.line);
+    const b = blocks[blocks.length - 1];
+    if ((it.st.kind === "elif" || it.st.kind === "else") && !(b.last === "if" || b.last === "elif")) throw syntaxErr(it.line);
+    b.last = it.st.kind;
+    opens = opensBlock(it.text);
+  }
+  if (opens && items.length) throw new PyErr("IndentationError", "expected an indented block", items[items.length - 1].line);
+  const root = { kids: [] }, stack = [{ ind: -1, node: root }];
+  for (const it of items) {
+    while (stack[stack.length - 1].ind >= it.ind) stack.pop();
+    const node = Object.assign({}, it.st, { line: it.line, kids: [] });
+    stack[stack.length - 1].node.kids.push(node);
+    if (opensBlock(it.text)) stack.push({ ind: it.ind, node });
+  }
+  (function link(list) {
+    for (let k = 0; k < list.length; k++) {
+      const n = list[k];
+      link(n.kids);
+      if (n.kind === "if") n.branches = [{ cond: n.cond, kids: n.kids, line: n.line }];
+      if (n.kind === "elif" || n.kind === "else") {
+        const prev = list[k - 1];
+        if (!prev || prev.kind !== "if" || prev.closed) throw syntaxErr(n.line);
+        if (n.kind === "elif") prev.branches.push({ cond: n.cond, kids: n.kids, line: n.line });
+        else { prev.elseKids = n.kids; prev.elseLine = n.line; prev.closed = true; }
+        list.splice(k, 1); k--;
+      }
+    }
+  })(root.kids);
+  return root.kids;
+}
+const isF = v => !!v && typeof v === "object" && "f" in v;
+const numv = v => (isF(v) ? v.f : v);
+const isNum = v => typeof v === "number" || isF(v);
+const mkF = x => ({ f: x });
+const pyType = v => (isF(v) ? "float" : v && v.cls ? "type" : v && v.range ? "range" : typeof v === "string" ? "str" : typeof v === "boolean" ? "bool" : v === null || v === undefined ? "NoneType" : v && v.img ? "Image" : v && v.fn ? "function" : Number.isInteger(v) ? "int" : "float");
+function pyStr(v) {
+  if (isF(v)) { const x = v.f; if (!isFinite(x)) return x > 0 ? "inf" : x < 0 ? "-inf" : "nan"; return Number.isInteger(x) ? x.toFixed(1) : String(x); }
+  if (v && v.cls) return `<class '${v.cls}'>`;
+  if (v === true) return "True";
+  if (v === false) return "False";
+  if (v === null || v === undefined) return "None";
+  if (v && v.img) return "Image." + v.img;
+  if (v && v.fn) return "<function>";
+  if (v && v.range) return "range(" + v.args.join(", ") + ")";
+  return String(v);
+}
+const pyRepr = v => (typeof v === "string" ? `"${v}"` : pyStr(v));
+const truthy = v => !(v === false || v === 0 || v === "" || v === null || v === undefined || (isF(v) && v.f === 0));
+const dotted = n => (n.t === "name" ? n.v : n.t === "attr" ? (dotted(n.obj) ? dotted(n.obj) + "." + n.name : null) : null);
+const DUNDER = { "<": "__lt__", ">": "__gt__", "<=": "__le__", ">=": "__ge__", "-": "__sub__", "*": "__mul__", "/": "__truediv__", "%": "__mod__", "+": "__add__" };
+
+const STR_METHODS = {
+  upper: s => s.toUpperCase(),
+  lower: s => s.toLowerCase(),
+  strip: s => s.trim(),
+  replace: (s, a) => {
+    if (a.length !== 2) throw new PyErr("TypeError", `replace() takes 2 arguments (${a.length} given)`);
+    if (typeof a[0] !== "string" || typeof a[1] !== "string") throw new PyErr("TypeError", `can't convert '${pyType(typeof a[0] !== "string" ? a[0] : a[1])}' object to str implicitly`);
+    return a[0] === "" ? a[1] + [...s].join(a[1]) + a[1] : s.split(a[0]).join(a[1]);
+  }
+};
+const BUILTINS = {
+  "print": async (a, c) => c.env.serial(a.map(pyStr).join(" ")),
+  "sleep": async (a, c) => c.s.sleep(numv(a[0])),
+  "display.scroll": async (a, c) => { const t = pyStr(a[0]); if (c.env.onScroll) c.env.onScroll(t); await c.env.board.scroll(t, c.s, c.env.scrollDelay || 85); },
+  "display.show": async (a, c) => {
+    const v = a[0];
+    if (v && v.img) { c.env.board.show(v.img); if (c.env.onShow) c.env.onShow(v.img); return; }
+    const t = pyStr(v);
+    for (const ch of t) { c.env.board.showChar(ch); if (t.length > 1) await c.s.sleep(400); }
+    if (c.env.onShow) c.env.onShow(t);
+  },
+  "display.clear": async (a, c) => c.env.board.clear(),
+  "display.read_light_level": async (a, c) => c.env.sensors.light,
+  "music.pitch": async (a, c) => { c.env.speaker.play(a[0], a[1] === undefined ? 200 : a[1]); if (c.env.onPitch) c.env.onPitch(a[0]); await c.s.sleep(a[1] === undefined ? 200 : a[1]); },
+  "button_a.is_pressed": async (a, c) => c.env.sensors.a,
+  "button_b.is_pressed": async (a, c) => c.env.sensors.b,
+  "button_a.was_pressed": async (a, c) => { const v = c.env.sensors.aLatch; c.env.sensors.aLatch = false; return v; },
+  "button_b.was_pressed": async (a, c) => { const v = c.env.sensors.bLatch; c.env.sensors.bLatch = false; return v; },
+  "pin1.read_analog": async (a, c) => c.env.sensors.pin1,
+  "microphone.set_threshold": async (a, c) => { c.env.sensors.threshold = a[1]; },
+  "microphone.was_event": async (a, c) => { const v = c.env.sensors.loud; c.env.sensors.loud = false; return v; },
+  "random.randint": async a => a[0] + Math.floor(Math.random() * (a[1] - a[0] + 1)),
+  "int": async a => {
+    if (isNum(a[0])) return Math.trunc(numv(a[0]));
+    if (typeof a[0] === "string" && /^\s*[-+]?\d+\s*$/.test(a[0])) return parseInt(a[0], 10);
+    throw new PyErr("ValueError", `invalid syntax for integer with base 10: '${typeof a[0] === "string" ? a[0] : pyStr(a[0])}'`);
+  },
+  "float": async a => {
+    if (isNum(a[0])) return mkF(numv(a[0]));
+    if (typeof a[0] === "string" && /^\s*[-+]?(\d+\.?\d*|\.\d+)\s*$/.test(a[0])) return mkF(parseFloat(a[0]));
+    throw new PyErr("ValueError", `could not convert string to float: '${typeof a[0] === "string" ? a[0] : pyStr(a[0])}'`);
+  },
+  "len": async a => {
+    if (typeof a[0] === "string") return [...a[0]].length;
+    if (a[0] && a[0].range) return a[0].range.length;
+    throw new PyErr("TypeError", `object of type '${pyType(a[0])}' has no len()`);
+  },
+  "type": async a => ({ cls: pyType(a[0]) }),
+  "str": async a => pyStr(a[0]),
+  "range": async a => {
+    if (!a.length || a.length > 3) throw new PyErr("TypeError", "range expected 1 to 3 arguments");
+    for (const x of a) if (typeof x !== "number" || !Number.isInteger(x)) throw new PyErr("TypeError", typeof x === "number" ? "can't convert float to int" : `can't convert ${pyType(x)} to int`);
+    const [s, e, st] = a.length === 1 ? [0, a[0], 1] : [a[0], a[1], a.length > 2 ? a[2] : 1];
+    if (st === 0) throw new PyErr("ValueError", "zero step for range()");
+    const out = [];
+    for (let v = s; st > 0 ? v < e : v > e; v += st) { out.push(v); if (out.length > 10000) break; }
+    return { range: out, args: a };
+  },
+  "input": async (a, c) => c.env.input(a.length ? pyStr(a[0]) : ""),
+  "temperature": async (a, c) => c.env.sensors.temp
+};
+async function ev(n, c) {
+  switch (n.t) {
+    case "num": return n.float ? mkF(n.v) : n.v;
+    case "str": return n.v;
+    case "name":
+      if (n.v === "True") return true;
+      if (n.v === "False") return false;
+      if (n.v === "None") return null;
+      if (n.v in c.vars) return c.vars[n.v];
+      if (BUILTINS[n.v]) return { fn: n.v };
+      throw new PyErr("NameError", `name '${n.v}' isn't defined`);
+    case "attr": {
+      const d = dotted(n);
+      if (d && d.startsWith("Image.")) { if (IMAGES[n.name]) return { img: n.name }; throw new PyErr("AttributeError", `type object 'Image' has no attribute '${n.name}'`); }
+      if (d === "SoundEvent.LOUD") return "LOUD";
+      if (d && BUILTINS[d]) return { fn: d };
+      if (n.obj.t === "str" || (n.obj.t === "name" && n.obj.v in c.vars)) {
+        const obj = await ev(n.obj, c);
+        if (typeof obj === "string" && STR_METHODS[n.name]) return { fn: "str." + n.name };
+        throw new PyErr("AttributeError", `'${pyType(obj)}' object has no attribute '${n.name}'`);
+      }
+      throw new PyErr("AttributeError", `object has no attribute '${n.name}'`);
+    }
+    case "call": {
+      const d = dotted(n.fn);
+      if ((!d || !BUILTINS[d]) && n.fn.t === "attr" && (n.fn.obj.t !== "name" || n.fn.obj.v in c.vars)) {
+        const obj = await ev(n.fn.obj, c);
+        const args = [];
+        for (const a of n.args) args.push(await ev(a, c));
+        if (typeof obj === "string" && STR_METHODS[n.fn.name]) return STR_METHODS[n.fn.name](obj, args);
+        throw new PyErr("AttributeError", `'${pyType(obj)}' object has no attribute '${n.fn.name}'`);
+      }
+      if (!d || !BUILTINS[d]) {
+        if (n.fn.t === "name" && n.fn.v in c.vars) throw new PyErr("TypeError", `'${pyType(c.vars[n.fn.v])}' object isn't callable`);
+        await ev(n.fn, c);
+        throw new PyErr("TypeError", "object isn't callable");
+      }
+      const args = [];
+      for (const a of n.args) args.push(await ev(a, c));
+      return BUILTINS[d](args, c);
+    }
+    case "not": return !truthy(await ev(n.a, c));
+    case "and": { const a = await ev(n.a, c); return truthy(a) ? ev(n.b, c) : a; }
+    case "or": { const a = await ev(n.a, c); return truthy(a) ? a : ev(n.b, c); }
+    case "neg": { const a = await ev(n.a, c); if (!isNum(a)) throw new PyErr("TypeError", `unsupported type for __neg__: '${pyType(a)}'`); return isF(a) ? mkF(-a.f) : -a; }
+    case "bin": {
+      const a = await ev(n.a, c), b = await ev(n.b, c);
+      if (n.op === "+") {
+        if (typeof a === "string" && typeof b === "string") return a + b;
+        if (typeof a === "string") throw new PyErr("TypeError", `can't convert '${pyType(b)}' object to str implicitly`);
+      }
+      if (n.op === "*") {
+        const [s, k] = typeof a === "string" ? [a, b] : typeof b === "string" ? [b, a] : [null, null];
+        if (s !== null) {
+          if (typeof k !== "number") throw new PyErr("TypeError", `can't multiply sequence by non-int of type '${pyType(k)}'`);
+          return k > 0 ? s.repeat(k) : "";
+        }
+      }
+      if (!isNum(a) || !isNum(b)) throw new PyErr("TypeError", `unsupported types for ${DUNDER[n.op]}: '${pyType(a)}', '${pyType(b)}'`);
+      const x = numv(a), y = numv(b), fl = isF(a) || isF(b);
+      if ((n.op === "/" || n.op === "%") && y === 0) throw new PyErr("ZeroDivisionError", "division by zero");
+      if (n.op === "/") return mkF(x / y);
+      const r = n.op === "+" ? x + y : n.op === "-" ? x - y : n.op === "*" ? x * y : ((x % y) + y) % y;
+      return fl ? mkF(r) : r;
+    }
+    case "cmp": {
+      const a = await ev(n.a, c), b = await ev(n.b, c);
+      const eq = isNum(a) && isNum(b) ? numv(a) === numv(b) : a === b || (!!a && !!b && !!a.img && a.img === b.img);
+      if (n.op === "==") return eq;
+      if (n.op === "!=") return !eq;
+      const bothNum = isNum(a) && isNum(b), bothStr = typeof a === "string" && typeof b === "string";
+      if (!bothNum && !bothStr) throw new PyErr("TypeError", `unsupported types for ${DUNDER[n.op]}: '${pyType(a)}', '${pyType(b)}'`);
+      const x = bothNum ? numv(a) : a, y = bothNum ? numv(b) : b;
+      return n.op === "<" ? x < y : n.op === ">" ? x > y : n.op === "<=" ? x <= y : x >= y;
+    }
+  }
+  throw new PyErr("SyntaxError", "invalid syntax");
+}
+// env: board, sensors, speaker, serial(text), input(prompt), mark(n), cond(n, v), pace, loopPace, onLoop, onVars
+async function runProgram(nodes, env, s) {
+  const c = { vars: {}, env, s };
+  const pace = env.pace === undefined ? 250 : env.pace;
+  async function block(list) { for (const n of list) await stmt(n); }
+  async function stmt(n) {
+    env.mark(n.line);
+    try {
+      switch (n.kind) {
+        case "pass": await s.sleep(pace / 3); break;
+        case "while":
+          for (;;) {
+            const v = truthy(await ev(n.cond, c));
+            env.cond(n.line, v);
+            if (!v) { await s.sleep(pace); break; }
+            await s.sleep(env.loopPace === undefined ? pace : env.loopPace);
+            try { await block(n.kids); } catch (e) { if (e === BREAK) break; throw e; }
+            if (env.onLoop) env.onLoop();
+            env.mark(n.line);
+          }
+          break;
+        case "for": {
+          const it = await ev(n.iter, c);
+          const vals = it && it.range ? it.range : typeof it === "string" ? [...it] : null;
+          if (!vals) throw new PyErr("TypeError", `'${pyType(it)}' object isn't iterable`);
+          for (const v of vals) {
+            env.mark(n.line);
+            c.vars[n.name] = v;
+            if (env.onVars) env.onVars(c.vars, n.name);
+            await s.sleep(env.loopPace === undefined ? pace : env.loopPace);
+            try { await block(n.kids); } catch (e) { if (e === BREAK) break; throw e; }
+            if (env.onLoop) env.onLoop();
+          }
+          if (env.onVars) env.onVars(c.vars, null);
+          break;
+        }
+        case "if": {
+          let ran = false;
+          for (const br of n.branches) {
+            env.mark(br.line);
+            const v = truthy(await ev(br.cond, c));
+            env.cond(br.line, v);
+            await s.sleep(pace);
+            if (v) { await block(br.kids); ran = true; break; }
+          }
+          if (!ran && n.elseKids) { env.mark(n.elseLine); await s.sleep(pace); await block(n.elseKids); }
+          break;
+        }
+        case "assign":
+          c.vars[n.name] = await ev(n.value, c);
+          if (env.onVars) env.onVars(c.vars, n.name);
+          await s.sleep(pace);
+          break;
+        case "expr": await ev(n.value, c); await s.sleep(pace / 2); break;
+        case "break": await s.sleep(pace); throw BREAK;
+      }
+    } catch (e) {
+      if (e instanceof PyErr && !e.line) e.line = n.line;
+      throw e;
+    }
+  }
+  await block(nodes);
+}
+function traceback(e, compileTime) {
+  return compileTime
+    ? `  File "main.py", line ${e.line}\n${e.type}: ${e.msg}`
+    : `Traceback (most recent call last):\n  File "main.py", line ${e.line}, in <module>\n${e.type}: ${e.msg}`;
+}
+// compile + run with error reporting into a serial element; returns "ok", "error" or "stopped"
+async function execute(lines, env, s, serialEl, code) {
+  let nodes;
+  try { nodes = compile(lines); } catch (e) {
+    if (!(e instanceof PyErr)) throw e;
+    code.mark(e.line);
+    serialEl.innerHTML += `<span class="err">${esc(traceback(e, true))}</span>\n`;
+    if (env.onError) env.onError(e);
+    return "error";
+  }
+  try { await runProgram(nodes, env, s); code.mark(0); return "ok"; } catch (e) {
+    if (e === CANCEL) return "stopped";
+    if (!(e instanceof PyErr)) throw e;
+    code.mark(e.line);
+    serialEl.innerHTML += `<span class="err">${esc(traceback(e, false))}</span>\n`;
+    if (env.onError) env.onError(e);
+    return "error";
+  }
+}
+function serialWriter(el) {
+  return text => { el.innerHTML += esc(text) + "\n"; el.scrollTop = el.scrollHeight; };
+}
+
+/* =========================================================
+   Shared builders: Parsons puzzles, quizzes, spot the bug
+   ========================================================= */
+function makeParsons(root, PZ, id, fixedLines, orderHint) {
+  const board = makeBoard($("[data-board]", root));
+  const speaker = { play: tone };
+  const R = runner();
+  const bank = $("[data-bank]", root), target = $("[data-target]", root), fb = $("[data-fb]", root);
+  const solved = new Set();
+  let p = 0, inBank = [], inTarget = [];
+  const paintPills = pills($("[data-rounds]", root), PZ.length, k => load(k));
+  function load(k) {
+    R.stop(); p = k; board.clear();
+    inBank = shuffle(PZ[p].sol.concat(Object.keys(PZ[p].traps))); inTarget = [];
+    $("[data-task]", root).innerHTML = PZ[p].task + " Click a line to add it. Click it again to send it back.";
+    feedback(fb); paint();
+    paintPills(p, solved);
+  }
+  function lineBtn(text, onClick) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "pline"; b.textContent = text;
+    b.addEventListener("click", onClick);
+    return b;
+  }
+  function paint(bad = -1) {
+    bank.innerHTML = ""; target.innerHTML = "";
+    if (!inBank.length) bank.innerHTML = '<span class="empty">All lines used</span>';
+    inBank.forEach((t, k) => bank.append(lineBtn(t, () => { inTarget.push(t); inBank.splice(k, 1); paint(); })));
+    (PZ[p].fixed || fixedLines).forEach(t => { const f = document.createElement("div"); f.className = "pline fixed"; f.textContent = t; target.append(f); });
+    inTarget.forEach((t, k) => {
+      const b = lineBtn(t, () => { inBank.push(t); inTarget.splice(k, 1); paint(); });
+      if (k === bad) b.classList.add("wrongline");
+      target.append(b);
+    });
+  }
+  $("[data-reset]", root).addEventListener("click", () => load(p));
+  $("[data-check]", root).addEventListener("click", async () => {
+    const pz = PZ[p], fixedCount = (pz.fixed || fixedLines).length;
+    const trap = inTarget.findIndex(t => pz.traps[t]);
+    if (trap > -1) { paint(trap); feedback(fb, "bad", "<strong>One of these is a trap.</strong> " + pz.traps[inTarget[trap]]); return; }
+    if (inTarget.length < pz.sol.length) { paint(); feedback(fb, "bad", `You have ${inTarget.length} of ${pz.sol.length} lines. Keep going.`); return; }
+    const wrong = inTarget.findIndex((t, k) => t !== pz.sol[k]);
+    if (wrong > -1) { paint(wrong); feedback(fb, "bad", `<strong>Line ${wrong + fixedCount + 1} is out of place.</strong> ${orderHint}`); return; }
+    paint();
+    solved.add(p); paintPills(p, solved);
+    feedback(fb, "ok", "<strong>That runs.</strong> " + (pz.done || "") + (solved.size < PZ.length ? " Try another puzzle." : " All puzzles solved."));
+    if (solved.size === PZ.length) markDone(id);
+    const s = R.start();
+    try {
+      for (const o of pz.out || []) {
+        if (typeof o === "string") await board.scroll(o, s);
+        else if (o.tone) { speaker.play(o.tone, o.ms); await s.sleep(o.ms + 150); }
+        else { board.show(o.img); await s.sleep(o.ms); board.clear(); await s.sleep(300); }
+      }
+    } catch (e) { ignoreCancel(e); }
+  });
+  load(0);
+}
+
+function makeQuiz(root, Q, id) {
+  const host = $("[data-quiz]", root), right = new Set();
+  Q.forEach((q, k) => {
+    const card = document.createElement("div");
+    card.className = "q";
+    card.innerHTML = `<p><strong>${esc(q.ask)}</strong></p>${q.code ? `<pre><code>${hl(q.code)}</code></pre>` : ""}<div class="q-opts"></div><p class="why" aria-live="polite"></p>`;
+    const opts = $(".q-opts", card), why = $(".why", card);
+    q.opts.forEach((o, j) => {
+      const b = document.createElement("button");
+      b.className = "btn"; b.type = "button"; b.textContent = o;
+      b.addEventListener("click", () => {
+        $$(".btn", opts).forEach(x => x.classList.remove("wrong"));
+        if (j === q.a) {
+          b.classList.add("right"); why.textContent = q.why; right.add(k);
+          $$(".btn", opts).forEach(x => (x.disabled = x !== b));
+          if (right.size === Q.length) markDone(id);
+        } else { b.classList.add("wrong"); why.textContent = "Try another one."; }
+      });
+      opts.append(b);
+    });
+    host.append(card);
+  });
+}
+
+function makeBugHunt(root, B, id) {
+  const board = makeBoard($("[data-board]", root));
+  const R = runner();
+  const codeHost = $("[data-code]", root), fb = $("[data-fb]", root);
+  const fixesEl = $("[data-fixes]", root), optsEl = $("[data-opts]", root), bNext = $("[data-next]", root), hint = $("[data-hint]", root);
+  B.forEach(b => { if (typeof b.bug === "string") b.bug = b.lines.indexOf(b.bug) + 1; });
+  const solved = new Set();
+  let r = 0, found = false, code;
+  const paintPills = pills($("[data-rounds]", root), B.length, k => load(k));
+  function paint(lines, pickable) {
+    codeHost.parentElement.parentElement.classList.toggle("pickable", pickable);
+    code = renderCode(codeHost, lines, (li, n) => {
+      if (!pickable || !lines[n - 1].trim()) return;
+      li.tabIndex = 0;
+      li.setAttribute("role", "button");
+      li.setAttribute("aria-label", "Line " + n + ": " + lines[n - 1].trim());
+      li.addEventListener("click", () => pick(n, li));
+      li.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(n, li); } });
+    });
+  }
+  function load(k) {
+    R.stop(); r = k; found = false;
+    const b = B[r];
+    paint(b.lines, true);
+    $("[data-goal]", root).textContent = b.goal;
+    const sym = $("[data-symptom]", root);
+    sym.innerHTML = /Error/.test(b.symptom) ? `<span class="err">${esc(b.symptom)}</span>` : esc(b.symptom);
+    fixesEl.hidden = true; bNext.hidden = true; hint.textContent = "Click the line with the bug";
+    feedback(fb); board.clear();
+    paintPills(r, solved);
+  }
+  function pick(n, li) {
+    if (found) return;
+    const b = B[r];
+    if (n !== b.bug) {
+      $$(".wrongpick", codeHost).forEach(x => x.classList.remove("wrongpick"));
+      li.classList.add("wrongpick");
+      feedback(fb, "bad", `<strong>Line ${n} is fine.</strong> Compare what the program should do with what actually happens, and look again.`);
+      return;
+    }
+    found = true;
+    $$(".wrongpick", codeHost).forEach(x => x.classList.remove("wrongpick"));
+    li.classList.add("rightpick");
+    hint.textContent = "Bug found on line " + n;
+    feedback(fb, "info", `<strong>Yes, line ${n}.</strong> Now choose the fix.`);
+    $("[data-fixtitle]", root).textContent = `Replace line ${n} with:`;
+    optsEl.innerHTML = "";
+    shuffle(b.fixes.map((f, i) => ({ f, i }))).forEach(({ f, i }) => {
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "btn"; btn.textContent = f;
+      btn.addEventListener("click", () => choose(i, btn));
+      optsEl.append(btn);
+    });
+    fixesEl.hidden = false;
+  }
+  async function choose(i, btn) {
+    const b = B[r];
+    if (i !== 0) { btn.classList.add("wrong"); feedback(fb, "bad", "<strong>That wouldn't fix it.</strong> Try another option."); return; }
+    $$(".btn", optsEl).forEach(x => { x.disabled = x !== btn; });
+    btn.classList.add("right");
+    const fixed = b.lines.slice(); fixed[b.bug - 1] = b.fixes[0];
+    paint(fixed, false);
+    code.flash(b.bug);
+    hint.textContent = "Fixed";
+    $("[data-symptom]", root).textContent = "Works as it should now.";
+    feedback(fb, "ok", "<strong>Fixed.</strong> " + esc(b.why));
+    solved.add(r); paintPills(r, solved);
+    bNext.hidden = r === B.length - 1;
+    if (solved.size === B.length) markDone(id);
+    const s = R.start();
+    try {
+      for (const o of b.out || []) {
+        if (typeof o === "string") await board.scroll(o, s);
+        else if (o.tone) { tone(o.tone, o.ms); await s.sleep(o.ms + 150); }
+        else { board.show(o.img); await s.sleep(o.ms); board.clear(); await s.sleep(300); }
+      }
+    } catch (e) { ignoreCancel(e); }
+  }
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+}
+
+
+
+/* =========================================================
+   LOOPS LAB: activity builders
+   ========================================================= */
+const MB_HEAD = ["from microbit import *", ""];
+
+// 1. How many times does it run? Type a number, then watch the loop counter.
+function makeHowMany(root, rounds, id) {
+  const board = makeBoard($("[data-board]", root));
+  const R = runner();
+  const fb = $("[data-fb]", root), serial = $("[data-serial]", root), loopsEl = $("[data-loops]", root);
+  const input = $("input[type=number]", root), bRun = $("[data-run]", root), bNext = $("[data-next]", root);
+  const solved = new Set();
+  let r = 0, code, busy = false;
+  const paint = pills($("[data-rounds]", root), rounds.length, k => load(k));
+  function load(k) {
+    R.stop(); busy = false; r = k;
+    code = renderCode($("[data-code]", root), MB_HEAD.concat(rounds[r].lines));
+    serial.innerHTML = ""; loopsEl.textContent = "0"; board.clear();
+    input.value = ""; input.disabled = false; bRun.disabled = false; bNext.hidden = true;
+    feedback(fb); paint(r, solved);
+  }
+  bRun.addEventListener("click", async () => {
+    if (input.value === "") { feedback(fb, "bad", "Type how many times you think the loop body runs."); input.focus(); return; }
+    R.stop(); busy = true; input.disabled = true; bRun.disabled = true;
+    serial.innerHTML = ""; board.clear(); code.clearConds();
+    let loops = 0;
+    loopsEl.textContent = "0";
+    const s = R.start(), rd = rounds[r];
+    const env = { board, speaker: { play() {} }, sensors: {}, serial: serialWriter(serial), mark: n => code.mark(n), cond: (n, v) => code.cond(n, v),
+      pace: 90, loopPace: 60, onLoop: () => { loops++; loopsEl.textContent = loops; } };
+    feedback(fb, "info", "Running… watch the loop counter.");
+    const res = await execute(MB_HEAD.concat(rd.lines), env, s, serial, code);
+    busy = false;
+    if (res === "stopped") return;
+    const right = +input.value === rd.answer;
+    feedback(fb, right ? "ok" : "bad", (right ? `<strong>Correct, ${rd.answer} time${rd.answer === 1 ? "" : "s"}.</strong> ` : `<strong>It ran ${rd.answer} time${rd.answer === 1 ? "" : "s"}.</strong> You said ${esc(input.value)}. `) + rd.why);
+    solved.add(r); paint(r, solved);
+    bNext.hidden = r === rounds.length - 1;
+    if (solved.size === rounds.length) markDone(id);
+  });
+  input.addEventListener("keydown", e => { if (e.key === "Enter" && !bRun.disabled) bRun.click(); });
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+  tabHooks.push(() => { if (busy) load(r); });
+}
+
+// 2. Track, check, update: click the line for each part of the loop.
+function makeLinePick(root, rounds, id) {
+  const fb = $("[data-fb]", root), qEl = $("[data-q]", root), goalsEl = $("[data-goals]", root), bNext = $("[data-next]", root);
+  const ROLES = [["track", "the tracking variable (set before the loop)"], ["check", "the condition (checked each time round)"], ["update", "the line that updates the variable"]];
+  const solved = new Set();
+  let r = 0, step = 0, code;
+  const paint = pills($("[data-rounds]", root), rounds.length, k => load(k));
+  function load(k) {
+    r = k; step = 0;
+    const rd = rounds[r], lines = MB_HEAD.concat(rd.lines);
+    code = renderCode($("[data-code]", root), lines, (li, n) => {
+      if (!lines[n - 1].trim()) return;
+      li.tabIndex = 0; li.setAttribute("role", "button"); li.setAttribute("aria-label", "Line " + n + ": " + lines[n - 1].trim());
+      li.addEventListener("click", () => pick(n, li));
+      li.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(n, li); } });
+    });
+    $("[data-code]", root).closest(".split").classList.add("pickable");
+    paintAsk(); feedback(fb); bNext.hidden = true; paint(r, solved);
+  }
+  function paintAsk() {
+    goalsEl.innerHTML = ROLES.map(([key, txt], i) => `<li class="${i < step ? "met" : ""}"><strong>${key[0].toUpperCase() + key.slice(1)}</strong>: ${esc(txt)}</li>`).join("");
+    qEl.innerHTML = step < 3 ? `Click the line that is <strong>${ROLES[step][1]}</strong>.` : "All three parts found.";
+  }
+  function pick(n, li) {
+    if (step >= 3) return;
+    const rd = rounds[r], want = rd[ROLES[step][0]] + MB_HEAD.length;
+    if (n !== want) {
+      feedback(fb, "bad", `<strong>Not line ${n}.</strong> ${esc(rd.hints && rd.hints[ROLES[step][0]] || "Look for " + ROLES[step][1] + ".")}`);
+      return;
+    }
+    const tag = document.createElement("span");
+    tag.className = "tag role-" + ROLES[step][0]; tag.textContent = ROLES[step][0];
+    li.append(tag);
+    step++; paintAsk();
+    if (step < 3) feedback(fb, "ok", `<strong>Yes, line ${n}.</strong> Now find the next part.`);
+    else {
+      feedback(fb, "ok", "<strong>All three parts found.</strong> " + rd.why);
+      solved.add(r); paint(r, solved);
+      bNext.hidden = r === rounds.length - 1;
+      if (solved.size === rounds.length) markDone(id);
+    }
+  }
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+}
+
+// 3. Will it ever stop? Decide, then run it with a safety limit.
+function makeStopOrNot(root, rounds, id) {
+  const board = makeBoard($("[data-board]", root));
+  const R = runner();
+  const OPTS = ["It stops", "It runs forever", "It never runs"], CAP = 25;
+  const fb = $("[data-fb]", root), serial = $("[data-serial]", root), loopsEl = $("[data-loops]", root), optsEl = $("[data-opts]", root), bNext = $("[data-next]", root);
+  const solved = new Set();
+  let r = 0, code, busy = false;
+  const paint = pills($("[data-rounds]", root), rounds.length, k => load(k));
+  function load(k) {
+    R.stop(); busy = false; r = k;
+    code = renderCode($("[data-code]", root), MB_HEAD.concat(rounds[r].lines));
+    serial.innerHTML = ""; loopsEl.textContent = "0"; board.clear(); feedback(fb); bNext.hidden = true;
+    optsEl.innerHTML = "";
+    OPTS.forEach((o, i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn"; b.textContent = o;
+      b.addEventListener("click", () => choose(i, b));
+      optsEl.append(b);
+    });
+    paint(r, solved);
+  }
+  async function choose(i, btn) {
+    if (busy) return;
+    busy = true;
+    $$(".btn", optsEl).forEach(b => (b.disabled = true));
+    const rd = rounds[r], s = R.start();
+    let loops = 0, capped = false;
+    serial.innerHTML = ""; code.clearConds();
+    const env = { board, speaker: { play() {} }, sensors: {}, serial: serialWriter(serial), mark: n => code.mark(n), cond: (n, v) => code.cond(n, v), pace: 70, loopPace: 50,
+      onLoop: () => { loops++; loopsEl.textContent = loops; if (loops >= CAP) { capped = true; R.stop(); } } };
+    feedback(fb, "info", "Running…");
+    const res = await execute(MB_HEAD.concat(rd.lines), env, s, serial, code);
+    busy = false;
+    if (res === "stopped" && !capped) return; // left the tab or changed program
+    if (capped) serial.innerHTML += `<span class="err">Still going after ${CAP} times round. The simulator stopped it.</span>\n`;
+    const right = i === rd.a;
+    $$(".btn", optsEl)[rd.a].classList.add("right");
+    if (!right) btn.classList.add("wrong");
+    feedback(fb, right ? "ok" : "bad", (right ? "<strong>Correct.</strong> " : `<strong>${OPTS[rd.a]}.</strong> `) + rd.why);
+    solved.add(r); paint(r, solved);
+    bNext.hidden = r === rounds.length - 1;
+    if (solved.size === rounds.length) markDone(id);
+  }
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+  tabHooks.push(() => { if (busy) load(r); });
+}
+
+// 4. Range explorer: set start, stop and step to hit each target.
+function makeRangeExplorer(root, targets, id) {
+  const startEl = $("[data-start]", root), stopEl = $("[data-stop]", root), stepEl = $("[data-step]", root);
+  const chips = $("[data-chips]", root), codeHost = $("[data-code]", root), goalsEl = $("[data-goals]", root), fb = $("[data-fb]", root);
+  const met = targets.map(() => false);
+  function call(s, e, st) { return st === 1 ? (s === 0 ? `range(${e})` : `range(${s}, ${e})`) : `range(${s}, ${e}, ${st})`; }
+  function update() {
+    const s = parseInt(startEl.value, 10), e = parseInt(stopEl.value, 10), st = parseInt(stepEl.value, 10);
+    if ([s, e, st].some(Number.isNaN)) { chips.innerHTML = '<span class="empty">Type whole numbers in all three boxes.</span>'; return; }
+    renderCode(codeHost, MB_HEAD.concat([`for n in ${call(s, e, st)}:`, "    display.scroll(n)"]));
+    if (st === 0) { chips.innerHTML = '<span class="err-text">ValueError: zero step for range(). The step can\'t be 0.</span>'; return; }
+    const vals = [];
+    for (let v = s; st > 0 ? v < e : v > e; v += st) { vals.push(v); if (vals.length > 40) break; }
+    chips.innerHTML = vals.length ? vals.slice(0, 40).map(v => `<span class="chip">${v}</span>`).join("") + (vals.length > 40 ? '<span class="empty">…</span>' : "") + `<span class="chip-count">${vals.length > 40 ? "40+" : vals.length} number${vals.length === 1 ? "" : "s"}</span>`
+      : '<span class="empty">No numbers at all: the loop body would never run. Check the direction of the step.</span>';
+    const hit = targets.findIndex((t, i) => !met[i] && t.vals.length === vals.length && t.vals.every((v, j) => v === vals[j]));
+    if (hit > -1) {
+      met[hit] = true;
+      feedback(fb, "ok", `<strong>Target hit:</strong> ${esc(targets[hit].label)} with <code>${call(s, e, st)}</code>. ${esc(targets[hit].why)}`);
+      if (met.every(Boolean)) markDone(id);
+    }
+    paintGoals();
+  }
+  function paintGoals() { goalsEl.innerHTML = targets.map((t, i) => `<li class="${met[i] ? "met" : ""}">${esc(t.label)}</li>`).join(""); }
+  [startEl, stopEl, stepEl].forEach(el => el.addEventListener("input", update));
+  update();
+}
+
+// 5. Predict the output of a for loop, then run it.
+function makePredict(root, rounds, id) {
+  const board = makeBoard($("[data-board]", root));
+  const R = runner();
+  const fb = $("[data-fb]", root), serial = $("[data-serial]", root), varsEl = $("[data-vars]", root), optsEl = $("[data-opts]", root), bNext = $("[data-next]", root);
+  const solved = new Set();
+  let r = 0, code, busy = false;
+  const paint = pills($("[data-rounds]", root), rounds.length, k => load(k));
+  function load(k) {
+    R.stop(); busy = false; r = k;
+    const rd = rounds[r];
+    code = renderCode($("[data-code]", root), MB_HEAD.concat(rd.lines));
+    $("[data-q]", root).textContent = rd.q || "What is printed?";
+    serial.innerHTML = ""; renderVars(varsEl, {}); board.clear(); feedback(fb); bNext.hidden = true;
+    optsEl.innerHTML = "";
+    rd.opts.forEach((o, i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn"; b.textContent = o;
+      b.addEventListener("click", () => choose(i, b));
+      optsEl.append(b);
+    });
+    paint(r, solved);
+  }
+  async function choose(i, btn) {
+    if (busy) return;
+    busy = true;
+    $$(".btn", optsEl).forEach(b => (b.disabled = true));
+    const rd = rounds[r], s = R.start();
+    serial.innerHTML = ""; code.clearConds();
+    const env = { board, speaker: { play() {} }, sensors: {}, serial: serialWriter(serial), mark: n => code.mark(n), cond: (n, v) => code.cond(n, v), pace: 160, loopPace: 120,
+      onVars: (vars, changed) => renderVars(varsEl, vars, changed ? [changed] : []) };
+    feedback(fb, "info", "Running…");
+    const res = await execute(MB_HEAD.concat(rd.lines), env, s, serial, code);
+    busy = false;
+    if (res === "stopped") return;
+    const right = i === rd.a;
+    $$(".btn", optsEl)[rd.a].classList.add("right");
+    if (!right) btn.classList.add("wrong");
+    feedback(fb, right ? "ok" : "bad", (right ? "<strong>Correct.</strong> " : `<strong>It was "${esc(rd.opts[rd.a])}".</strong> `) + rd.why);
+    solved.add(r); paint(r, solved);
+    bNext.hidden = r === rounds.length - 1;
+    if (solved.size === rounds.length) markDone(id);
+  }
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+  tabHooks.push(() => { if (busy) load(r); });
+}
+
+// 6. Convert: pick the for loop that does exactly what the while loop does.
+function makeCodeMatch(root, rounds, id) {
+  const optsEl = $("[data-options]", root), fb = $("[data-fb]", root), bNext = $("[data-next]", root);
+  const solved = new Set();
+  let r = 0;
+  const paint = pills($("[data-rounds]", root), rounds.length, k => load(k));
+  function load(k) {
+    r = k;
+    const rd = rounds[r];
+    renderCode($("[data-code]", root), rd.src);
+    optsEl.innerHTML = "";
+    shuffle(rd.options.map((o, i) => ({ o, i }))).forEach(({ o, i }, n) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "code-opt";
+      b.innerHTML = `<span class="code-opt-tag">Option ${"ABC"[n]}</span><pre><code>${hl(o.join("\n"))}</code></pre>`;
+      b.addEventListener("click", () => {
+        if (i === rd.a) {
+          $$(".code-opt", optsEl).forEach(x => (x.disabled = x !== b));
+          b.classList.add("right");
+          feedback(fb, "ok", "<strong>Correct.</strong> " + rd.why);
+          solved.add(r); paint(r, solved);
+          bNext.hidden = r === rounds.length - 1;
+          if (solved.size === rounds.length) markDone(id);
+        } else {
+          b.classList.add("wrong");
+          feedback(fb, "bad", "<strong>Not that one.</strong> " + (rd.hints[i] || "List the numbers each loop goes through and compare them."));
+        }
+      });
+      optsEl.append(b);
+    });
+    feedback(fb); bNext.hidden = true; paint(r, solved);
+  }
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+}
+
+
+/* =========================================================
+   DATA TYPES & STRINGS LAB: activity builders
+   ========================================================= */
+
+// Type casting: pick the expression that meets the goal, then see what it really prints.
+function makeCastPicker(root, rounds, id) {
+  const board = makeBoard($("[data-board]", root));
+  const R = runner();
+  const fb = $("[data-fb]", root), serial = $("[data-serial]", root), varsEl = $("[data-vars]", root), optsEl = $("[data-opts]", root), bNext = $("[data-next]", root);
+  const solved = new Set();
+  let r = 0, code, busy = false;
+  const paint = pills($("[data-rounds]", root), rounds.length, k => load(k));
+  const prog = (rd, expr) => MB_HEAD.concat(rd.setup, [`print(${expr})`]);
+  function load(k) {
+    R.stop(); busy = false; r = k;
+    const rd = rounds[r];
+    code = renderCode($("[data-code]", root), prog(rd, "???"));
+    $("[data-goal]", root).innerHTML = rd.goal;
+    serial.innerHTML = ""; renderVars(varsEl, {}); board.clear(); feedback(fb); bNext.hidden = true;
+    optsEl.innerHTML = "";
+    rd.opts.forEach((o, i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn"; b.textContent = o;
+      b.addEventListener("click", () => choose(i, b));
+      optsEl.append(b);
+    });
+    paint(r, solved);
+  }
+  async function choose(i, btn) {
+    if (busy) return;
+    busy = true;
+    const rd = rounds[r], s = R.start();
+    code = renderCode($("[data-code]", root), prog(rd, rd.opts[i]));
+    serial.innerHTML = "";
+    const env = { board, speaker: { play() {} }, sensors: {}, serial: serialWriter(serial), mark: n => code.mark(n), cond: () => {}, pace: 260,
+      onVars: (vars, changed) => renderVars(varsEl, vars, changed ? [changed] : []) };
+    const res = await execute(prog(rd, rd.opts[i]), env, s, serial, code);
+    busy = false;
+    if (res === "stopped") return;
+    if (i === rd.a) {
+      $$(".btn", optsEl).forEach(b => (b.disabled = b !== btn));
+      btn.classList.add("right");
+      feedback(fb, "ok", "<strong>That meets the goal.</strong> " + rd.why);
+      solved.add(r); paint(r, solved);
+      bNext.hidden = r === rounds.length - 1;
+      if (solved.size === rounds.length) markDone(id);
+    } else {
+      btn.classList.add("wrong");
+      feedback(fb, "bad", "<strong>Not quite.</strong> " + (res === "error" ? "Read the error in the serial pane. " : "Compare what was printed with the goal. ") + (rd.hints && rd.hints[i] ? rd.hints[i] : "Try another option."));
+    }
+  }
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+  tabHooks.push(() => { if (busy) load(r); });
+}
+
+// Input lab: run a program that uses input(), type answers, hit targets. Optional switch edits a line.
+function makeInputLab(root, rounds, id) {
+  const board = makeBoard($("[data-board]", root));
+  const R = runner();
+  const fb = $("[data-fb]", root), goalsEl = $("[data-goals]", root), serial = $("[data-serial]", root), varsEl = $("[data-vars]", root);
+  const ask = $("[data-ask]", root), answer = $("input[type=text]", ask), toggle = $("[data-toggle] input", root), toggleLbl = $("[data-toggle] span", root);
+  const met = rounds.map(rd => rd.targets.map(() => false));
+  const solved = new Set();
+  let r = 0, code, pending = null;
+  const paint = pills($("[data-rounds]", root), rounds.length, k => load(k));
+  const lines = () => MB_HEAD.concat(toggle.checked ? rounds[r].off : rounds[r].lines);
+  const paintGoals = () => { goalsEl.innerHTML = rounds[r].targets.map((t, i) => `<li class="${met[r][i] ? "met" : ""}">${esc(t[0])}</li>`).join(""); };
+  function render() { code = renderCode($("[data-code]", root), lines()); }
+  function load(k) {
+    R.stop(); r = k; pending = null; ask.hidden = true;
+    toggle.checked = false; toggleLbl.innerHTML = rounds[r].toggle;
+    render(); serial.innerHTML = ""; renderVars(varsEl, {}); board.clear(); feedback(fb); paintGoals(); paint(r, solved);
+  }
+  toggle.addEventListener("change", () => { R.stop(); ask.hidden = true; render(); feedback(fb); });
+  ask.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!pending) return;
+    const v = answer.value;
+    serial.innerHTML += esc(v) + "\n";
+    ask.hidden = true;
+    const p = pending; pending = null; p(v);
+  });
+  $("[data-run]", root).addEventListener("click", async () => {
+    R.stop(); render();
+    serial.innerHTML = ""; renderVars(varsEl, {}); board.clear(); feedback(fb);
+    const s = R.start(), o = { shown: null, printed: [], error: null, typed: "", off: toggle.checked };
+    const env = {
+      board, speaker: { play() {} }, sensors: {}, pace: 220,
+      serial: t => { o.printed.push(t); serialWriter(serial)(t); },
+      mark: n => code.mark(n), cond: (n, v) => code.cond(n, v),
+      onVars: (vars, changed) => renderVars(varsEl, vars, changed ? [changed] : []),
+      onScroll: t => { o.shown = t; }, onError: e => { o.error = e.type; },
+      input: prompt => new Promise(res => {
+        serial.innerHTML += esc(prompt);
+        answer.value = ""; ask.hidden = false; answer.focus();
+        pending = v => { o.typed = v; res(v); };
+      })
+    };
+    const res = await execute(lines(), env, s, serial, code);
+    if (res === "stopped") return;
+    o.out = o.printed.length ? o.printed[o.printed.length - 1] : o.shown;
+    const hits = rounds[r].targets.map((t, i) => (!met[r][i] && t[1](o) ? i : -1)).filter(i => i > -1);
+    hits.forEach(i => (met[r][i] = true));
+    paintGoals();
+    const explain = rounds[r].explain ? rounds[r].explain(o) : "";
+    if (hits.length) feedback(fb, "ok", "<strong>Target hit:</strong> " + hits.map(i => esc(rounds[r].targets[i][0])).join(", ") + ". " + explain);
+    else feedback(fb, "info", explain || "That ran, but it didn't hit a new target. Try a different answer.");
+    if (met[r].every(Boolean)) { solved.add(r); paint(r, solved); }
+    if (solved.size === rounds.length) markDone(id);
+  });
+  load(0);
+  tabHooks.push(() => { if (pending) load(r); });
+}
+
+// String explorer: type any text, pick a function, see the result and the Python.
+function makeStringExplorer(root, targets, id) {
+  const textEl = $("[data-text]", root), fnEl = $("[data-fn]", root), oldEl = $("[data-old]", root), newEl = $("[data-new]", root), repl = $("[data-replwrap]", root);
+  const outEl = $("[data-result]", root), fb = $("[data-fb]", root), goalsEl = $("[data-goals]", root);
+  const met = targets.map(() => false);
+  const q = s => '"' + s.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+  function update() {
+    const text = textEl.value, fn = fnEl.value, old = oldEl.value, nw = newEl.value;
+    repl.hidden = fn !== "replace";
+    let call, result;
+    if (fn === "len") { call = "len(text)"; result = String([...text].length); }
+    else if (fn === "upper") { call = "text.upper()"; result = text.toUpperCase(); }
+    else if (fn === "lower") { call = "text.lower()"; result = text.toLowerCase(); }
+    else { call = `text.replace(${q(old)}, ${q(nw)})`; result = old === "" ? nw + [...text].join(nw) + nw : text.split(old).join(nw); }
+    renderCode($("[data-code]", root), MB_HEAD.concat([`text = ${q(text)}`, `print(${call})`]));
+    outEl.textContent = result;
+    const st = { text, fn, old, nw, result };
+    // Credit every target this state meets, so overlapping targets don't hide each other.
+    const hits = targets.map((t, i) => (!met[i] && t[1](st) ? i : -1)).filter(i => i > -1);
+    if (hits.length) {
+      hits.forEach(i => (met[i] = true));
+      feedback(fb, "ok", hits.map(i => `<strong>Target hit:</strong> ${esc(targets[i][0])}. ${esc(targets[i][2])}`).join("<br>"));
+      if (met.every(Boolean)) markDone(id);
+    }
+    goalsEl.innerHTML = targets.map((t, i) => `<li class="${met[i] ? "met" : ""}">${esc(t[0])}</li>`).join("");
+  }
+  [textEl, fnEl, oldEl, newEl].forEach(el => el.addEventListener("input", update));
+  fnEl.addEventListener("change", update);
+  update();
+}
+
+// Count the characters: type the length, then every character is shown in its own box.
+function makeLenCounter(root, items, id) {
+  const fb = $("[data-fb]", root), input = $("input[type=number]", root), boxes = $("[data-boxes]", root), bNext = $("[data-next]", root);
+  const solved = new Set();
+  let r = 0;
+  const paint = pills($("[data-rounds]", root), items.length, k => load(k));
+  function load(k) {
+    r = k;
+    renderCode($("[data-code]", root), [`text = "${items[r].s}"`, "print(len(text))"]);
+    input.value = ""; boxes.innerHTML = '<span class="empty">The characters appear here after you check.</span>';
+    feedback(fb); bNext.hidden = true; paint(r, solved);
+  }
+  $("[data-check]", root).addEventListener("click", () => {
+    if (input.value === "") { feedback(fb, "bad", "Type the number of characters first."); input.focus(); return; }
+    const it = items[r], chars = [...it.s];
+    boxes.innerHTML = chars.length
+      ? chars.map((ch, i) => `<span class="charbox${ch === " " ? " space" : ""}"><b>${ch === " " ? "␣" : esc(ch)}</b><i>${i + 1}</i></span>`).join("")
+      : '<span class="empty">"" is an empty string: no characters at all.</span>';
+    const right = +input.value === chars.length;
+    feedback(fb, right ? "ok" : "bad", (right ? `<strong>Correct: ${chars.length}.</strong> ` : `<strong>It's ${chars.length}.</strong> You said ${esc(input.value)}. `) + it.why);
+    if (right) { solved.add(r); paint(r, solved); if (solved.size === items.length) markDone(id); }
+    bNext.hidden = r === items.length - 1;
+  });
+  input.addEventListener("keydown", e => { if (e.key === "Enter") $("[data-check]", root).click(); });
+  bNext.addEventListener("click", () => load(r + 1));
+  load(0);
+}
+
+
+/* =========================================================
+   DATA TYPES & STRINGS LAB: content
+   ========================================================= */
+
+/* ---------------- DATA TYPES ---------------- */
+const TYPES = ["int", "float", "str"];
+makeQuiz($('[data-act="d1"]'), [
+  ["x = 7", 0, "A whole number with no quotes is an int."],
+  ["x = 3.14", 1, "A number with a decimal point is a float."],
+  ['x = "micro:bit"', 2, "Anything in quotes is a string."],
+  ['x = "10"', 2, "It looks like a number, but the quotes make it text."],
+  ["x = -5", 0, "Negative whole numbers are ints too."],
+  ["x = 0.5", 1, "It has a decimal point, so it's a float."],
+  ["x = '42'", 2, "Single quotes make a string just like double quotes."],
+  ["x = 100.0", 1, "Even with .0 on the end, the decimal point makes it a float."],
+  ['x = "3.14"', 2, "In quotes, so it's text, not a float."],
+  ["x = -0.25", 1, "A negative number with a decimal is a float."],
+  ["x = 0", 0, "Zero is a whole number: an int."],
+  ['x = ""', 2, "Two quotes with nothing between them is an empty string."],
+  ["x = 1000000", 0, "However big it is, a whole number with no quotes is an int."],
+  ["x = \"-7\"", 2, "The minus sign is inside the quotes, so the whole thing is text."],
+  ["x = \"True\"", 2, "In quotes it's just text, even though True is a Python word."]
+].map(([code, a, why]) => ({ code, ask: "What type is x?", opts: TYPES, a, why })), "d1");
+
+makePredict($('[data-act="d2"]'), [
+  { lines: ["a = 5", "b = 10", "result = a + b", "print(result)"], opts: ["15", "510", "An error"], a: 0, why: "Two ints: + adds them." },
+  { lines: ['a = "5"', 'b = "10"', "result = a + b", "print(result)"], opts: ["15", "510", "An error"], a: 1, why: "Two strings: + joins them into \"510\". The quotes make all the difference." },
+  { lines: ["a = 5", 'b = "10"', "result = a + b", "print(result)"], opts: ["15", "510", "An error"], a: 2, why: "Python won't add a number and a string. It stops with a TypeError." },
+  { lines: ["a = 2.5", "b = 2.5", "result = a + b", "print(result)"], opts: ["5", "5.0", "2.52.5"], a: 1, why: "Adding floats gives a float, so it prints 5.0, not 5." },
+  { lines: ['word = "ha"', "result = word * 3", "print(result)"], opts: ["hahaha", "ha3", "An error"], a: 0, why: "A string times a whole number repeats the string." },
+  { lines: ["result = 7 / 2", "print(result)"], opts: ["3", "3.5", "3.0"], a: 1, why: "/ always gives a float, and 7 ÷ 2 is 3.5." },
+  { lines: ['a = "3"', "result = a * 2", "print(result)"], opts: ["6", "33", "An error"], a: 1, why: "\"3\" is a string, so * 2 repeats it: \"33\"." },
+  { lines: ["result = 10 / 2", "print(result)"], opts: ["5", "5.0", "An error"], a: 1, why: "Even when it divides exactly, / gives a float: 5.0." },
+  { lines: ["a = \"Hi\"", "b = \"there\"", "result = a + \" \" + b", "print(result)"], opts: ["Hithere", "Hi there", "An error"], a: 1, why: "Three strings joined: the \" \" in the middle adds the space." },
+  { lines: ["result = 3 * \"ab\"", "print(result)"], opts: ["3ab", "An error", "ababab"], a: 2, why: "A whole number times a string repeats the string, whichever way round." },
+  { lines: ["x = 4", "y = 2.0", "result = x * y", "print(result)"], opts: ["8.0", "8", "An error"], a: 0, why: "An int times a float gives a float, so it prints 8.0." },
+  { lines: ["result = 9 / 3", "print(result)"], opts: ["3", "3.0", "3.3"], a: 1, why: "/ always gives a float, even when it divides exactly." },
+  { lines: ["result = \"5\" + \"5\" + \"5\"", "print(result)"], opts: ["15", "An error", "555"], a: 2, why: "They're all strings, so + joins them." },
+  { lines: ["result = \"Score: \" + \"7\"", "print(result)"], opts: ["Score: 7", "Score: + 7", "An error"], a: 0, why: "\"7\" is already a string, so it can be joined straight on." },
+  { lines: ["a = 10", "b = \"2\"", "result = a * b", "print(result)"], opts: ["20", "2222222222", "An error"], a: 1, why: "A number times a string repeats the string: 10 copies of \"2\"." }
+], "d2");
+
+makeQuiz($('[data-act="d8"]'), [
+  { code: "x = 7 / 7", ask: "What type is x?", opts: TYPES, a: 1, why: "/ always gives a float, even when the answer is a whole number." },
+  { code: "x = 3 * 4", ask: "What type is x?", opts: TYPES, a: 0, why: "An int times an int is an int." },
+  { code: "x = \"3\" * 4", ask: "What type is x?", opts: TYPES, a: 2, why: "A string times a number repeats it: \"3333\" is still a string." },
+  { code: "x = 2 + 0.5", ask: "What type is x?", opts: TYPES, a: 1, why: "Mixing an int and a float gives a float." },
+  { code: "x = int(\"8\")", ask: "What type is x?", opts: TYPES, a: 0, why: "int() always gives an int." },
+  { code: "x = str(8)", ask: "What type is x?", opts: TYPES, a: 2, why: "str() always gives a string." },
+  { code: "x = float(8)", ask: "What type is x?", opts: TYPES, a: 1, why: "float() always gives a float: 8.0." },
+  { code: "x = 10 - 2.0", ask: "What type is x?", opts: TYPES, a: 1, why: "One float in the sum makes the answer a float." },
+  { code: "x = \"ab\" + \"cd\"", ask: "What type is x?", opts: TYPES, a: 2, why: "Joining two strings gives a string." },
+  { code: "x = len(\"hello\")", ask: "What type is x?", opts: TYPES, a: 0, why: "len() counts, so it gives a whole number." },
+  { code: "x = int(4.9)", ask: "What type is x?", opts: TYPES, a: 0, why: "int() cuts off the decimal and gives an int." },
+  { code: "x = 5 * 1.0", ask: "What type is x?", opts: TYPES, a: 1, why: "Multiplying by a float gives a float: 5.0." },
+  { code: "x = input(\"Age: \")", ask: "What type is x?", opts: TYPES, a: 2, why: "input() always gives a string, even if you type a number." },
+  { code: "x = \"4\" + \"2\"", ask: "What type is x?", opts: TYPES, a: 2, why: "Two strings joined: \"42\" is text." },
+  { code: "x = int(\"4\") + int(\"2\")", ask: "What type is x?", opts: TYPES, a: 0, why: "Both are converted to ints first, so the total is an int." }
+], "d8");
+
+makeCastPicker($('[data-act="d3"]'), [
+  { setup: ['age_str = "12"'], goal: "Print <strong>13</strong>: next year's age.", opts: ["int(age_str) + 1", "age_str + 1", 'age_str + "1"'], a: 0,
+    hints: [null, "age_str is text, and you can't add the number 1 to text.", "That joins two pieces of text: \"121\"."], why: "int() turns the text \"12\" into the number 12, so you can do maths with it." },
+  { setup: ["score = 10"], goal: "Print <strong>Your score is 10</strong>.", opts: ['"Your score is " + score', '"Your score is " + str(score)', '"Your score is " + int(score)'], a: 1,
+    hints: ["score is a number, so it can't be joined to text.", null, "score is already an int. You need it as text."], why: "str() turns the number into text so it can be joined to the message." },
+  { setup: ['price = "2.50"'], goal: "Print <strong>5.0</strong>: double the price.", opts: ["price * 2", "float(price) * 2", "int(price) * 2"], a: 1,
+    hints: ["price is text, so * 2 repeats it.", null, "int() can't convert text with a decimal point. It's a ValueError."], why: "float() converts text with a decimal point into a float." },
+  { setup: ['a = "4"', 'b = "6"'], goal: "Print <strong>10</strong>.", opts: ["a + b", "int(a) + int(b)", "int(a + b)"], a: 1,
+    hints: ["Two strings join: \"46\".", null, "a + b joins first to make \"46\", then int() turns that into 46."], why: "Convert each one to a number first, then add." },
+  { setup: ["temp = 21.7"], goal: "Print <strong>21</strong>: the whole number part.", opts: ["int(temp)", "str(temp)", "float(temp)"], a: 0,
+    hints: [null, "str() keeps the decimal: \"21.7\".", "It's already a float, so nothing changes."], why: "int() on a float cuts off everything after the decimal point. It doesn't round." },
+  { setup: ["lives = 3"], goal: "Print <strong>3 lives left</strong>.", opts: ['str(lives) + " lives left"', 'lives + " lives left"', '"lives" + " lives left"'], a: 0,
+    hints: [null, "lives is a number: you can't add text to it.", "\"lives\" in quotes is the word lives, not the variable."], why: "str(lives) gives \"3\", which can be joined to the rest of the message." },
+  { setup: ["n = \"7\""], goal: "Print <strong>14</strong>.", opts: ["n * 2", "int(n) * 2", "n + n"], a: 1, hints: ["n is text, so * 2 repeats it: \"77\".", null, "Joining two strings gives \"77\" as well."], why: "int() turns \"7\" into the number 7, so * 2 doubles it." },
+  { setup: ["total = 45"], goal: "Print <strong>Total: 45</strong>.", opts: ["\"Total: \" + total", "\"Total: \" + str(total)", "\"Total: \" + \"total\""], a: 1, hints: ["total is a number, so it can't be joined to text.", null, "\"total\" in quotes is the word total, not the variable."], why: "str() turns the number into text so it can be joined." },
+  { setup: ["h = \"1.5\""], goal: "Print <strong>3.0</strong>.", opts: ["float(h) * 2", "h * 2", "int(h) * 2"], a: 0, hints: [null, "h is text, so * 2 repeats it: \"1.51.5\".", "int() can't convert text with a decimal point."], why: "float() converts \"1.5\" into the number 1.5." },
+  { setup: ["text = \"100\""], goal: "Print <strong>101</strong>.", opts: ["text + \"1\"", "int(text) + 1", "float(text) + 1"], a: 1, hints: ["That joins the text: \"1001\".", null, "float() gives 101.0, with a decimal point."], why: "int() gives a whole number, so the answer has no .0." },
+  { setup: ["count = 5"], goal: "Print <strong>5.0</strong>.", opts: ["float(count)", "str(count)", "int(count)"], a: 0, hints: [null, "str() gives the text \"5\".", "count is already an int."], why: "float() turns a whole number into a float, so it gains .0." },
+  { setup: ["a = \"3\"", "b = \"2\""], goal: "Print <strong>32</strong>.", opts: ["a + b", "int(a) + int(b)", "a * b"], a: 0, hints: [null, "That adds the numbers: 5.", "You can't multiply two strings together."], why: "Two strings joined give \"32\". Sometimes joining is exactly what you want." },
+  { setup: ["mark = 8.0"], goal: "Print <strong>8</strong>.", opts: ["int(mark)", "str(mark)", "mark"], a: 0, hints: [null, "str() keeps the decimal: \"8.0\".", "mark is a float, so it prints 8.0."], why: "int() drops the .0." },
+  { setup: ["age = 15"], goal: "Print <strong>I am 15</strong>.", opts: ["\"I am \" + str(age)", "\"I am\" + str(age)", "\"I am \" + age"], a: 0, hints: [null, "There's no space after am: \"I am15\".", "age is a number: convert it with str() first."], why: "str() converts the number, and the space is inside \"I am \"." },
+  { setup: ["cm = \"180\""], goal: "Print <strong>1.8</strong>: the height in metres.", opts: ["float(cm) / 100", "cm / 100", "int(cm) / 1000"], a: 0, hints: [null, "cm is text, so you can't divide it.", "Divide by 100, not 1000: that gives 0.18."], why: "Convert the text to a number first, then divide by 100." }
+], "d3");
+
+makeInputLab($('[data-act="d4"]'), [
+  { toggle: "Remove <code>int()</code>",
+    lines: ['age_str = input("Enter your age: ")', "age = int(age_str)", "print(age + 1)"],
+    off: ['age_str = input("Enter your age: ")', "age = age_str", "print(age + 1)"],
+    targets: [["Type 12 and get 13", o => !o.off && o.typed.trim() === "12" && o.out === "13"],
+      ["Type a decimal, like 12.5", o => !o.off && o.error === "ValueError" && /^\s*-?\d+\.\d+\s*$/.test(o.typed)],
+      ["Type a word instead of a number", o => o.error === "ValueError" && /[a-z]/i.test(o.typed)],
+      ["Remove int() and see what goes wrong", o => o.off && o.error === "TypeError"]],
+    explain: o => o.error === "TypeError" ? "input() always gives back text. Without int(), Python is asked to add the number 1 to text, which is a TypeError."
+      : o.error === "ValueError" ? "int() can only convert text that looks like a whole number. Decimals and words can't be converted."
+      : o.out ? `int() turned the text "${esc(o.typed)}" into a number, so + 1 worked.` : "" },
+  { toggle: "Remove <code>float()</code>",
+    lines: ['number = float(input("Number: "))', "print(number * 2)"],
+    off: ['number = input("Number: ")', "print(number * 2)"],
+    targets: [["Double 2.5", o => !o.off && o.out === "5.0"],
+      ["Double a whole number like 4. Why the .0?", o => !o.off && /^\s*-?\d+\s*$/.test(o.typed) && /^-?\d+\.0$/.test(o.out || "")],
+      ["Type a word", o => !o.off && o.error === "ValueError"],
+      ["Remove float() and type 4", o => o.off && o.out === "44"]],
+    explain: o => o.off && o.out ? `Without float(), number is the text "${esc(o.typed)}", and text * 2 repeats it: "${esc(o.out)}".`
+      : o.error === "ValueError" ? "float() converts whole numbers and decimals, but not words."
+      : o.out ? `float() always gives a decimal number, so the answer is ${esc(o.out)}.` : "" },
+  { toggle: "Remove <code>int()</code>", lines: ["num = int(input(\"Number: \"))", "print(num * 10)"], off: ["num = input(\"Number: \")", "print(num * 10)"], targets: [["Type 3 and get 30", o => !o.off && o.typed.trim() === "3" && o.out === "30"], ["Type a negative number", o => !o.off && /^\s*-\d+\s*$/.test(o.typed) && !o.error], ["Type 0", o => !o.off && o.typed.trim() === "0" && o.out === "0"], ["Remove int() and type 3", o => o.off && o.typed.trim() === "3" && o.out === "3333333333"]], explain: o => o.off && o.out ? `Without int(), num is the text "${esc(o.typed)}", and text * 10 repeats it ten times.` : o.error === "ValueError" ? "int() can only convert whole numbers." : o.out ? `int() turned "${esc(o.typed)}" into a number, so * 10 multiplied it.` : "" },
+  { toggle: "Remove <code>str()</code>", lines: ["price = float(input(\"Price: \"))", "print(\"Total: \" + str(price * 2))"], off: ["price = float(input(\"Price: \"))", "print(\"Total: \" + price * 2)"], targets: [["Type 1.5 and get Total: 3.0", o => !o.off && o.out === "Total: 3.0"], ["Type a whole number, like 4. Why the .0?", o => !o.off && /^\s*\d+\s*$/.test(o.typed) && /^Total: \d+\.0$/.test(o.out || "")], ["Remove str() and see the error", o => o.off && o.error === "TypeError"]], explain: o => o.error === "TypeError" ? "price * 2 is a number. Joining it to text needs str() first." : o.error === "ValueError" ? "float() converts numbers, not words." : o.out ? `float() makes a decimal number, and str() turns the answer back into text: ${esc(o.out)}.` : "" }
+], "d4");
+
+makeParsons($('[data-act="d5"]'), [
+  { task: "Ask for the user's age and print how old they'll be next year.",
+    sol: ['age_str = input("Enter your age: ")', "age = int(age_str)", "print(age + 1)"],
+    traps: { "print(age_str + 1)": "age_str is still text. Adding 1 to text is a TypeError.", "age = str(age_str)": "str() keeps it as text. You need int() to do maths." } },
+  { task: "Scroll the message \"Your score is 10\".",
+    sol: ["score = 10", 'message = "Your score is " + str(score)', "display.scroll(message)"],
+    traps: { 'message = "Your score is " + score': "score is a number. Joining it to text without str() is a TypeError.", 'display.scroll("message")': "The quotes make it the word message, not the variable." },
+    out: ["Your score is 10"] },
+  { task: "Full name: ask for a first and last name and print them with a space between.",
+    sol: ['first = input("First name: ")', 'last = input("Last name: ")', 'full = first + " " + last', "print(full)"],
+    traps: { "full = first + last": "Without the \" \" in the middle, you'd get SamLee.", "full = int(first) + int(last)": "Names aren't numbers. int() would give a ValueError." } },
+  { task: "Ask for a number and print double it.", sol: ["n = int(input(\"Number: \"))", "print(n * 2)"], traps: { "n = input(\"Number: \")": "Without int(), n * 2 would repeat the text.", "print(\"n\" * 2)": "\"n\" in quotes is the letter n, not the variable." } },
+  { task: "Scroll the temperature with a label: Temp: 21.", sol: ["temp = 21", "label = \"Temp: \" + str(temp)", "display.scroll(label)"], traps: { "label = \"Temp: \" + temp": "temp is a number. Join it with str().", "display.scroll(\"label\")": "The quotes make it the word label, not the variable." }, out: ["Temp: 21"] },
+  { task: "Ask for two whole numbers and print their total.", sol: ["a = int(input(\"First: \"))", "b = int(input(\"Second: \"))", "print(a + b)"], traps: { "a = input(\"First: \")": "Without int(), a + b would join the text.", "print(a + \" + \" + b)": "a and b are numbers, so they can't be joined to text." } },
+  { task: "Turn the text \"3.5\" into a number and double it (7.0).", sol: ["text = \"3.5\"", "number = float(text)", "print(number * 2)"], traps: { "number = int(text)": "int() can't convert text with a decimal point.", "print(text * 2)": "text is still a string, so * 2 repeats it." } },
+  { task: "Print the type of 7.5.", sol: ["x = 7.5", "print(type(x))"], traps: { "print(type(\"x\"))": "\"x\" in quotes is a string, so you'd get <class 'str'>.", "print(x.type())": "type() is a function: the value goes inside the brackets." } },
+  { task: "Store 10 as text, convert it to a number and add 5 (15).", sol: ["text = \"10\"", "number = int(text)", "print(number + 5)"], traps: { "print(text + 5)": "text is still a string, so + 5 is a TypeError.", "number = str(text)": "str() keeps it as text." } },
+  { task: "Scroll how many lives are left: Lives: 3.", sol: ["lives = 3", "display.scroll(\"Lives: \" + str(lives))"], traps: { "display.scroll(\"Lives: \" + lives)": "lives is a number. Convert it with str() before joining.", "display.scroll(\"Lives: \" + \"lives\")": "\"lives\" in quotes is the word, not the number." }, out: ["Lives: 3"] },
+  { task: "Ask for a whole number of minutes and print it in seconds.", sol: ["minutes = int(input(\"Minutes: \"))", "seconds = minutes * 60", "print(seconds)"], traps: { "seconds = minutes + 60": "To change minutes into seconds, multiply by 60.", "minutes = input(\"Minutes: \")": "Without int(), minutes * 60 would repeat the text 60 times." } },
+  { task: "Cut the decimal off 9.7 and print 9.", sol: ["value = 9.7", "whole = int(value)", "print(whole)"], traps: { "whole = float(value)": "float() keeps the decimal.", "whole = round(value)": "round() would give 10. int() cuts the decimal off." } },
+  { task: "Print the average of 7 and 8 (7.5).", sol: ["total = 7 + 8", "average = total / 2", "print(average)"], traps: { "average = 7 + 8 / 2": "Without brackets, 8 / 2 happens first: 11.0.", "average = str(total) / 2": "You can't divide text." } },
+  { task: "Draw a line of 10 dashes.", sol: ["line = \"-\" * 10", "print(line)"], traps: { "line = \"-\" + 10": "You can't add a number to text. * repeats it.", "line = \"-10\"": "That's just the text -10." } },
+  { task: "Ask for a height in centimetres (it may have a decimal) and print it in metres.", sol: ["cm = float(input(\"Height in cm: \"))", "metres = cm / 100", "print(metres)"], traps: { "cm = int(input(\"Height in cm: \"))": "int() can't convert a decimal like 172.5.", "metres = cm * 100": "Divide by 100 to get metres." } }
+], "d5", ["from microbit import *"], "Check the order: you have to get a value (input or =) before you can use it.");
+
+makeQuiz($('[data-act="d6"]'), [
+  { code: 'num3 = "5"\nnum4 = "10"\nprint(num3 + num4)', ask: "What does this print?", opts: ["15", "510", "An error"], a: 1, why: "They're strings, so + joins them into \"510\"." },
+  { code: "", ask: "Which of these is a float?", opts: ["3", '"3.14"', "3.14"], a: 2, why: "3.14 is a number with a decimal. \"3.14\" in quotes is a string." },
+  { code: 'print(5 + "10")', ask: "What happens?", opts: ["15", '"510"', "An error: you can't add a number and a string"], a: 2, why: "Python won't add different types together." },
+  { code: "", ask: 'Which function turns the string "12" into the number 12?', opts: ["int()", "str()", "len()"], a: 0, why: "int() converts a string to an integer." },
+  { code: 'print(len("Hello, World!"))', ask: "What does this print?", opts: ["12", "13", "11"], a: 1, why: "Count every character, including the comma, space and exclamation mark: 13." },
+  { code: "print(7 / 2)", ask: "What does this print?", opts: ["3", "3.5", "3.0"], a: 1, why: "/ gives a float, and 7 ÷ 2 is 3.5." },
+  { code: 'x = "42"', ask: "What type is x?", opts: ["int", "str", "float"], a: 1, why: "The quotes make it a string, even though it looks like a number." },
+  { code: "print(int(9.9))", ask: "What does this print?", opts: ["10", "9", "9.9"], a: 1, why: "int() cuts off the decimal part. It doesn't round." },
+  { code: "print(int(\"7\") + 3)", ask: "What does this print?", opts: ["73", "10", "An error"], a: 1, why: "int(\"7\") is the number 7, so + 3 adds." },
+  { code: "", ask: "Which of these is a string?", opts: ["42", "4.2", "\"42\""], a: 2, why: "Quotes make it a string." },
+  { code: "print(type(3.0))", ask: "What does this print?", opts: ["<class 'int'>", "<class 'float'>", "<class 'str'>"], a: 1, why: "3.0 has a decimal point, so it's a float." },
+  { code: "print(float(\"4\"))", ask: "What does this print?", opts: ["4", "4.0", "An error"], a: 1, why: "float() always gives a decimal number." },
+  { code: "", ask: "What does str(25) give?", opts: ["The text \"25\"", "The number 25", "25.0"], a: 0, why: "str() turns a value into text." },
+  { code: "print(int(\"3.7\"))", ask: "What happens?", opts: ["It prints 3", "It prints 4", "An error"], a: 2, why: "int() can't convert text with a decimal point. Use float() first." },
+  { code: "x = 5\nx = str(x)\nprint(x + \"5\")", ask: "What does this print?", opts: ["10", "55", "An error"], a: 1, why: "After str(), x is the text \"5\", so + joins." }
+], "d6");
+
+makeBugHunt($('[data-act="d7"]'), [
+  { goal: "Add 5 and 10 and print 15.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 5, in <module>\nTypeError: unsupported types for __add__: 'int', 'str'",
+    lines: ["from microbit import *", "", "num1 = 5", 'num2 = "10"', "result = num1 + num2", "print(result)"],
+    bug: 'num2 = "10"', fixes: ["num2 = 10", 'num2 = "ten"', "num2 = str(10)"], why: "The quotes made num2 a string. Without them it's the number 10.", out: [] },
+  { goal: "Ask for an age and print next year's age.", symptom: "Enter your age: 12\nTraceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: can't convert 'int' object to str implicitly",
+    lines: ["from microbit import *", "", 'age = input("Enter your age: ")', "print(age + 1)"],
+    bug: 'age = input("Enter your age: ")', fixes: ['age = int(input("Enter your age: "))', 'age = str(input("Enter your age: "))', 'age = input(int("Enter your age: "))'],
+    why: "input() gives back text. int() converts it so you can add 1. The error shows on line 4, but the cause is line 3.", out: [] },
+  { goal: 'Scroll "Score: 10".', symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: can't convert 'int' object to str implicitly",
+    lines: ["from microbit import *", "", "score = 10", 'display.scroll("Score: " + score)'],
+    bug: 'display.scroll("Score: " + score)', fixes: ['display.scroll("Score: " + str(score))', 'display.scroll("Score: " + int(score))', 'display.scroll("Score: " - score)'], why: "Convert the number to text with str() before joining.", out: ["Score: 10"] },
+  { goal: "Add the numbers in a and b and print 10.", symptom: "Prints 46",
+    lines: ["from microbit import *", "", 'a = "4"', 'b = "6"', "print(a + b)"],
+    bug: "print(a + b)", fixes: ["print(int(a) + int(b))", "print(int(a + b))", "print(str(a) + str(b))"], why: "Convert each string to a number first. int(a + b) joins first, then converts \"46\".", out: [] },
+  { goal: "Double the price \"2.50\" and print 5.0.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nValueError: invalid syntax for integer with base 10: '2.50'",
+    lines: ["from microbit import *", "", 'price = "2.50"', "total = int(price) * 2", "print(total)"],
+    bug: "total = int(price) * 2", fixes: ["total = float(price) * 2", "total = price * 2", "total = str(price) * 2"], why: "int() only works on whole numbers. float() handles the decimal point.", out: [] },
+  { goal: "Start with 3 lives and take one away.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: unsupported types for __sub__: 'str', 'int'",
+    lines: ["from microbit import *", "", 'lives = "3"', "lives = lives - 1", "display.scroll(lives)"],
+    bug: 'lives = "3"', fixes: ["lives = 3", 'lives = "three"', "lives = str(3)"], why: "lives needs to be a number to do maths with it, so no quotes.", out: ["2"] },
+  { goal: 'Scroll "Temp: 21.7".', symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: can't convert 'float' object to str implicitly",
+    lines: ["from microbit import *", "", "temp = 21.7", 'display.scroll("Temp: " + temp)'],
+    bug: 'display.scroll("Temp: " + temp)', fixes: ['display.scroll("Temp: " + str(temp))', 'display.scroll("Temp: " + int(temp))', 'display.scroll("Temp: " + "temp")'], why: "A float has to be turned into text too.", out: ["Temp: 21.7"] },
+  { goal: "Scroll how many whole times 2 goes into 9 (4).", symptom: "Scrolls 4.5",
+    lines: ["from microbit import *", "", "half = 9 / 2", "display.scroll(half)"],
+    bug: "display.scroll(half)", fixes: ["display.scroll(int(half))", "display.scroll(str(half))", "display.scroll(float(half))"], why: "/ gives a float (4.5). int() cuts off the .5.", out: ["4"] },
+  { goal: "Add the two prices and print 3.5.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 5, in <module>\nTypeError: unsupported types for __add__: 'float', 'str'", lines: ["from microbit import *", "", "a = \"1.5\"", "b = \"2\"", "print(float(a) + b)"], bug: "print(float(a) + b)", fixes: ["print(float(a) + float(b))", "print(a + b)", "print(float(a + b))"], why: "Both prices need converting. float(a + b) joins them first: 1.52.", out: [] },
+  { goal: "Ask for a number and print it times 3.", symptom: "Number: 4\nPrints 444", lines: ["from microbit import *", "", "n = input(\"Number: \")", "print(n * 3)"], bug: "n = input(\"Number: \")", fixes: ["n = int(input(\"Number: \"))", "n = str(input(\"Number: \"))", "n = input(int(\"Number: \"))"], why: "input() gives text, and text * 3 repeats it. int() makes it a number.", out: [] },
+  { goal: "Double 2.5 and print 5.0.", symptom: "Prints 2.52.5", lines: ["from microbit import *", "", "x = \"2.5\"", "print(x * 2)"], bug: "x = \"2.5\"", fixes: ["x = 2.5", "x = '2.5'", "x = int(2.5)"], why: "The quotes make x text. Without them it's the float 2.5.", out: [] },
+  { goal: "Convert the text \"12\" and add 8 (20).", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: can't convert 'int' object to str implicitly", lines: ["from microbit import *", "", "text = \"12\"", "total = text + 8", "print(total)"], bug: "total = text + 8", fixes: ["total = int(text) + 8", "total = text + \"8\"", "total = str(text) + 8"], why: "Convert the text to a number before adding.", out: [] },
+  { goal: "Print 7.0 as a whole number (7).", symptom: "Prints 7.0", lines: ["from microbit import *", "", "value = 7.0", "print(float(value))"], bug: "print(float(value))", fixes: ["print(int(value))", "print(str(value))", "print(value * 1)"], why: "int() drops the .0. float() and str() both keep it.", out: [] },
+  { goal: "Add the two scores and print 15.", symptom: "Prints 105", lines: ["from microbit import *", "", "first = 10", "second = \"5\"", "total = str(first) + second", "print(total)"], bug: "total = str(first) + second", fixes: ["total = first + int(second)", "total = first + second", "total = int(str(first) + second)"], why: "Turning first into text joins them. Turn second into a number instead.", out: [] },
+  { goal: "Ask for a height that may have a decimal, and print it.", symptom: "Height: 1.75\nTraceback (most recent call last):\n  File \"main.py\", line 3, in <module>\nValueError: invalid syntax for integer with base 10: '1.75'", lines: ["from microbit import *", "", "h = int(input(\"Height: \"))", "print(h)"], bug: "h = int(input(\"Height: \"))", fixes: ["h = float(input(\"Height: \"))", "h = int(float(\"Height: \"))", "h = str(int(input(\"Height: \")))"], why: "int() can't convert 1.75. float() can.", out: [] }
+], "d7");
+
+/* ---------------- STRINGS ---------------- */
+makeStringExplorer($('[data-act="s1"]'), [
+  ["Find the length of Hello, World!", st => st.fn === "len" && st.text === "Hello, World!", "13: the comma, the space and the ! all count."],
+  ["Make some text ALL CAPITALS", st => st.fn === "upper" && /[a-z]/.test(st.text), "upper() changes every lowercase letter. Numbers and symbols stay the same."],
+  ["Lowercase some text that has capitals", st => st.fn === "lower" && /[A-Z]/.test(st.text), "lower() is handy for comparing: \"YES\".lower() is \"yes\"."],
+  ["Turn Hello, World! into Hello, micro:bit!", st => st.fn === "replace" && st.result === "Hello, micro:bit!" && st.text === "Hello, World!", "Old first, then new: replace(\"World\", \"micro:bit\")."],
+  ["Replace a word that isn't in the text", st => st.fn === "replace" && st.old !== "" && !st.text.includes(st.old), "Nothing changes and there's no error. replace() just finds nothing to swap."],
+  ["Replace a letter that appears more than once", st => st.fn === "replace" && st.old.length === 1 && st.text.split(st.old).length > 2, "replace() swaps every match, not just the first one."],
+  ["Find the length of an empty string", st => st.fn === "len" && st.text === "", "An empty string has 0 characters."],
+  ["Find the length of micro:bit", st => st.fn === "len" && st.text === "micro:bit", "9: the colon counts."],
+  ["Make Hello, World! all lowercase", st => st.fn === "lower" && st.text === "Hello, World!", "hello, world!: the comma and ! don't change."],
+  ["Uppercase some text that has a digit in it", st => st.fn === "upper" && /\d/.test(st.text) && /[a-z]/.test(st.text), "Digits have no capitals, so they stay the same."],
+  ["Replace a word with nothing (leave new empty)", st => st.fn === "replace" && st.old !== "" && st.nw === "" && st.text.includes(st.old), "Replacing with \"\" deletes every match."],
+  ["Replace every space with a dash", st => st.fn === "replace" && st.old === " " && st.nw === "-" && st.text.includes(" "), "Spaces are characters too, so replace() can swap them."],
+  ["Find some text with exactly 5 characters", st => st.fn === "len" && st.result === "5", "Any 5 characters will do: letters, digits, spaces or symbols."],
+  ["Use upper() on text that's already in capitals", st => st.fn === "upper" && /[A-Z]/.test(st.text) && st.text === st.text.toUpperCase(), "Nothing changes, and there's no error."],
+  ["Swap cat for CAT in some text", st => st.fn === "replace" && st.old === "cat" && st.nw === "CAT" && st.text.includes("cat"), "replace() matches capitals exactly: \"Cat\" wouldn't be swapped."]
+], "s1");
+
+makeLenCounter($('[data-act="s2"]'), [
+  { s: "micro:bit", why: "m-i-c-r-o-:-b-i-t: the colon counts." },
+  { s: "Hello, World!", why: "The comma, the space and the ! are all characters." },
+  { s: "  hi  ", why: "Spaces count, even at the start and end." },
+  { s: "ICT 302", why: "The space in the middle counts, and so does each digit." },
+  { s: "can't", why: "The apostrophe is a character too." },
+  { s: "A", why: "One character." },
+  { s: "", why: "Nothing between the quotes: an empty string." },
+  { s: "123", why: "These are characters in a string, not the number 123." },
+  { s: "Python", why: "6 letters." },
+  { s: "hi there", why: "8: the space in the middle counts." },
+  { s: "3.14", why: "4: the decimal point is a character." },
+  { s: "!!!", why: "3: punctuation counts." },
+  { s: "A B C", why: "5: three letters and two spaces." },
+  { s: "2026", why: "4: a year in quotes is just four characters." },
+  { s: "x = 5", why: "5: x, a space, =, a space and 5." }
+], "s2");
+
+makePredict($('[data-act="s3"]'), [
+  { lines: ['text = "Hello, World!"', "print(text.upper())"], opts: ["HELLO, WORLD!", "hello, world!", "Hello, World!"], a: 0, why: "upper() converts every letter to uppercase." },
+  { lines: ['text = "Hello, World!"', "print(text.lower())"], opts: ["HELLO, WORLD!", "hello, world!", "Hello, world!"], a: 1, why: "lower() converts every letter to lowercase." },
+  { lines: ['text = "I like cats"', 'print(text.replace("cats", "dogs"))'], opts: ["I like cats", "dogs", "I like dogs"], a: 2, why: "replace swaps \"cats\" for \"dogs\"." },
+  { lines: ['word = "banana"', 'print(word.replace("a", "o"))'], opts: ["bonana", "bonono", "banana"], a: 1, why: "replace() swaps every match, so all three a's become o's." },
+  { lines: ['name = "sam"', 'print(name.upper() + "!")'], opts: ["sam!", "SAM!", "Sam!"], a: 1, why: "upper() runs first, then + joins the !" },
+  { lines: ['text = "Hello"', "text.upper()", "print(text)"], opts: ["HELLO", "Hello", "hello"], a: 1, why: "upper() gives back a new string but doesn't change text. You'd need text = text.upper()." },
+  { lines: ['msg = "Hi"', "print(len(msg * 3))"], opts: ["2", "3", "6"], a: 2, why: "msg * 3 is \"HiHiHi\", which has 6 characters." },
+  { lines: ['answer = "YES"', 'print(answer.lower() == "yes")'], opts: ["True", "False", "yes"], a: 0, why: "\"YES\".lower() is \"yes\", so the comparison is True." },
+  { lines: ["text = \"Good Morning\"", "print(text.lower())"], opts: ["GOOD MORNING", "Good morning", "good morning"], a: 2, why: "lower() changes every capital to a small letter." },
+  { lines: ["word = \"hello\"", "print(word.upper() + word)"], opts: ["HELLOhello", "HELLO hello", "hellohello"], a: 0, why: "upper() gives a new string. word itself is still lowercase." },
+  { lines: ["s = \"a-b-c\"", "print(s.replace(\"-\", \"\"))"], opts: ["a b c", "abc", "a-b-c"], a: 1, why: "Replacing with \"\" deletes every dash." },
+  { lines: ["text = \"cat\"", "print(text.replace(\"c\", \"b\").upper())"], opts: ["bat", "CAT", "BAT"], a: 2, why: "replace() runs first and gives \"bat\", then upper() makes it BAT." },
+  { lines: ["name = \"Ana\"", "print(len(name) * 2)"], opts: ["6", "AnaAna", "An error"], a: 0, why: "len(name) is 3, a number, so * 2 doubles it." },
+  { lines: ["msg = \"Hi\"", "msg = msg + \"!\"", "print(msg * 2)"], opts: ["Hi!2", "Hi!Hi!", "Hi!!"], a: 1, why: "msg is \"Hi!\" before it's repeated." },
+  { lines: ["text = \"Yes\"", "print(text.upper() == \"YES\")"], opts: ["False", "YES", "True"], a: 2, why: "\"Yes\".upper() is \"YES\", so the comparison is True." }
+], "s3");
+
+makeCastPicker($('[data-act="s8"]'), [
+  { setup: ["name = \"sam\""], goal: "Print <strong>SAM</strong>.", opts: ["name.upper()", "upper(name)", "name.lower()"], a: 0, hints: [null, "upper() is a method: it goes after a dot.", "lower() gives small letters."], why: "name.upper() gives a new string in capitals." },
+  { setup: ["word = \"Python\""], goal: "Print <strong>6</strong>.", opts: ["word.len()", "len(word)", "len(\"word\")"], a: 1, hints: ["len() is a function, not a method.", null, "\"word\" in quotes is the 4-letter word word."], why: "len(word) counts the characters in the variable." },
+  { setup: ["text = \"I like tea\""], goal: "Print <strong>I like coffee</strong>.", opts: ["text.replace(\"coffee\", \"tea\")", "text + \"coffee\"", "text.replace(\"tea\", \"coffee\")"], a: 2, hints: ["Old first, then new.", "That adds coffee on the end: I like teacoffee.", null], why: "replace(old, new) swaps tea for coffee." },
+  { setup: ["a = \"Hi\"", "b = \"there\""], goal: "Print <strong>Hi there</strong>.", opts: ["a + \" \" + b", "a + b", "a + \"_\" + b"], a: 0, hints: [null, "Without a space you get Hithere.", "That puts an underscore in the middle."], why: "+ joins exactly what you give it, so the space has to be added." },
+  { setup: ["shout = \"STOP\""], goal: "Print <strong>stop</strong>.", opts: ["shout.upper()", "shout.lower()", "lower(shout)"], a: 1, hints: ["It's already in capitals.", null, "lower() is a method: shout.lower()."], why: "lower() makes every letter small." },
+  { setup: ["dash = \"-\""], goal: "Print <strong>-----</strong> (5 dashes).", opts: ["dash + 5", "5 + dash", "dash * 5"], a: 2, hints: ["You can't add a number to text.", "You can't add text to a number either.", null], why: "* repeats a string." },
+  { setup: ["msg = \"Hello\""], goal: "Print <strong>HELLO!</strong>.", opts: ["msg.upper() + \"!\"", "msg + \"!\".upper()", "msg.upper + \"!\""], a: 0, hints: [null, "Only the ! is made uppercase: Hello!", "upper needs brackets to run: upper()."], why: "upper() runs on msg first, then the ! is joined on." },
+  { setup: ["text = \"a,b,c\""], goal: "Print <strong>a b c</strong>.", opts: ["text.replace(\" \", \",\")", "text.replace(\",\", \" \")", "text.replace(\",\", \"\")"], a: 1, hints: ["There are no spaces to replace yet.", null, "Replacing with \"\" removes the commas without adding spaces: abc."], why: "Every comma is swapped for a space." },
+  { setup: ["name = \"Ana\""], goal: "Print <strong>Ana has 3 letters</strong>.", opts: ["name + \" has \" + len(name) + \" letters\"", "name + \" has len(name) letters\"", "name + \" has \" + str(len(name)) + \" letters\""], a: 2, hints: ["len() gives a number: convert it with str().", "Inside quotes, len(name) is just text.", null], why: "len() counts, str() turns the count into text, and + joins it all." },
+  { setup: ["word = \"LeVeL\""], goal: "Print <strong>level</strong>.", opts: ["word.lower()", "word.upper()", "word.replace(\"L\", \"l\")"], a: 0, hints: [null, "That gives LEVEL.", "Only the L's change: leVel."], why: "lower() changes every capital at once." },
+  { setup: ["code = \"abc\""], goal: "Print <strong>ABCABC</strong>.", opts: ["code * 2", "code.upper() * 2", "code.upper() + 2"], a: 1, hints: ["That repeats it, but in small letters.", null, "You can't add a number to text."], why: "upper() first, then * 2 repeats it." },
+  { setup: ["answer = \"YeS\""], goal: "Print <strong>True</strong>.", opts: ["answer == \"yes\"", "answer.upper() == \"yes\"", "answer.lower() == \"yes\""], a: 2, hints: ["The capitals make them different.", "\"YES\" isn't the same as \"yes\".", null], why: "Lowercase it first, then compare." },
+  { setup: ["phone = \"0412 345 678\""], goal: "Print <strong>0412345678</strong>.", opts: ["phone.replace(\" \", \"\")", "phone.replace(\"\", \" \")", "phone.replace(\" \", \"-\")"], a: 0, hints: [null, "Old first, then new. This puts spaces everywhere.", "That swaps the spaces for dashes."], why: "Replacing every space with \"\" removes them." },
+  { setup: ["first = \"micro\"", "second = \"bit\""], goal: "Print <strong>9</strong>: the length of micro:bit.", opts: ["len(first + second)", "len(first + \":\" + second)", "len(first) + second"], a: 1, hints: ["That leaves out the colon: 8.", null, "len(first) is a number, and you can't add text to it."], why: "Build the full text first, then count it." },
+  { setup: ["city = \"perth\""], goal: "Print <strong>PERTH, WA</strong>.", opts: ["city + \", WA\".upper()", "city.upper() + \", wa\"", "city.upper() + \", WA\""], a: 2, hints: ["Only \", WA\" is uppercased: perth, WA.", "The state is in small letters: PERTH, wa.", null], why: "Uppercase the city, then join the rest." }
+], "s8");
+
+makeInputLab($('[data-act="s4"]'), [
+  { toggle: "Remove <code>.lower()</code>",
+    lines: ['answer = input("Do you like Python? ")', 'if answer.lower() == "yes":', '    display.scroll("Great!")', "else:", '    display.scroll("Oh no")'],
+    off: ['answer = input("Do you like Python? ")', 'if answer == "yes":', '    display.scroll("Great!")', "else:", '    display.scroll("Oh no")'],
+    targets: [["Type yes", o => !o.off && o.typed === "yes" && o.shown === "Great!"],
+      ["Type YES in capitals", o => !o.off && o.typed === "YES" && o.shown === "Great!"],
+      ["Type Yes with a capital Y", o => !o.off && o.typed === "Yes" && o.shown === "Great!"],
+      ["Remove .lower() and type YES", o => o.off && o.typed === "YES" && o.shown === "Oh no"]],
+    explain: o => o.off ? `Without lower(), Python compares "${esc(o.typed)}" with "yes" exactly, and capitals make them different.`
+      : o.typed ? `answer.lower() turned "${esc(o.typed)}" into "${esc(o.typed.toLowerCase())}" before comparing.` : "" },
+  { toggle: "Remove <code>len()</code>",
+    lines: ['word = input("Word: ")', "if len(word) > 6:", '    display.scroll("Long")', "else:", '    display.scroll("Short")'],
+    off: ['word = input("Word: ")', "if word > 6:", '    display.scroll("Long")', "else:", '    display.scroll("Short")'],
+    targets: [["Find a word that's Long", o => !o.off && o.shown === "Long"],
+      ["Try a word with exactly 6 letters", o => !o.off && [...o.typed].length === 6 && o.shown === "Short"],
+      ["Type two words with a space between them", o => !o.off && o.typed.trim().includes(" ") && !!o.shown],
+      ["Remove len() and see the error", o => o.off && o.error === "TypeError"]],
+    explain: o => o.error === "TypeError" ? "Without len(), Python tries to compare the text itself with the number 6."
+      : o.shown ? `"${esc(o.typed)}" has ${[...o.typed].length} characters${o.typed.includes(" ") ? " (spaces count too)" : ""}, so ${[...o.typed].length} > 6 is ${[...o.typed].length > 6 ? "True" : "False"}.` : "" },
+  { toggle: "Remove <code>.upper()</code>", lines: ["name = input(\"Name: \")", "display.scroll(\"HI \" + name.upper())"], off: ["name = input(\"Name: \")", "display.scroll(\"HI \" + name)"], targets: [["Type a name in lowercase", o => !o.off && /^[a-z]+$/.test(o.typed) && o.shown === "HI " + o.typed.toUpperCase()], ["Type a name with a number in it", o => !o.off && /\d/.test(o.typed) && !!o.shown], ["Press Enter without typing anything", o => !o.off && o.typed === "" && o.shown === "HI "], ["Remove .upper() and type sam", o => o.off && o.typed === "sam" && o.shown === "HI sam"]], explain: o => o.off ? `Without upper(), the name scrolls exactly as you typed it: "${esc(o.typed)}".` : o.typed === "" ? "An empty string has nothing to make uppercase, so only HI scrolls." : o.shown ? `upper() turned "${esc(o.typed)}" into "${esc(o.typed.toUpperCase())}". Digits and symbols don't change.` : "" },
+  { toggle: "Remove <code>.replace()</code>", lines: ["text = input(\"Text: \")", "print(text.replace(\" \", \"_\"))"], off: ["text = input(\"Text: \")", "print(text)"], targets: [["Type two words and see the underscore", o => !o.off && o.typed.includes(" ") && o.out === o.typed.split(" ").join("_")], ["Type text with no spaces", o => !o.off && o.typed !== "" && !o.typed.includes(" ") && o.out === o.typed], ["Remove .replace() and type two words", o => o.off && o.typed.includes(" ")]], explain: o => o.off ? "Without replace(), the spaces stay as they are." : o.typed.includes(" ") ? "replace() swapped every space for an underscore." : o.typed ? "There were no spaces to replace, so the text didn't change. No error either." : "" }
+], "s4");
+
+makeParsons($('[data-act="s5"]'), [
+  { task: "Shout it: ask for a message and scroll it in uppercase.",
+    sol: ['message = input("Message: ")', "loud = message.upper()", "display.scroll(loud)"],
+    traps: { "loud = upper(message)": "upper() is a method. It goes after a dot: message.upper().", 'display.scroll("loud")': "The quotes make it the word loud, not the variable." } },
+  { task: "Long or short: scroll Long if the word has more than 6 characters, otherwise Short.",
+    sol: ['word = input("Word: ")', "if len(word) > 6:", '    display.scroll("Long")', "else:", '    display.scroll("Short")'],
+    traps: { "if word > 6:": "Compare the length, len(word), not the word itself.", 'if len(word) > "6":': "\"6\" in quotes is text. Compare with the number 6." } },
+  { task: "Swap a word: replace Sam with Ana in the sentence and print it.",
+    sol: ['sentence = "Sam is learning Python"', 'new = sentence.replace("Sam", "Ana")', "print(new)"],
+    traps: { 'new = sentence.replace("Ana", "Sam")': "Old first, then new. This looks for Ana, which isn't there.", "print(sentence)": "replace() gives back a new string. sentence itself doesn't change." } },
+  { task: "Whisper it: ask for a message and print it in lowercase.", sol: ["message = input(\"Message: \")", "quiet = message.lower()", "print(quiet)"], traps: { "quiet = lower(message)": "lower() is a method: it goes after a dot, message.lower().", "print(\"quiet\")": "The quotes make it the word quiet, not the variable." } },
+  { task: "Ask for a name and print how many characters it has.", sol: ["name = input(\"Name: \")", "count = len(name)", "print(count)"], traps: { "count = name.len()": "len() is a function: len(name).", "count = len(\"name\")": "\"name\" in quotes is the 4-letter word name." } },
+  { task: "Swap cats for dogs and scroll the result.", sol: ["text = \"I like cats\"", "text = text.replace(\"cats\", \"dogs\")", "display.scroll(text)"], traps: { "text.replace(\"cats\", \"dogs\")": "replace() gives back a new string. Store it, or text stays the same.", "text = text.replace(\"dogs\", \"cats\")": "Old first, then new." }, out: ["I like dogs"] },
+  { task: "Ask if the user is ready, and accept yes in any capitals.", sol: ["answer = input(\"Ready? \")", "if answer.lower() == \"yes\":", "    display.show(Image.YES)", "else:", "    display.show(Image.NO)"], traps: { "if answer == \"yes\":": "Without lower(), YES wouldn't match.", "if answer.lower() == \"YES\":": "Lowercase text can never equal \"YES\"." } },
+  { task: "Print a name and its length: Ana has 3 letters.", sol: ["name = \"Ana\"", "size = len(name)", "print(name + \" has \" + str(size) + \" letters\")"], traps: { "print(name + \" has \" + size + \" letters\")": "size is a number: convert it with str().", "size = len(Ana)": "Ana without quotes is a variable that doesn't exist." } },
+  { task: "Shout a greeting: print HELLO, SAM!", sol: ["name = \"Sam\"", "greeting = \"Hello, \" + name + \"!\"", "print(greeting.upper())"], traps: { "print(greeting.Upper())": "Method names are lower case: upper().", "print(upper(greeting))": "upper() goes after a dot: greeting.upper()." } },
+  { task: "Remove every space from a phrase and print it.", sol: ["phrase = \"a b c\"", "joined = phrase.replace(\" \", \"\")", "print(joined)"], traps: { "joined = phrase.replace(\"\", \" \")": "Old first, then new: find \" \" and replace it with \"\".", "joined = phrase - \" \"": "You can't subtract text." } },
+  { task: "Ask for a word and print it twice in capitals: HIHI.", sol: ["word = input(\"Word: \")", "loud = word.upper()", "print(loud * 2)"], traps: { "print(loud + 2)": "You can't add a number to text. * repeats it.", "loud = word.lower()": "lower() gives small letters." } },
+  { task: "Check that a password has 8 or more characters.", sol: ["password = input(\"Password: \")", "if len(password) >= 8:", "    print(\"OK\")", "else:", "    print(\"Too short\")"], traps: { "if password >= 8:": "Compare the length, not the text.", "if len(password) > 8:": "> 8 would reject a password of exactly 8 characters." } },
+  { task: "Make a hashtag: print #microbit from the words micro bit.", sol: ["words = \"micro bit\"", "tag = \"#\" + words.replace(\" \", \"\")", "print(tag)"], traps: { "tag = \"#\" + words": "That keeps the space: #micro bit.", "tag = # + words.replace(\" \", \"\")": "# needs quotes. On its own it starts a comment." } },
+  { task: "Ask for a name and scroll it in capitals after Hi: Hi SAM.", sol: ["name = input(\"Name: \")", "message = \"Hi \" + name.upper()", "display.scroll(message)"], traps: { "message = \"Hi \" + name.upper": "upper needs brackets: upper().", "message = \"Hi\" + name.upper()": "There's no space after Hi: you'd get HiSAM." } },
+  { task: "Print the length of Hello, World! with a label: Length: 13.", sol: ["text = \"Hello, World!\"", "length = len(text)", "print(\"Length: \" + str(length))"], traps: { "print(\"Length: \" + length)": "length is a number: convert it with str().", "length = text.len()": "len() is a function: len(text)." } }
+], "s5", ["from microbit import *"], "Check the order: get the text first, change it, then show it.");
+
+makeQuiz($('[data-act="s6"]'), [
+  { code: 'print(len("micro:bit"))', ask: "What does this print?", opts: ["8", "9", "10"], a: 1, why: "m-i-c-r-o-:-b-i-t is 9 characters (the colon counts)." },
+  { code: 'print("Hello, World!".upper())', ask: "What does this print?", opts: ["HELLO, WORLD!", "hello, world!", "Hello, World!"], a: 0, why: "upper() converts every letter to uppercase." },
+  { code: 'text = "I like cats"\nprint(text.replace("cats", "dogs"))', ask: "What does this print?", opts: ["I like cats", "dogs", "I like dogs"], a: 2, why: "replace swaps \"cats\" for \"dogs\"." },
+  { code: "", ask: 'Which function would make "YES" match "yes"?', opts: ["len()", "lower()", "replace()"], a: 1, why: "\"YES\".lower() gives \"yes\"." },
+  { code: 'text = "Hello"\ntext.upper()\nprint(text)', ask: "What does this print?", opts: ["HELLO", "Hello", "An error"], a: 1, why: "upper() doesn't change text. It gives back a new string, which is thrown away here." },
+  { code: 'print("ab" * 3)', ask: "What does this print?", opts: ["ab3", "An error", "ababab"], a: 2, why: "A string times a whole number repeats it." },
+  { code: 'print(len("  hi  "))', ask: "What does this print?", opts: ["2", "4", "6"], a: 2, why: "The four spaces count as well as h and i." },
+  { code: 'print("banana".replace("an", "AN"))', ask: "What does this print?", opts: ["bANana", "bANANa", "BANANA"], a: 1, why: "replace() swaps every \"an\", and there are two." },
+  { code: "print(\"Hi\".lower())", ask: "What does this print?", opts: ["HI", "hi", "Hi"], a: 1, why: "lower() makes every letter small." },
+  { code: "print(len(\"a b\"))", ask: "What does this print?", opts: ["2", "3", "1"], a: 1, why: "The space between a and b counts." },
+  { code: "print(\"cat\".replace(\"c\", \"h\"))", ask: "What does this print?", opts: ["cat", "hat", "hcat"], a: 1, why: "Every c is swapped for h." },
+  { code: "", ask: "Which line makes text all capitals?", opts: ["text.upper()", "upper(text)", "text.UPPER()"], a: 0, why: "upper() is a method, written in small letters after a dot." },
+  { code: "name = \"ANA\"\nprint(name.lower() == \"ana\")", ask: "What does this print?", opts: ["False", "ana", "True"], a: 2, why: "\"ANA\".lower() is \"ana\", so the comparison is True." },
+  { code: "print(len(\"\"))", ask: "What does this print?", opts: ["0", "1", "An error"], a: 0, why: "An empty string has no characters." },
+  { code: "word = \"hello\"\nprint(word.replace(\"l\", \"L\"))", ask: "What does this print?", opts: ["heLlo", "heLLo", "HELLO"], a: 1, why: "replace() swaps every l, and there are two." }
+], "s6");
+
+makeBugHunt($('[data-act="s7"]'), [
+  { goal: "Print HELLO.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nAttributeError: 'str' object has no attribute 'Upper'",
+    lines: ["from microbit import *", "", 'text = "Hello"', "print(text.Upper())"],
+    bug: "print(text.Upper())", fixes: ["print(text.upper())", "print(upper(text))", "print(text.UPPER())"], why: "Method names are lower case: upper(), and they go after a dot.", out: [] },
+  { goal: "Print how many characters are in word (9).", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nAttributeError: 'str' object has no attribute 'len'",
+    lines: ["from microbit import *", "", 'word = "micro:bit"', "print(word.len())"],
+    bug: "print(word.len())", fixes: ["print(len(word))", "print(word.length())", "print(len.word)"], why: "len() is a function, not a method. The string goes inside the brackets.", out: [] },
+  { goal: "Print Hello, micro:bit!", symptom: "Prints Hello, World!",
+    lines: ["from microbit import *", "", 'text = "Hello, World!"', 'text.replace("World", "micro:bit")', "print(text)"],
+    bug: 'text.replace("World", "micro:bit")', fixes: ['text = text.replace("World", "micro:bit")', 'text.replace("micro:bit", "World")', 'replace(text, "World", "micro:bit")'], why: "replace() gives back a new string. Store it, or text stays the same.", out: [] },
+  { goal: "Print Hello, micro:bit!", symptom: "Prints Hello, World!",
+    lines: ["from microbit import *", "", 'text = "Hello, World!"', 'print(text.replace("micro:bit", "World"))'],
+    bug: 'print(text.replace("micro:bit", "World"))', fixes: ['print(text.replace("World", "micro:bit"))', 'print(text.replace("World"))', 'print(text.replace("Hello", "micro:bit"))'], why: "replace(old, new): the word to find comes first.", out: [] },
+  { goal: "Accept yes in any mix of capitals.", symptom: "Do you like Python? YES\n(scrolls Oh no)",
+    lines: ["from microbit import *", "", 'answer = input("Do you like Python? ")', 'if answer == "yes":', '    display.scroll("Great!")', "else:", '    display.scroll("Oh no")'],
+    bug: 'if answer == "yes":', fixes: ['if answer.lower() == "yes":', 'if answer.upper() == "yes":', 'if answer == "YES":'], why: "Lowercase the answer first, then compare it with \"yes\".", out: ["Great!"] },
+  { goal: "Scroll Long for words over 6 characters.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: unsupported types for __gt__: 'int', 'str'",
+    lines: ["from microbit import *", "", 'word = "elephant"', 'if len(word) > "6":', '    display.scroll("Long")'],
+    bug: 'if len(word) > "6":', fixes: ["if len(word) > 6:", "if word > 6:", "if len(word) > len(6):"], why: "len() gives a number, so compare it with the number 6, not the text \"6\".", out: ["Long"] },
+  { goal: "Scroll the name Sam.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 3, in <module>\nNameError: name 'Sam' isn't defined",
+    lines: ["from microbit import *", "", "name = Sam", "display.scroll(name)"],
+    bug: "name = Sam", fixes: ['name = "Sam"', "name = str(Sam)", "name = 'Sam"], why: "Text needs quotes. Without them, Python looks for a variable called Sam.", out: ["Sam"] },
+  { goal: "Print Length: 5.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: can't convert 'int' object to str implicitly",
+    lines: ["from microbit import *", "", 'text = "Hello"', 'print("Length: " + len(text))'],
+    bug: 'print("Length: " + len(text))', fixes: ['print("Length: " + str(len(text)))', 'print("Length: " + len("text"))', 'print("Length: " + "len(text)")'], why: "len() gives a number, so turn it into text with str() before joining.", out: [] },
+  { goal: "Print hello in lowercase.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nAttributeError: 'str' object has no attribute 'Lower'", lines: ["from microbit import *", "", "text = \"HELLO\"", "print(text.Lower())"], bug: "print(text.Lower())", fixes: ["print(text.lower())", "print(lower(text))", "print(text.LOWER())"], why: "Method names are lower case, and they go after a dot.", out: [] },
+  { goal: "Print the length of name (3).", symptom: "Prints 4", lines: ["from microbit import *", "", "name = \"Sam\"", "print(len(\"name\"))"], bug: "print(len(\"name\"))", fixes: ["print(len(name))", "print(len(Sam))", "print(name.len())"], why: "\"name\" in quotes is the word name, which has 4 letters. Use the variable.", out: [] },
+  { goal: "Scroll the text with dashes: a-b-c.", symptom: "Scrolls a b c", lines: ["from microbit import *", "", "text = \"a b c\"", "text.replace(\" \", \"-\")", "display.scroll(text)"], bug: "text.replace(\" \", \"-\")", fixes: ["text = text.replace(\" \", \"-\")", "text.replace(\"-\", \" \")", "text = text.replace(\"-\", \" \")"], why: "replace() gives back a new string. Store it in text.", out: ["a-b-c"] },
+  { goal: "Accept no in any capitals, and scroll Stopping.", symptom: "Want to stop? NO\n(scrolls Keep going)", lines: ["from microbit import *", "", "answer = input(\"Want to stop? \")", "if answer == \"no\":", "    display.scroll(\"Stopping\")", "else:", "    display.scroll(\"Keep going\")"], bug: "if answer == \"no\":", fixes: ["if answer.lower() == \"no\":", "if answer.upper() == \"no\":", "if answer == \"No\":"], why: "Lowercase the answer first, then compare it with \"no\".", out: ["Stopping"] },
+  { goal: "Print the message 3 times on one line: HiHiHi.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 5, in <module>\nTypeError: can't multiply sequence by non-int of type 'str'", lines: ["from microbit import *", "", "msg = \"Hi\"", "times = \"3\"", "print(msg * times)"], bug: "times = \"3\"", fixes: ["times = 3", "times = '3'", "times = 3.0"], why: "A string can only be repeated a whole number of times, so times must be the int 3.", out: [] },
+  { goal: "Print how many digits are in the year (4).", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: object of type 'int' has no len()", lines: ["from microbit import *", "", "year = 2026", "print(len(year))"], bug: "print(len(year))", fixes: ["print(len(str(year)))", "print(len(int(year)))", "print(str(len(year)))"], why: "len() works on text, so turn the number into a string first.", out: [] },
+  { goal: "Replace every o with a zero: Hell0 W0rld.", symptom: "Prints Hello World", lines: ["from microbit import *", "", "text = \"Hello World\"", "print(text.replace(\"O\", \"0\"))"], bug: "print(text.replace(\"O\", \"0\"))", fixes: ["print(text.replace(\"o\", \"0\"))", "print(text.replace(\"0\", \"o\"))", "print(text.replace(\"O\", \"o\"))"], why: "replace() matches capitals exactly, and there's no capital O.", out: [] }
+], "s7");
+
+/* ---------------- ON A REAL MICRO:BIT ---------------- */
+const CHALLENGES = {
+  d: [
+    { title: "Change case", level: "Starter",
+      steps: ["Ask for your name with input().", "Print it in uppercase.", "Print it in lowercase."],
+      starter: "from microbit import *\n\nname = input(\"What is your name? \")\n",
+      solution: "from microbit import *\n\nname = input(\"What is your name? \")\nprint(name.upper())\nprint(name.lower())",
+      tip: "Class activity 8.6, part 1." },
+    { title: "Count characters", level: "Starter",
+      steps: ["Ask the user for a sentence.", "Print how many characters it has."],
+      starter: "from microbit import *\n\nsentence = input(\"Type a sentence: \")\n",
+      solution: "from microbit import *\n\nsentence = input(\"Type a sentence: \")\nprint(\"That has \" + str(len(sentence)) + \" characters\")",
+      tip: "len() gives a number, so use str() to join it into the message." },
+    { title: "Replace a word", level: "Core",
+      steps: ["Ask for a sentence.", "Ask for a word to find and a word to swap in.", "Print the sentence with the word replaced."],
+      starter: "from microbit import *\n\nsentence = input(\"Sentence: \")\nold = input(\"Word to find: \")\nnew = input(\"Replace it with: \")\n",
+      solution: "from microbit import *\n\nsentence = input(\"Sentence: \")\nold = input(\"Word to find: \")\nnew = input(\"Replace it with: \")\nprint(sentence.replace(old, new))",
+      tip: "Class activity 8.6, part 3. What happens if the word isn't in the sentence?" },
+    { title: "Full name", level: "Core",
+      steps: ["Ask for a first name and a last name.", "Join them with a space between.", "Print and scroll the full name."],
+      starter: "from microbit import *\n\nfirst = input(\"First name: \")\nlast = input(\"Last name: \")\n",
+      solution: "from microbit import *\n\nfirst = input(\"First name: \")\nlast = input(\"Last name: \")\nfull = first + \" \" + last\nprint(full)\ndisplay.scroll(full)",
+      tip: "Class activity 8.6, part 4. Don't forget the \" \" in the middle." }
+  ],
+  s: [
+    { title: "Shout it", level: "Starter",
+      steps: ["Ask for a message with input().", "Scroll it in uppercase."],
+      starter: "from microbit import *\n\nmessage = input(\"Message: \")\n",
+      solution: "from microbit import *\n\nmessage = input(\"Message: \")\ndisplay.scroll(message.upper())",
+      tip: "From the Strings slides." },
+    { title: "Long or short?", level: "Core",
+      steps: ["Ask for a word.", "If it has more than 6 characters, show \"Long\".", "Otherwise show \"Short\"."],
+      starter: "from microbit import *\n\nword = input(\"Word: \")\n",
+      solution: "from microbit import *\n\nword = input(\"Word: \")\nif len(word) > 6:\n    display.scroll(\"Long\")\nelse:\n    display.scroll(\"Short\")",
+      tip: "From the Strings slides. Try a word with exactly 6 letters." },
+    { title: "Swap a word", level: "Core",
+      steps: ["Write a sentence that includes your name.", "Replace your name with a friend's name.", "Print the new sentence."],
+      starter: "from microbit import *\n\nsentence = \"Sam is learning Python\"\n",
+      solution: "from microbit import *\n\nsentence = \"Sam is learning Python\"\nnew = sentence.replace(\"Sam\", \"Ana\")\nprint(new)",
+      tip: "From the Strings slides. replace() gives back a new string, so store it." },
+    { title: "Word stats", level: "Stretch",
+      steps: ["Ask for a sentence.", "Print its length, the uppercase and lowercase versions.", "Print it with every space replaced by a dash."],
+      starter: "from microbit import *\n\nsentence = input(\"Sentence: \")\n",
+      solution: "from microbit import *\n\nsentence = input(\"Sentence: \")\nprint(\"Length: \" + str(len(sentence)))\nprint(sentence.upper())\nprint(sentence.lower())\nprint(sentence.replace(\" \", \"-\"))",
+      tip: "All four string functions in one program." }
+  ]
+};
+
+let chDone = new Set();
+try { chDone = new Set(JSON.parse(localStorage.getItem(CH_KEY) || "[]")); } catch (e) { /* storage unavailable */ }
+function copyText(btn, text, label) {
+  const ok = () => { btn.textContent = "Copied"; setTimeout(() => (btn.textContent = label), 1600); };
+  const fail = () => { btn.textContent = "Copy failed: select the code"; setTimeout(() => (btn.textContent = label), 2400); };
+  try { navigator.clipboard.writeText(text).then(ok, fail); } catch (e) { fail(); }
+}
+function paintChallengeCounts() {
+  for (const key of Object.keys(CHALLENGES)) {
+    const n = CHALLENGES[key].filter((_, i) => chDone.has(`${key}-${i}`)).length;
+    const el = $(`[data-realcount="${key}"]`);
+    if (el) el.textContent = `${n}/${CHALLENGES[key].length} working on a micro:bit`;
+  }
+}
+for (const [key, list] of Object.entries(CHALLENGES)) {
+  const host = $(`[data-challenges="${key}"]`);
+  list.forEach((c, i) => {
+    const id = `${key}-${i}`;
+    const card = document.createElement("article");
+    card.className = "ch" + (chDone.has(id) ? " done" : "");
+    card.innerHTML = `
+      <div class="ch-head"><h4>${esc(c.title)}</h4><span class="lvl ${c.level.toLowerCase()}">${c.level}</span><span class="ch-num">Challenge ${i + 1}</span></div>
+      <ol>${c.steps.map(t => `<li>${esc(t)}</li>`).join("")}</ol>
+      <pre><code>${hl(c.starter)}</code></pre>
+      <div class="controls"><button class="btn small" type="button" data-c="starter">Copy starter code</button><button class="btn small" type="button" data-c="toggle" aria-expanded="false">Show a solution</button></div>
+      <div data-sol hidden>
+        <p class="sol-label">One possible solution</p>
+        <pre><code>${hl(c.solution)}</code></pre>
+        <div class="controls"><button class="btn small" type="button" data-c="solution">Copy solution</button></div>
+      </div>
+      <p class="tip"><strong>Tip:</strong> ${esc(c.tip)}</p>
+      <label class="ch-done" for="ch-${id}"><input type="checkbox" id="ch-${id}"${chDone.has(id) ? " checked" : ""}> It works on my micro:bit</label>`;
+    $('[data-c="starter"]', card).addEventListener("click", e => copyText(e.currentTarget, c.starter, "Copy starter code"));
+    $('[data-c="solution"]', card).addEventListener("click", e => copyText(e.currentTarget, c.solution, "Copy solution"));
+    $('[data-c="toggle"]', card).addEventListener("click", e => {
+      const sol = $("[data-sol]", card), open = sol.hidden;
+      sol.hidden = !open;
+      e.currentTarget.textContent = open ? "Hide solution" : "Show a solution";
+      e.currentTarget.setAttribute("aria-expanded", String(open));
+    });
+    $("input", card).addEventListener("change", e => {
+      if (e.target.checked) chDone.add(id); else chDone.delete(id);
+      card.classList.toggle("done", e.target.checked);
+      try { localStorage.setItem(CH_KEY, JSON.stringify([...chDone])); } catch (err) { /* ignore */ }
+      paintChallengeCounts();
+    });
+    host.append(card);
+  });
+}
+paintChallengeCounts();
+
+
+
+/* ---------- start ---------- */
+paintProgress();
+let start = "data-types";
+try { const h = location.hash.replace("#", ""); if (TOPICS[h]) start = h; } catch (e) { /* ignore */ }
+showTopic(start);
+window.addEventListener("hashchange", () => { const h = location.hash.replace("#", ""); if (TOPICS[h]) showTopic(h); });
+})();
+
+</script>
+<script>
+/* Print summary: lists every activity in this lab with its Done / Not done status. */
+(function () {
+  "use strict";
+  const KEY = "ictprg302-datatypes-progress";
+  const NAME_KEY = "ictprg302-student-name";
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const sheet = document.querySelector("[data-printsheet]");
+  const nameIn = document.querySelector("[data-printname]");
+  try { nameIn.value = localStorage.getItem(NAME_KEY) || ""; } catch (e) { /* storage unavailable */ }
+  nameIn.addEventListener("input", () => { try { localStorage.setItem(NAME_KEY, nameIn.value.trim()); } catch (e) { /* ignore */ } });
+
+  function build() {
+    let done = new Set();
+    try { done = new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); } catch (e) { /* storage unavailable */ }
+    let total = 0, count = 0, body = "";
+    document.querySelectorAll(".topic").forEach(topic => {
+      const acts = [...topic.querySelectorAll(".act[data-act]")];
+      if (!acts.length) return;
+      const rows = acts.map(a => {
+        const d = done.has(a.dataset.act);
+        total++; if (d) count++;
+        const tag = a.querySelector(".act-tag"), title = a.querySelector(".act-head h3");
+        return `<tr><td>${esc(tag ? tag.textContent : "")}</td><td>${esc(title ? title.textContent : a.dataset.act)}</td><td>${d ? "Done" : "Not done"}</td></tr>`;
+      }).join("");
+      const h = topic.querySelector(".intro h2");
+      body += `<h2>${esc(h ? h.textContent : topic.id)}</h2><table><thead><tr><th>Activity</th><th>Title</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+    });
+    const name = nameIn.value.trim() || "____________________";
+    const date = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    sheet.innerHTML = `<h1>${esc(document.querySelector(".brand h1").textContent)}: results</h1>
+      <dl><dt>Student</dt><dd>${esc(name)}</dd><dt>Date</dt><dd>${esc(date)}</dd><dt>Completed</dt><dd>${count} of ${total} activities</dd></dl>${body}`;
+  }
+  window.addEventListener("beforeprint", build);
+  document.querySelector("[data-print]").addEventListener("click", () => { build(); window.print(); });
+})();
+</script>
+<script src="../shared/code-tips.js" defer></script>
+<script src="../shared/lab-nav.js" defer></script>
+</body>
+</html>

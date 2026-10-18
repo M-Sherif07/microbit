@@ -1,0 +1,1099 @@
+[
+  {
+    "folder": "practice-lab",
+    "title": "Practice Lab",
+    "key": "ictprg302-practice-progress",
+    "blurb": "Variables, functions and the event loop.",
+    "decks": "01–03",
+    "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>&gt;_</text></svg>",
+    "slides": [
+      "01 Intro and Variables",
+      "02 Functions",
+      "03 Event Loop",
+      "Flowcharts and Pseudocode"
+    ],
+    "outcomes": [
+      "Store values in well-named variables and trace how they change",
+      "Define functions with parameters and use the values they return",
+      "Build a while True event loop that reacts to button presses",
+      "Read a flowchart and turn a plan into pseudocode and Python"
+    ],
+    "ids": [
+      "v1",
+      "v2",
+      "v3",
+      "v4",
+      "v6",
+      "v5",
+      "f1",
+      "f2",
+      "f3",
+      "f4",
+      "f7",
+      "f5",
+      "f6",
+      "e1",
+      "ef1",
+      "ef2",
+      "ef3",
+      "ep1",
+      "ep2",
+      "ep3",
+      "ep4",
+      "ep5",
+      "ep6",
+      "e2",
+      "e3",
+      "e4",
+      "e6",
+      "e5"
+    ],
+    "topics": [
+      {
+        "id": "variables",
+        "tab": "Variables",
+        "title": "Variables",
+        "lead": "A variable is a name that refers to a value. Think of a labelled box: you put a value in with <code>=</code> and use the label later.",
+        "acts": [
+          {
+            "id": "v1",
+            "tag": "Activity 1",
+            "title": "Predict, then trace",
+            "brief": "Read the program and decide what the micro:bit will scroll. Lock in your answer, then step through one line at a time and watch the variable boxes change."
+          },
+          {
+            "id": "v2",
+            "tag": "Activity 2",
+            "title": "Arrow animation",
+            "brief": "This is the class activity from the slides. Build the sequence with the arrow buttons and the code writes itself."
+          },
+          {
+            "id": "v3",
+            "tag": "Activity 3",
+            "title": "Name it well",
+            "brief": "Descriptive names make code easier to read and fix. Pick the best name for each value. The last question checks Python's naming rules."
+          },
+          {
+            "id": "v4",
+            "tag": "Activity 4",
+            "title": "Quick quiz: what's in the box?",
+            "brief": "Read each short program and choose what it does. Answer all of them correctly to finish."
+          },
+          {
+            "id": "v6",
+            "tag": "Activity 5",
+            "title": "Dry run the plan",
+            "brief": "Predict what the plan displays, then watch a dry run fill in the trace table, one line at a time."
+          },
+          {
+            "id": "v5",
+            "tag": "Activity 6",
+            "title": "Spot the bug",
+            "brief": "Each program has one bug. Read what it should do and what actually happens, click the line with the bug, then choose the fix."
+          }
+        ]
+      },
+      {
+        "id": "functions",
+        "tab": "Functions",
+        "title": "Functions",
+        "lead": "A function is a mini-program inside your program. Give a block of code a name, then run it as often as you like by calling that name.",
+        "acts": [
+          {
+            "id": "f1",
+            "tag": "Activity 1",
+            "title": "Follow the calls",
+            "brief": "In these programs, functions call other functions. Count carefully: how many times will the heart appear?"
+          },
+          {
+            "id": "f2",
+            "tag": "Activity 2",
+            "title": "Parameter playground",
+            "brief": "One function, different values. Add calls to flash_icon and watch what icon and delay hold each time the function runs."
+          },
+          {
+            "id": "f3",
+            "tag": "Activity 3",
+            "title": "What comes back?",
+            "brief": "return sends a value back to the line that called the function. Work out what each call returns. Get 15 right to finish. Some calls put one function inside another."
+          },
+          {
+            "id": "f4",
+            "tag": "Activity 4",
+            "title": "Assemble the function",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "f7",
+            "tag": "Activity 5",
+            "title": "Read the pseudocode",
+            "brief": "Read the plan, then pick the Python that follows it. FUNCTION … WITH is def with parameters, RETURN is return, and CALL runs the function."
+          },
+          {
+            "id": "f5",
+            "tag": "Activity 6",
+            "title": "Quick quiz: functions",
+            "brief": "Defining, calling, parameters and return. Answer all of them correctly to finish."
+          },
+          {
+            "id": "f6",
+            "tag": "Activity 7",
+            "title": "Spot the bug",
+            "brief": "Each program has one bug in how a function is defined, called or returns a value. Find the line, then choose the fix."
+          }
+        ]
+      },
+      {
+        "id": "event-loop",
+        "tab": "Event Loop",
+        "title": "Event Loop",
+        "lead": "<code>while True:</code> repeats its code forever. Each time round, the program can check for events such as button presses and respond to them.",
+        "acts": [
+          {
+            "id": "e1",
+            "tag": "Activity 1",
+            "title": "Inside or outside?",
+            "brief": "Each program has the right lines but the wrong indentation. Use the → and ← buttons to move lines inside or outside the loop, then run it."
+          },
+          {
+            "id": "ef1",
+            "tag": "Activity 2",
+            "title": "Follow the flowchart",
+            "brief": "Press ▶ Start and watch the highlighted shape move along the arrows. When it stops at a diamond, read the question under Now and click Yes or No (or press Y or N)."
+          },
+          {
+            "id": "ef2",
+            "tag": "Activity 3",
+            "title": "Build the flowchart",
+            "brief": "Each lettered shape is blank. Choose what goes in it so the flowchart matches the code. Indented lines go inside the loop; lines before while True go above it."
+          },
+          {
+            "id": "ef3",
+            "tag": "Activity 4",
+            "title": "Which code matches?",
+            "brief": "Indentation changes the shape of the flowchart."
+          },
+          {
+            "id": "ep1",
+            "tag": "Activity 5",
+            "title": "Read the pseudocode",
+            "brief": "Read the plan, then pick the Python that follows it line for line. Pay attention to what comes before, inside and after the loop."
+          },
+          {
+            "id": "ep2",
+            "tag": "Activity 6",
+            "title": "Translate it",
+            "brief": "Choose the Python for each line of the plan. Your program builds up on the right as you go."
+          },
+          {
+            "id": "ep3",
+            "tag": "Activity 7",
+            "title": "Write the pseudocode",
+            "brief": "Build the pseudocode for a program by picking its steps in the right order."
+          },
+          {
+            "id": "ep4",
+            "tag": "Activity 8",
+            "title": "Dry run the plan",
+            "brief": "Predict what the plan does, then watch a dry run. The trace table records every line: the variables, each check, and the output."
+          },
+          {
+            "id": "ep5",
+            "tag": "Activity 9",
+            "title": "Find the error in the plan",
+            "brief": "Each plan has one mistake that stops it meeting its goal. Click the line with the error, then choose the fix."
+          },
+          {
+            "id": "ep6",
+            "tag": "Activity 10",
+            "title": "Complete the plan",
+            "brief": "Choose the right word, operator or value for each blank so the plan meets its goal. Then compare it with the Python."
+          },
+          {
+            "id": "e2",
+            "tag": "Activity 11",
+            "title": "When does it break?",
+            "brief": "The loop counts up and stops with break. Predict the last number printed, then run it. Watch the difference between < and <=."
+          },
+          {
+            "id": "e3",
+            "tag": "Activity 12",
+            "title": "Buttons in the loop",
+            "brief": "This program is running now. The loop checks the buttons over and over. Press A and B on the board (or the A and B keys)."
+          },
+          {
+            "id": "e4",
+            "tag": "Activity 13",
+            "title": "Quick quiz: loops",
+            "brief": "while True, indentation, break and buttons. Answer all of them correctly to finish."
+          },
+          {
+            "id": "e6",
+            "tag": "Activity 14",
+            "title": "What will it do?",
+            "brief": "Read each loop and predict what it prints or shows. Answer all of them correctly to finish."
+          },
+          {
+            "id": "e5",
+            "tag": "Activity 15",
+            "title": "Spot the bug",
+            "brief": "Each loop has one bug. Look for missing colons, indentation and missing break lines."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "selection-lab",
+    "title": "Selection Lab",
+    "key": "ictprg302-selection-progress",
+    "blurb": "if, elif and else, and selection inside the event loop.",
+    "decks": "04–05",
+    "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>if</text></svg>",
+    "slides": [
+      "04 Selection",
+      "05 Selection in Event Loop",
+      "Flowcharts and Pseudocode"
+    ],
+    "outcomes": [
+      "Write conditions with comparison operators that are True or False",
+      "Choose between paths with if, elif and else",
+      "Follow and plan decisions with flowcharts and pseudocode",
+      "Check buttons and sensors inside the event loop and react to them"
+    ],
+    "ids": [
+      "s1",
+      "sf1",
+      "sf2",
+      "sf3",
+      "sp1",
+      "sp2",
+      "sp3",
+      "sp4",
+      "sp5",
+      "sp6",
+      "s2",
+      "s3",
+      "s4",
+      "s7",
+      "s5",
+      "s6",
+      "l1",
+      "lf1",
+      "lf2",
+      "lf3",
+      "lp1",
+      "lp2",
+      "lp3",
+      "lp4",
+      "lp5",
+      "lp6",
+      "l2",
+      "l3",
+      "l4",
+      "l6",
+      "l5"
+    ],
+    "topics": [
+      {
+        "id": "selection",
+        "tab": "Selection",
+        "title": "Selection",
+        "lead": "Selection lets a program choose a path. A condition is either True or False, and that decides which block of code runs.",
+        "acts": [
+          {
+            "id": "s1",
+            "tag": "Activity 1",
+            "title": "Which path runs?",
+            "brief": "Read the program and pick what you think the micro:bit will do. Then watch it run: each condition is marked True or False as Python checks it."
+          },
+          {
+            "id": "sf1",
+            "tag": "Activity 2",
+            "title": "Follow the flowchart",
+            "brief": "Start at the top and follow the arrows. At each diamond, answer Yes or No for the situation shown. Outputs appear on the micro:bit as you pass them."
+          },
+          {
+            "id": "sf2",
+            "tag": "Activity 3",
+            "title": "Build the flowchart",
+            "brief": "Each lettered shape is blank. Choose what goes in it so the flowchart does exactly what the code does."
+          },
+          {
+            "id": "sf3",
+            "tag": "Activity 4",
+            "title": "Which code matches?",
+            "brief": "Read the flowchart, follow every Yes and No arrow, then pick the code with exactly the same structure: the same decisions, in the same order, with the same Yes and No paths."
+          },
+          {
+            "id": "sp1",
+            "tag": "Activity 5",
+            "title": "Read the pseudocode",
+            "brief": "Pseudocode is a plan in plain English. Read it, then pick the Python that follows it line for line. Watch for the order of the checks, int(), and = versus ==."
+          },
+          {
+            "id": "sp2",
+            "tag": "Activity 6",
+            "title": "Translate it",
+            "brief": "Choose the Python for each line of pseudocode. Your program builds up on the right as you go. Not every pseudocode line needs its own Python line."
+          },
+          {
+            "id": "sp3",
+            "tag": "Activity 7",
+            "title": "Write the pseudocode",
+            "brief": "Build the pseudocode for a program by picking its steps in the right order."
+          },
+          {
+            "id": "sp4",
+            "tag": "Activity 8",
+            "title": "Dry run the plan",
+            "brief": "Predict what the plan does, then watch a dry run. The trace table records every line: the variables, each check, and the output."
+          },
+          {
+            "id": "sp5",
+            "tag": "Activity 9",
+            "title": "Find the error in the plan",
+            "brief": "Each plan has one mistake that stops it meeting its goal. Click the line with the error, then choose the fix."
+          },
+          {
+            "id": "sp6",
+            "tag": "Activity 10",
+            "title": "Complete the plan",
+            "brief": "Choose the right word, operator or value for each blank so the plan meets its goal. Then compare it with the Python."
+          },
+          {
+            "id": "s2",
+            "tag": "Activity 11",
+            "title": "Find the boundary",
+            "brief": "Drag the slider to change the variable. The conditions update as you drag, and the green bar shows which block would run."
+          },
+          {
+            "id": "s3",
+            "tag": "Activity 12",
+            "title": "Ask the user",
+            "brief": "input() waits for the user to type something. Run the program, type an answer in the serial pane, and press Enter. Try to reach every target."
+          },
+          {
+            "id": "s4",
+            "tag": "Activity 13",
+            "title": "Assemble the decision",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "s7",
+            "tag": "Activity 14",
+            "title": "True or False?",
+            "brief": "Every if depends on a condition that is either True or False. Work out what each comparison prints. Answer all of them correctly to finish."
+          },
+          {
+            "id": "s5",
+            "tag": "Activity 15",
+            "title": "Quick quiz: selection",
+            "brief": "Conditions, if, elif, else and input. Answer all of them correctly to finish."
+          },
+          {
+            "id": "s6",
+            "tag": "Activity 16",
+            "title": "Spot the bug",
+            "brief": "Each program has one bug. Read what it should do and what actually happens, click the line with the bug, then choose the fix."
+          }
+        ]
+      },
+      {
+        "id": "selection-loop",
+        "tab": "Selection in Event Loop",
+        "title": "Selection in the Event Loop",
+        "lead": "Put an <code>if</code> inside <code>while True:</code> and the micro:bit keeps checking its buttons and sensors, reacting the moment something happens.",
+        "acts": [
+          {
+            "id": "l1",
+            "tag": "Activity 1",
+            "title": "Belongs to the if, or the loop?",
+            "brief": "A small change in indentation gives completely different behaviour."
+          },
+          {
+            "id": "lf1",
+            "tag": "Activity 2",
+            "title": "Follow the flowchart",
+            "brief": "Event loops have a loop-back arrow, so the path never reaches End. Each time you come back to a diamond, the situation may have changed: read the question carefully."
+          },
+          {
+            "id": "lf2",
+            "tag": "Activity 3",
+            "title": "Build the flowchart",
+            "brief": "Fill in the blank shapes so the flowchart matches the event loop. Watch where each line sits: inside the if (on the Yes arrow) or at loop level (on the main path)."
+          },
+          {
+            "id": "lf3",
+            "tag": "Activity 4",
+            "title": "Which code matches?",
+            "brief": "Indentation changes the shape of the flowchart."
+          },
+          {
+            "id": "lp1",
+            "tag": "Activity 5",
+            "title": "Read the pseudocode",
+            "brief": "Read the plan for each event loop, then pick the Python that follows it line for line. Lines between REPEAT FOREVER and END REPEAT are inside the loop."
+          },
+          {
+            "id": "lp2",
+            "tag": "Activity 6",
+            "title": "Translate it",
+            "brief": "Choose the Python for each line of the plan. Indentation is added for you on the right, based on where each line sits in the plan."
+          },
+          {
+            "id": "lp3",
+            "tag": "Activity 7",
+            "title": "Write the pseudocode",
+            "brief": "Build the pseudocode for a program by picking its steps in the right order."
+          },
+          {
+            "id": "lp4",
+            "tag": "Activity 8",
+            "title": "Dry run the plan",
+            "brief": "Predict what the plan does, then watch a dry run. The trace table records every line: the variables, each check, and the output."
+          },
+          {
+            "id": "lp5",
+            "tag": "Activity 9",
+            "title": "Find the error in the plan",
+            "brief": "Each plan has one mistake that stops it meeting its goal. Click the line with the error, then choose the fix."
+          },
+          {
+            "id": "lp6",
+            "tag": "Activity 10",
+            "title": "Complete the plan",
+            "brief": "Choose the right word, operator or value for each blank so the plan meets its goal. Then compare it with the Python."
+          },
+          {
+            "id": "l2",
+            "tag": "Activity 11",
+            "title": "Sensor lab",
+            "brief": "These are the programs from the slides. Pick one, press Run, then use the buttons, sliders and clap to set it off. Change a threshold to see how it changes the behaviour."
+          },
+          {
+            "id": "l3",
+            "tag": "Activity 12",
+            "title": "Quick quiz: what will it do?",
+            "brief": "Buttons, sensors, sound and indentation. Answer all of them correctly to finish."
+          },
+          {
+            "id": "l4",
+            "tag": "Activity 13",
+            "title": "Assemble the event loop",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "l6",
+            "tag": "Activity 14",
+            "title": "When does it react?",
+            "brief": "Each condition reads a button or a sensor. Work out exactly which values make it react. Answer all of them correctly to finish."
+          },
+          {
+            "id": "l5",
+            "tag": "Activity 15",
+            "title": "Spot the bug",
+            "brief": "Each event loop has one bug. Look closely at indentation, comparison signs and sensor ranges."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "loops-lab",
+    "title": "Loops Lab",
+    "key": "ictprg302-loops-progress",
+    "blurb": "while loops and for loops with range().",
+    "decks": "06",
+    "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>↻</text></svg>",
+    "slides": [
+      "06 Loops and Conditions"
+    ],
+    "outcomes": [
+      "Write a while loop with a start value, a condition and an update",
+      "Spot and fix loops that never stop",
+      "Use for loops with range() to repeat a set number of times",
+      "Convert a while loop into a for loop and pick the right loop for the job"
+    ],
+    "ids": [
+      "w1",
+      "w2",
+      "w3",
+      "w9",
+      "w4",
+      "w5",
+      "w6",
+      "w7",
+      "w8",
+      "r1",
+      "r2",
+      "r10",
+      "r3",
+      "r4",
+      "r5",
+      "r6",
+      "r7",
+      "r8",
+      "r9"
+    ],
+    "topics": [
+      {
+        "id": "while-loops",
+        "tab": "While loops",
+        "title": "While loops",
+        "lead": "A while loop is like an if statement that repeats. It keeps running its body while the condition is True, and stops as soon as the condition is False.",
+        "acts": [
+          {
+            "id": "w1",
+            "tag": "Activity 1",
+            "title": "How many times?",
+            "brief": "Work out how many times the loop body runs, type your answer, then run it and watch the loop counter. Each check of the while line is marked True or False."
+          },
+          {
+            "id": "w2",
+            "tag": "Activity 2",
+            "title": "Track, check, update",
+            "brief": "Every while loop that stops has three key parts. Click the line for each part, in order."
+          },
+          {
+            "id": "w3",
+            "tag": "Activity 3",
+            "title": "Will it ever stop?",
+            "brief": "Decide what each loop will do: stop, run forever, or never run at all. Then watch it run. The simulator gives up after 25 times round."
+          },
+          {
+            "id": "w9",
+            "tag": "Activity 4",
+            "title": "Predict the output",
+            "brief": "Read the while loop and pick what it prints. Then run it and watch the variables change each time round."
+          },
+          {
+            "id": "w4",
+            "tag": "Activity 5",
+            "title": "Follow the flowchart",
+            "brief": "In a flowchart, the while line is a diamond. Yes runs the loop body, No leaves the loop, and the arrow on the left goes back to check again."
+          },
+          {
+            "id": "w5",
+            "tag": "Activity 6",
+            "title": "Dry run the plan",
+            "brief": "Predict what the plan does, then watch a dry run fill in the trace table. A trace table is the best way to check a loop by hand."
+          },
+          {
+            "id": "w6",
+            "tag": "Activity 7",
+            "title": "Find the error in the plan",
+            "brief": "Each plan has one mistake that stops it meeting its goal. Click the line with the error, then choose the fix."
+          },
+          {
+            "id": "w7",
+            "tag": "Activity 8",
+            "title": "Quick quiz: while loops",
+            "brief": "Counting loops, conditions and infinite loops. Answer all of them correctly to finish."
+          },
+          {
+            "id": "w8",
+            "tag": "Activity 9",
+            "title": "Spot the bug",
+            "brief": "Each while loop has one bug: a missing colon, the wrong comparison, an update in the wrong place… Click the line, then choose the fix."
+          }
+        ]
+      },
+      {
+        "id": "for-loops",
+        "tab": "For loops",
+        "title": "For loops",
+        "lead": "A for loop is cleaner when you know how many times to repeat. It creates the counter, updates it, and stops at the right time, all in one line.",
+        "acts": [
+          {
+            "id": "r1",
+            "tag": "Activity 1",
+            "title": "Range explorer",
+            "brief": "Change the start, stop and step to see exactly which numbers range() gives. Hit every target. The stop number is never included."
+          },
+          {
+            "id": "r2",
+            "tag": "Activity 2",
+            "title": "Predict the output",
+            "brief": "Read the for loop and pick what it will do. Then run it and watch the loop variable change each time round."
+          },
+          {
+            "id": "r10",
+            "tag": "Activity 3",
+            "title": "How many times?",
+            "brief": "Work out how many numbers the range() gives, which is how many times the loop body runs. Type your answer, then run it and watch the loop counter."
+          },
+          {
+            "id": "r3",
+            "tag": "Activity 4",
+            "title": "Convert it: while → for",
+            "brief": "Each while loop on the left can be written as a shorter for loop. Pick the one that goes through exactly the same numbers."
+          },
+          {
+            "id": "r4",
+            "tag": "Activity 5",
+            "title": "Which loop?",
+            "brief": "For each job, decide which loop fits best. Do you know how many times it repeats, or does it depend on something that happens?"
+          },
+          {
+            "id": "r5",
+            "tag": "Activity 6",
+            "title": "Follow the flowchart",
+            "brief": "A for loop as a flowchart: the diamond asks whether range() has any numbers left. Each Yes hands out the next number."
+          },
+          {
+            "id": "r6",
+            "tag": "Activity 7",
+            "title": "Translate it",
+            "brief": "Choose the Python for each line of the plan. In pseudocode, FROM 1 TO 5 includes 5. In Python, range() always stops one before."
+          },
+          {
+            "id": "r7",
+            "tag": "Activity 8",
+            "title": "Complete the plan",
+            "brief": "Choose the right number, keyword or step for each blank so the plan meets its goal. Then compare it with the Python."
+          },
+          {
+            "id": "r8",
+            "tag": "Activity 9",
+            "title": "Quick quiz: for loops",
+            "brief": "range(), loop variables and choosing the right loop. Answer all of them correctly to finish."
+          },
+          {
+            "id": "r9",
+            "tag": "Activity 10",
+            "title": "Spot the bug",
+            "brief": "Each for loop has one bug, often in the range() numbers. Click the line, then choose the fix."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "datatypes-strings-lab",
+    "title": "Data Types & Strings Lab",
+    "key": "ictprg302-datatypes-progress",
+    "blurb": "int, float, str and bool, then working with strings.",
+    "decks": "08–09",
+    "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>Aa</text></svg>",
+    "slides": [
+      "08 Data Types",
+      "09 Strings"
+    ],
+    "outcomes": [
+      "Tell int, float, str and bool values apart and predict the result of each operator",
+      "Convert between types with int(), float() and str(), and know that input() always gives a string",
+      "Measure a string, change its case and replace part of it with built-in functions and methods",
+      "Find and fix type errors in micro:bit programs"
+    ],
+    "ids": [
+      "d1",
+      "d2",
+      "d8",
+      "d3",
+      "d4",
+      "d5",
+      "d6",
+      "d7",
+      "s1",
+      "s2",
+      "s3",
+      "s8",
+      "s4",
+      "s5",
+      "s6",
+      "s7"
+    ],
+    "topics": [
+      {
+        "id": "data-types",
+        "tab": "Data types",
+        "title": "Letters and numbers",
+        "lead": "Use numbers to calculate and strings for text. Python decides the type from the value you write, and quotes make all the difference.",
+        "acts": [
+          {
+            "id": "d1",
+            "tag": "Activity 1",
+            "title": "What type is it?",
+            "brief": "Integers are whole numbers, floats have a decimal point, and strings are text in quotes. Sort each value: watch out for numbers in quotes."
+          },
+          {
+            "id": "d2",
+            "tag": "Activity 2",
+            "title": "Add or join?",
+            "brief": "+ adds numbers but joins strings, and * repeats strings. Predict what each program prints, then run it. The Variables panel shows each value's type."
+          },
+          {
+            "id": "d8",
+            "tag": "Activity 3",
+            "title": "What type is the result?",
+            "brief": "Each line works something out. Decide what type the answer is: int, float or str. Answer all of them correctly to finish."
+          },
+          {
+            "id": "d3",
+            "tag": "Activity 4",
+            "title": "Type casting",
+            "brief": "Each program needs one expression where the ??? is. Pick the one that meets the goal. Wrong choices run too, so you can see exactly what goes wrong."
+          },
+          {
+            "id": "d4",
+            "tag": "Activity 5",
+            "title": "Input is always a string",
+            "brief": "input() always gives back text, even when you type a number. Run each program, type answers in the serial pane, and hit every target."
+          },
+          {
+            "id": "d5",
+            "tag": "Activity 6",
+            "title": "Assemble the program",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "d6",
+            "tag": "Activity 7",
+            "title": "Quick quiz: data types",
+            "brief": "Numbers, strings and converting between them. Answer all of them correctly to finish."
+          },
+          {
+            "id": "d7",
+            "tag": "Activity 8",
+            "title": "Spot the bug",
+            "brief": "Each program mixes up its types somewhere. Click the line with the bug, then choose the fix."
+          }
+        ]
+      },
+      {
+        "id": "strings",
+        "tab": "Strings",
+        "title": "Strings",
+        "lead": "A string is a sequence of characters. Python has built-in functions and methods to measure it, change its case and replace part of it.",
+        "acts": [
+          {
+            "id": "s1",
+            "tag": "Activity 1",
+            "title": "String function explorer",
+            "brief": "Type any text, choose a function and see the result straight away, with the Python that does it. Hit every target."
+          },
+          {
+            "id": "s2",
+            "tag": "Activity 2",
+            "title": "Count the characters",
+            "brief": "How many characters does len() count? Type your answer and check. Every character is then shown in its own box, and spaces are highlighted."
+          },
+          {
+            "id": "s3",
+            "tag": "Activity 3",
+            "title": "Predict the output",
+            "brief": "What does each string function give back? Predict, then run it and check the Variables panel."
+          },
+          {
+            "id": "s8",
+            "tag": "Activity 4",
+            "title": "Pick the expression",
+            "brief": "Each program needs one expression where the ??? is. Pick the one that prints exactly the goal. Wrong choices run too, so you can see what they really do."
+          },
+          {
+            "id": "s4",
+            "tag": "Activity 5",
+            "title": "Strings and input",
+            "brief": "Programs that use string functions on what the user types, starting with two from the slides."
+          },
+          {
+            "id": "s5",
+            "tag": "Activity 6",
+            "title": "Assemble the program",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "s6",
+            "tag": "Activity 7",
+            "title": "Quick quiz: strings",
+            "brief": "len(), upper(), lower() and replace(). Answer all of them correctly to finish."
+          },
+          {
+            "id": "s7",
+            "tag": "Activity 8",
+            "title": "Spot the bug",
+            "brief": "Each program uses a string function wrongly. Click the line with the bug, then choose the fix."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "lists-lab",
+    "title": "Lists Lab",
+    "key": "ictprg302-lists-progress",
+    "blurb": "Building and changing lists, and looping over them.",
+    "decks": "10",
+    "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='26' font-weight='700' fill='white' text-anchor='middle'>[ ]</text></svg>",
+    "slides": [
+      "10 Lists"
+    ],
+    "outcomes": [
+      "Create lists and read items by their index",
+      "Add, change and remove items",
+      "Loop through a list to print, total or filter its items",
+      "Avoid index errors at the ends of a list"
+    ],
+    "ids": [
+      "a1",
+      "a2",
+      "a3",
+      "a4",
+      "a5",
+      "a8",
+      "a6",
+      "a7",
+      "b1",
+      "b2",
+      "b3",
+      "b4",
+      "b7",
+      "b5",
+      "b6"
+    ],
+    "topics": [
+      {
+        "id": "lists",
+        "tab": "Creating &amp; changing lists",
+        "title": "Lists",
+        "lead": "A list stores many values in a single variable, like a row of numbered boxes. Perfect for collections such as sensor readings or names.",
+        "acts": [
+          {
+            "id": "a1",
+            "tag": "Activity 1",
+            "title": "Boxes and indexes",
+            "brief": "Picture a list as a row of boxes, numbered from 0. Click the box each question asks for."
+          },
+          {
+            "id": "a2",
+            "tag": "Activity 2",
+            "title": "What's at that index?",
+            "brief": "Read each list and work out what the code gives back. Watch out for an index that doesn't exist."
+          },
+          {
+            "id": "a3",
+            "tag": "Activity 3",
+            "title": "List playground",
+            "brief": "Lists can grow and shrink. Use the buttons to change the list and watch the boxes and the Python. Hit every target, including the errors."
+          },
+          {
+            "id": "a4",
+            "tag": "Activity 4",
+            "title": "Predict the list",
+            "brief": "Each program changes a list. Predict what's printed, then run it and watch the list in the Variables panel."
+          },
+          {
+            "id": "a5",
+            "tag": "Activity 5",
+            "title": "Assemble the program",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "a8",
+            "tag": "Activity 6",
+            "title": "Translate it",
+            "brief": "Choose the Python for each line of the plan. ADD … TO THE END OF is append(), and the first item is always index 0."
+          },
+          {
+            "id": "a6",
+            "tag": "Activity 7",
+            "title": "Quick quiz: lists",
+            "brief": "Indexes, list functions and len(). Answer all of them correctly to finish."
+          },
+          {
+            "id": "a7",
+            "tag": "Activity 8",
+            "title": "Spot the bug",
+            "brief": "Each program uses a list wrongly. Click the line with the bug, then choose the fix."
+          }
+        ]
+      },
+      {
+        "id": "list-loops",
+        "tab": "Lists &amp; loops",
+        "title": "Lists and loops",
+        "lead": "Loops are the natural way to work through every item in a list: to print them, add them up, or build a new list from the ones you want.",
+        "acts": [
+          {
+            "id": "b1",
+            "tag": "Activity 1",
+            "title": "Loop through a list",
+            "brief": "Lists and loops go hand in hand. Predict what each loop prints, then watch the loop variable change in the Variables panel."
+          },
+          {
+            "id": "b2",
+            "tag": "Activity 2",
+            "title": "Temperature logger",
+            "brief": "The slides' program: it appends a reading every second while the temperature is below 25, then prints them all with a for loop."
+          },
+          {
+            "id": "b3",
+            "tag": "Activity 3",
+            "title": "Dry run the plan",
+            "brief": "Predict what each plan displays, then watch the trace table record every step through the list."
+          },
+          {
+            "id": "b4",
+            "tag": "Activity 4",
+            "title": "Which loop works?",
+            "brief": "Each goal has three attempts. Pick the loop that does exactly what the goal asks. The others are off by one, crash, or print too much."
+          },
+          {
+            "id": "b7",
+            "tag": "Activity 5",
+            "title": "Complete the plan",
+            "brief": "Choose the right word, number or symbol for each blank so the plan meets its goal. Then compare it with the Python."
+          },
+          {
+            "id": "b5",
+            "tag": "Activity 6",
+            "title": "Quick quiz: lists and loops",
+            "brief": "Looping through lists with for and range(len()). Answer all of them correctly to finish."
+          },
+          {
+            "id": "b6",
+            "tag": "Activity 7",
+            "title": "Spot the bug",
+            "brief": "Each loop over a list has one bug, often an index that's off by one. Click the line, then choose the fix."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "file-lab",
+    "title": "File Lab",
+    "key": "ictprg302-files-progress",
+    "blurb": "Reading, writing and appending to files.",
+    "decks": "11",
+    "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>f</text></svg>",
+    "slides": [
+      "11 File Manipulation"
+    ],
+    "outcomes": [
+      "Write text to a file and read it back with open() and with",
+      "Pick the right file mode and know when 'w' wipes a file",
+      "Add to an existing file by reading it first and writing it back",
+      "List the files saved on the micro:bit with listdir()"
+    ],
+    "ids": [
+      "f1",
+      "f2",
+      "f3",
+      "f4",
+      "f7",
+      "f5",
+      "f6",
+      "g1",
+      "g2",
+      "g3",
+      "g4",
+      "g7",
+      "g5",
+      "g6"
+    ],
+    "topics": [
+      {
+        "id": "read-write",
+        "tab": "Reading &amp; writing",
+        "title": "Reading and writing files",
+        "lead": "The micro:bit can save text in files on the device, and read it back later. Open a file in the right mode, and <code>with</code> closes it for you, even if an error occurs.",
+        "acts": [
+          {
+            "id": "f1",
+            "tag": "Activity 1",
+            "title": "Which mode?",
+            "brief": "For each job, choose the mode you would open the file with. Two of the four modes aren't used in the online micro:bit editor, but you should still know them."
+          },
+          {
+            "id": "f2",
+            "tag": "Activity 2",
+            "title": "Predict the file",
+            "brief": "Predict what each program prints, then run it. The storage panel shows what's inside every file, and ↵ marks each \\n."
+          },
+          {
+            "id": "f3",
+            "tag": "Activity 3",
+            "title": "Choose the mode",
+            "brief": "Pick \"r\" or \"w\" for every open() so the program meets its goal, then run it and watch the storage panel."
+          },
+          {
+            "id": "f4",
+            "tag": "Activity 4",
+            "title": "Assemble the program",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "f7",
+            "tag": "Activity 5",
+            "title": "Translate it",
+            "brief": "Choose the Python for each line of the plan. FOR WRITING is \"w\", FOR READING is \"r\", and ⏎ is \\n."
+          },
+          {
+            "id": "f5",
+            "tag": "Activity 6",
+            "title": "Quick quiz: files",
+            "brief": "The slides' quiz plus a few more. Answer all of them correctly to finish."
+          },
+          {
+            "id": "f6",
+            "tag": "Activity 7",
+            "title": "Spot the bug",
+            "brief": "Each program has one file mistake: a wrong mode, a wrong name or a missing \\n. Click the line with the bug, then choose the fix."
+          }
+        ]
+      },
+      {
+        "id": "append",
+        "tab": "Appending &amp; listing",
+        "title": "Appending and listing files",
+        "lead": "Opening a file with 'w' wipes it. To add to a file in the online editor, read it first, write the old content back, then write the new text. <code>listdir()</code> shows which files exist.",
+        "acts": [
+          {
+            "id": "g1",
+            "tag": "Activity 1",
+            "title": "Simulate appending",
+            "brief": "The slides' append program and some broken versions of it. Predict what's printed, then watch the file change."
+          },
+          {
+            "id": "g2",
+            "tag": "Activity 2",
+            "title": "What does listdir() show?",
+            "brief": "Predict the list of files. Remember main.py, your program, is always there."
+          },
+          {
+            "id": "g3",
+            "tag": "Activity 3",
+            "title": "Assemble the append",
+            "brief": "Build the code by picking the scrambled lines in the right order."
+          },
+          {
+            "id": "g4",
+            "tag": "Activity 4",
+            "title": "Dry run the plan",
+            "brief": "Predict what each plan prints, then watch the trace table follow what is inside the file after every step."
+          },
+          {
+            "id": "g7",
+            "tag": "Activity 5",
+            "title": "Which program works?",
+            "brief": "Read the goal and what's already saved. Then pick the program that meets the goal exactly."
+          },
+          {
+            "id": "g5",
+            "tag": "Activity 6",
+            "title": "Quick quiz: appending and listing",
+            "brief": "Simulating append and listdir(). Answer all of them correctly to finish."
+          },
+          {
+            "id": "g6",
+            "tag": "Activity 7",
+            "title": "Spot the bug",
+            "brief": "Each program tries to append or list files but has one bug. Click the line, then choose the fix."
+          }
+        ]
+      }
+    ]
+  }
+]
