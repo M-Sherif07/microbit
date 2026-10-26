@@ -2,8 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Board from "../components/Board.jsx";
 import { useRunner } from "../components/ui.jsx";
 import { ignoreCancel } from "../lib/microbit.js";
-import LABS from "./labs.json";
+import EXTRA_LABS from "./extraLabs.js";
+import COURSE_LABS from "./labs.json";
 
+const LABS = [...COURSE_LABS, ...EXTRA_LABS];
+const NUMBER_WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 function doneSet(lab) {
@@ -57,7 +60,7 @@ export default function Home() {
       <div>
         <p className="eyebrow">ICTPRG302 · micro:bit · Python</p>
         <h1>Python labs</h1>
-        <p className="lead">Six hands-on labs that follow the course slides, from your first variable to saving data in files. Every activity runs in a micro:bit simulator on the page, so you can try code straight away and test it on a real board afterwards.</p>
+        <p className="lead">{NUMBER_WORDS[LABS.length] || LABS.length} hands-on labs that follow the course slides, from your first variable to saving data in files{EXTRA_LABS.length ? ", then planning and testing a whole program from a client brief" : ""}. Every activity runs in a micro:bit simulator on the page, so you can try code straight away and test it on a real board afterwards.</p>
         <div className="overall">
           <div className="bar" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={pct}><i style={{ width: pct + "%" }} /></div>
           <span>{allDone} of {all} activities done ({pct}%)</span>
@@ -117,7 +120,7 @@ function LabSection({ lab, i, done, n, total, pct, next }) {
         <div className="side">
           <div><h3>By the end you can</h3><ul className="outcomes">{lab.outcomes.map((o, k) => <li key={k}>{o}</li>)}</ul></div>
           <div><h3>Matching slides</h3><div className="chips">{lab.slides.map(s => <span key={s}>{s}</span>)}</div></div>
-          <div><h3>Before you start</h3><p className="note">{prev ? `This lab builds on the ${prev.title}. Finish that first if you're new to these ideas.` : "No experience needed. This is the place to start."}</p></div>
+          <div><h3>Before you start</h3><p className="note">{lab.before ? lab.before : prev ?`This lab builds on the ${prev.title}. Finish that first if you're new to these ideas.` : "No experience needed. This is the place to start."}</p></div>
         </div>
         <div className="topics">
           <h3>What's inside: {plural(lab.topics.length, "topic", "topics")}, {plural(total, "activity", "activities")}</h3>

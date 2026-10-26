@@ -12,7 +12,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: resolve(__dirname, "index.html"),
-        "loops-lab": resolve(__dirname, "loops-lab/index.html")
+        "loops-lab": resolve(__dirname, "loops-lab/index.html"),
+        "plan-code-lab": resolve(__dirname, "plan-code-lab/index.html")
       }
     }
   }

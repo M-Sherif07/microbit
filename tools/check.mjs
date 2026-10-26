@@ -172,5 +172,27 @@ for (const [lines, want, answer] of BROKEN) {
 }
 console.log(`error help: ${helpOk} of ${BROKEN.length} broken programs get the right advice`);
 
+// Plan It, Code It has no activities: check its model answers pass the lab's own checklists,
+// and the model solution shows every test's expected result
+const PCL = path.join(ROOT, "src", "labs", "plan-code-lab");
+if (fs.existsSync(path.join(PCL, "scenarios.js"))) {
+  const { SCENARIOS, STEPS } = await import(pathToFileURL(path.join(PCL, "scenarios.js")).href);
+  const { pseudoChecks, flowChecks, runCode, splitInputs, norm } = await import(pathToFileURL(path.join(PCL, "logic.js")).href);
+  let tests = 0;
+  for (const sc of SCENARIOS) {
+    const at = `plan-code-lab ${sc.id}`;
+    for (const c of pseudoChecks(sc, sc.pseudo)) if (!c.ok) problems.push(`${at}: the model pseudocode fails "${c.msg}"`);
+    for (const c of flowChecks(sc, sc.flow)) if (!c.ok) problems.push(`${at}: the model flowchart fails "${c.msg}"`);
+    for (const [k] of STEPS) if (!(sc.hints[k] || []).length) problems.push(`${at}: no hints for the ${k} step`);
+    for (const t of sc.tests) {
+      tests++;
+      const r = await runCode(sc.code, splitInputs(t.in)), got = r.outputs.join(" | ");
+      if (r.error) problems.push(`${at} test "${t.in}": the model solution stops with ${r.error.split("\n").pop()}`);
+      else if (norm(got) !== norm(t.exp)) problems.push(`${at} test "${t.in}": expected "${t.exp}", the model solution shows "${got}"`);
+    }
+  }
+  console.log(`plan-code-lab: ${SCENARIOS.length} scenarios, ${tests} tests run against the model solutions`);
+}
+
 if (problems.length) { console.log(`\n${problems.length} problem${problems.length === 1 ? "" : "s"}:\n` + problems.map(p => "  - " + p).join("\n")); process.exit(1); }
 console.log("All checks passed.");

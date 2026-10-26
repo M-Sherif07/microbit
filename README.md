@@ -1,7 +1,8 @@
 # ICTPRG302 Python Labs (React)
 
 A React + Vite version of the labs in `../ICTPRG302-Python-Labs`. The **home page** and the **Loops Lab** are
-React; the other five labs are still the original pages, copied into `public/` so every link works.
+React; the other five labs are still the original pages, copied into `public/` so every link works. The
+**Plan It, Code It** lab exists only here (see below).
 
 ```sh
 npm install
@@ -49,3 +50,22 @@ program finishes, the challenge's `check(run)` gets a record of what it did (tex
 prints, button presses, `input()` answers, LEDs left on, the source) and returns `null` for a pass
 or a one-line hint. Code and passes are saved under `ictprg302-<lab>-code`. "Reset my progress"
 clears the passes but keeps students' code.
+
+## Plan It, Code It
+
+Lab 7, at `plan-code-lab/index.html`. Students take a client brief through five steps: inputs / processing /
+outputs, pseudocode, a flowchart they build shape by shape, micro:bit Python, and a test table. There are three
+scenarios (cinema tickets, canteen till, PIN locker), one per tab.
+
+| To change | Edit |
+|---|---|
+| A brief, its model answers, hints or tests | `src/labs/plan-code-lab/scenarios.js` |
+| The pseudocode and flowchart checklists, running tests, the hand-in text | `src/labs/plan-code-lab/logic.js` |
+| How the flowchart is drawn | `src/labs/plan-code-lab/Flowchart.jsx` |
+| The page and its five steps | `src/labs/plan-code-lab/PlanCodeLab.jsx`, `plan-code.css` |
+| Its card on the home page | `src/home/extraLabs.js` (not `labs.json`, which `npm run sync` rewrites) |
+
+Code runs on the shared interpreter in `src/lib/python.js`, and errors get the same help as the other labs.
+`npm run check` confirms each model pseudocode and flowchart passes its own checklist, and that each model
+solution shows the expected result for every test. Students' work is saved under `ictprg302-plan-code-lab`.
+Finished steps are saved under `ictprg302-plan-code-progress` as `<scenario>-<step>`, which the home page reads.
