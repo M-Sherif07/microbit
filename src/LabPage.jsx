@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import * as KINDS from "./activities/index.js";
 import Challenges from "./components/Challenges.jsx";
 import CodeLab from "./components/CodeLab.jsx";
+import ThemeToggle from "./components/ThemeToggle.jsx";
 import { TipProvider } from "./components/Tooltip.jsx";
 import { Activity } from "./components/ui.jsx";
 
@@ -86,6 +87,7 @@ export default function LabPage({ lab }) {
             </button>
           ))}
         </nav>
+        <ThemeToggle />
       </div>
     </header>
 

@@ -47,8 +47,10 @@ a { color: var(--accent); }
 .overall span { font: 600 .85rem var(--f-mono); color: var(--muted); }
 
 /* ---------- sticky nav ---------- */
-.labnav { position: sticky; top: 0; z-index: 10; background: var(--bg); border-block: 1px solid var(--line); }
+.labnav { position: sticky; top: 0; z-index: 10; background: var(--bg); border-block: 1px solid var(--line); display: flex; align-items: center; gap: 10px; max-width: 100%; padding-right: 16px; }
+.labnav-inner { flex: 1 1 auto; min-width: 0; }
 .labnav ol { list-style: none; margin: 0 auto; max-width: 1120px; padding: 8px 16px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.labnav .theme-btn { flex: none; }
 .labnav a { display: block; white-space: nowrap; font: 600 .8rem var(--f-mono); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
 .labnav a:hover, .labnav a[aria-current="true"] { border-color: var(--accent); color: var(--accent); }
 .labnav a small { font: inherit; color: var(--muted); margin-left: 6px; }
@@ -167,3 +169,8 @@ kbd { font: 700 .78rem var(--f-mono); border: 1px solid var(--line); border-bott
   .hero { grid-template-columns: minmax(0, 1fr); }
   .play { max-width: 360px; }
 }
+
+/* the colour theme button (System / Light / Dark), in the top bar */
+.theme-btn { font: 600 .8rem var(--f-mono); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.theme-btn:hover { border-color: var(--accent); }
+@media print { .theme-btn { display: none !important; } }

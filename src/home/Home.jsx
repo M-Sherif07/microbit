@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Board from "../components/Board.jsx";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 import { useRunner } from "../components/ui.jsx";
 import { ignoreCancel } from "../lib/microbit.js";
 import EXTRA_LABS from "./extraLabs.js";
@@ -70,7 +71,8 @@ export default function Home() {
       <HeroBoard />
     </header>
 
-    <nav className="labnav" aria-label="Labs">
+    <div className="labnav">
+      <nav className="labnav-inner" aria-label="Labs">
       <ol>
         {state.map(({ lab, i, n, total }) => (
           <li key={lab.folder}>
@@ -80,7 +82,9 @@ export default function Home() {
           </li>
         ))}
       </ol>
-    </nav>
+      </nav>
+      <ThemeToggle />
+    </div>
 
     <main className="wrap">
       <section className="how" aria-labelledby="how-h">

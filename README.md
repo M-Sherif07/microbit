@@ -33,6 +33,7 @@ localStorage keys as the original pages.
 | The help shown when a student's code has an error | `src/lib/errorHelp.js` (tested by `npm run check`) |
 | How a "Code it here" challenge is checked | `check:` on the challenge in `content.js` (helpers in `src/lib/checks.js`) |
 | Home page layout and wording | `src/home/Home.jsx`, `src/home/home.css` |
+| The colour theme button (System / Light / Dark) | `src/lib/theme.js`; the button is `src/components/ThemeToggle.jsx` on React pages and `src/original/theme.js` on the not-yet-ported labs (then run `npm run sync`) |
 | Home page lab list, outcomes, slides | rebuild the original course, then `node tools/sync-home.mjs` |
 
 ## Porting another lab

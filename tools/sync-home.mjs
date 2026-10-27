@@ -10,8 +10,8 @@ Usage (from this folder):
    changed to match the React labs: the same code font (no ligatures), no list of key code
    lines in the topic intros, hover tooltips on every line of code (src/original/code-tips.js),
    and the same ways forward as the React labs: Next on every round but the last, and a
-   "Next topic" bar at the end of each topic (src/original/lab-nav.js). Both are built into
-   public/shared/.
+   "Next topic" bar at the end of each topic (src/original/lab-nav.js), and the colour theme
+   button (src/original/theme.js). All three are built into public/shared/.
    A lab that has been ported is removed from public/.
 
 Run it again after rebuilding the original course, or after porting another lab.
@@ -33,6 +33,9 @@ fs.mkdirSync(path.join(ROOT, "src", "home"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "src", "home", "labs.json"), JSON.stringify(labs, null, 2) + "\n");
 console.log(`Wrote src/home/labs.json: ${labs.length} labs`);
 
+// Applies the saved colour theme before the page draws (the same line as in the React pages' <head>)
+const THEME_BOOT = '<script>try{var t=localStorage.getItem("ictprg302-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>\n';
+
 // Make an original page match the React labs (see 2. above)
 function matchReact(html) {
   if (!/<\/body>/.test(html)) throw new Error("no </body> to add the tooltip script before");
@@ -40,17 +43,18 @@ function matchReact(html) {
     .replace(/JetBrains\+Mono/g, "IBM+Plex+Mono").replace(/"JetBrains Mono"/g, '"IBM Plex Mono"')
     .replace("</style>", '* { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }\n</style>')
     .replace(/\n?\s*<ul class="keys">[\s\S]*?<\/ul>/g, "")
-    .replace("</body>", '<script src="../shared/code-tips.js" defer></script>\n<script src="../shared/lab-nav.js" defer></script>\n</body>');
+    .replace("</head>", THEME_BOOT + "</head>")
+    .replace("</body>", '<script src="../shared/code-tips.js" defer></script>\n<script src="../shared/lab-nav.js" defer></script>\n<script src="../shared/theme.js" defer></script>\n</body>');
 }
 
 await build({
-  entryPoints: { "code-tips": path.join(ROOT, "src", "original", "code-tips.js"), "lab-nav": path.join(ROOT, "src", "original", "lab-nav.js") },
+  entryPoints: { "code-tips": path.join(ROOT, "src", "original", "code-tips.js"), "lab-nav": path.join(ROOT, "src", "original", "lab-nav.js"), theme: path.join(ROOT, "src", "original", "theme.js") },
   outdir: path.join(ROOT, "public", "shared"),
   bundle: true, format: "iife", target: "es2019", minify: true, legalComments: "none",
   banner: { js: "/* Built by tools/sync-home.mjs from src/original/. Don't edit this file. */" },
   logLevel: "warning"
 });
-console.log("Built public/shared/code-tips.js and lab-nav.js (tooltips and Next buttons for the original labs)");
+console.log("Built public/shared/code-tips.js, lab-nav.js and theme.js (tooltips, Next buttons and the theme button for the original labs)");
 
 for (const lab of labs) {
   const dest = path.join(ROOT, "public", lab.folder);

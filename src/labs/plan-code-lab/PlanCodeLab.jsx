@@ -2,6 +2,7 @@
    code it and test it. One scenario per tab. Students' work is kept in localStorage; which steps
    are done is also saved as a progress set, so the home page can show it like the other labs. */
 import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
+import ThemeToggle from "../../components/ThemeToggle.jsx";
 import { errorHelp } from "../../lib/errorHelp.js";
 import FlowSvg from "./Flowchart.jsx";
 import { blankWork, flowChecks, norm, pseudoChecks, rowPass, runCode, splitInputs, stepDone, testRows, TEST_HELP, workText } from "./logic.js";
@@ -88,6 +89,7 @@ export default function PlanCodeLab() {
             </button>;
           })}
         </nav>
+        <ThemeToggle />
       </div>
       <div className="pc-progress" aria-hidden="true"><span style={{ width: nDone * 20 + "%" }} /></div>
     </header>

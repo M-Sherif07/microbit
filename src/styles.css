@@ -460,3 +460,8 @@ ol.code li.cur[data-tip]:hover { background: var(--hl); }
 .topic-end p { color: var(--muted); }
 .topic-end p strong { color: var(--ink); }
 .topic-end a.btn { text-decoration: none; }
+
+/* the colour theme button (System / Light / Dark), in the top bar */
+.theme-btn { font: 600 .8rem var(--f-mono); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.theme-btn:hover { border-color: var(--accent); }
+@media print { .theme-btn { display: none !important; } }
