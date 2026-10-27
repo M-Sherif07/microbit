@@ -107,7 +107,9 @@ function nameError(name, lines, n) {
   if (/^(true|false|none)$/.test(name)) return `${c(name)} needs a capital letter: ${c(name[0].toUpperCase() + name.slice(1))}.`;
   if (/^[A-Z]/.test(name) && [...KEYWORDS, ...FUNCTIONS].includes(name.toLowerCase())) return `Python is case-sensitive: write ${c(name.toLowerCase())}, not ${c(name)}.`;
   if (vars.has(name) && vars.get(name) > n) return `${c(name)} is only created on line ${vars.get(name)}, but line ${n} runs first and needs it already. Set ${c(name)} on a line above line ${n}.`;
-  const near = closest(name, [...vars.keys(), ...FUNCTIONS, ...KEYWORDS]);
+  // A keyword only when it's one letter off ("brek"), so a misspelt variable like "totl" isn't matched to "not"
+  const kw = closest(name, KEYWORDS);
+  const near = closest(name, [...vars.keys(), ...FUNCTIONS]) || (kw && distance(name.toLowerCase(), kw.toLowerCase()) <= 1 ? kw : null);
   if (near) return `Python doesn't know ${c(name)}. Did you mean ${c(near)}${vars.has(near) ? ` (set on line ${vars.get(near)})` : ""}? Names have to match exactly.`;
   const t = (lines[n - 1] || "").trim();
   if (new RegExp(`(print|scroll|show)\\(\\s*${name}\\s*\\)`).test(t)) return `Python doesn't know a variable called ${c(name)}. If you meant the word itself, put it in quotes: ${c(`"${name}"`)}.`;
@@ -177,11 +179,44 @@ function valueError(msg) {
   return "A value on this line is the right type but not allowed here. Print it on the line before to see what it is.";
 }
 
+/* What kind of error it is, in plain English: [name, when Python found it, what this kind of error means].
+   "before": Python checks the whole program first, so nothing ran. "while": it stopped part way. */
+export const ERROR_TYPES = {
+  SyntaxError: ["Syntax error", "before", "Python couldn't read a line, so it didn't run any of the program. It's usually a missing colon, bracket or quote, or a misspelt keyword."],
+  IndentationError: ["Indentation error", "before", "The spaces at the start of a line are wrong, so Python can't tell which block the line belongs to. None of the program ran."],
+  NameError: ["Name error", "while", "The program used a name Python doesn't know: a misspelt variable or function, or a variable used before it was given a value."],
+  TypeError: ["Type error", "while", "Two kinds of value that don't go together were mixed, like adding text to a number, or a value was used the wrong way."],
+  ValueError: ["Value error", "while", "A value was the right kind but couldn't be used, like turning the text \"ten\" into a number with int()."],
+  ZeroDivisionError: ["Zero division error", "while", "The program divided by zero, which isn't possible."],
+  AttributeError: ["Attribute error", "while", "The part after a dot doesn't exist, like display.scrol instead of display.scroll."],
+  EOFError: ["Out of input", "while", "The program asked for more input than it was given."],
+  Timeout: ["Never finished", "stopped", "The program kept going for too long, so the simulator stopped it. This isn't a Python error: it's usually a loop that never ends."]
+};
+const WHEN = { before: "found before the program ran", while: "happened while the program was running", stopped: "the simulator stopped the program" };
+// Real Python the simulator can't run yet (a list, def, len() ...): what it is, or null. Then it may not be the student's mistake
+function simulatorGap(err, lines) {
+  const t = (lines[(err.line || 1) - 1] || "").trim();
+  const hit = /SyntaxError|NameError|AttributeError/.test(err.type) && UNSUPPORTED.find(([re]) => re.test(t));
+  if (hit) return hit[1];
+  const name = err.type === "NameError" && (err.msg.match(/name '(\w+)'/) || [])[1];
+  return name && NOT_SIMULATED_FN.includes(name) ? c(name + "()") : null;
+}
+// [name, when, meaning] for an error, using the program's lines to spot code the simulator doesn't run
+export function errorKind(err, lines) {
+  if (simulatorGap(err, lines)) return ["Not run by this simulator", err.type === "SyntaxError" ? "before" : "while", "This looks like real Python that the simulator on this page can't run yet, so it may not be a mistake in your code."];
+  return ERROR_TYPES[err.type] || [err.type, "while", "Python stopped with an error."];
+}
+// The error type as a heading and one line on what it means (HTML, escaped)
+export function errorType(err, lines) {
+  const [name, when, meaning] = errorKind(err, lines);
+  return `<span class="err-type"><span class="err-kind">Error type: ${esc(name)}</span> <code>${esc(err.type)}</code> · ${WHEN[when]}<span class="err-mean">${esc(meaning)}</span></span>`;
+}
+
 export function errorHelp(err, lines) {
   const n = err.line || 1, t = (lines[n - 1] || "").trim();
   let help;
-  const hit = /SyntaxError|NameError|AttributeError/.test(err.type) && UNSUPPORTED.find(([re]) => re.test(t));
-  if (hit) return `<strong>${esc(err.type)} on line ${n}.</strong> ${notSimulated(hit[1])}`;
+  const gap = simulatorGap(err, lines);
+  if (gap) return `<strong>${esc(err.type)} on line ${n}.</strong> ${notSimulated(gap)}`;
   switch (err.type) {
     case "SyntaxError": help = syntax(t, n); break;
     case "IndentationError": help = indentation(err.msg, lines, n); break;

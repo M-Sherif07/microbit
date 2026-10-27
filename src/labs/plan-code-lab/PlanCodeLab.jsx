@@ -3,7 +3,7 @@
    are done is also saved as a progress set, so the home page can show it like the other labs. */
 import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ThemeToggle from "../../components/ThemeToggle.jsx";
-import { errorHelp } from "../../lib/errorHelp.js";
+import { errorHelp, errorKind, errorType } from "../../lib/errorHelp.js";
 import { addPsKeywords, hl, psHl } from "../../lib/highlight.js";
 import FlowSvg from "./Flowchart.jsx";
 import { blankWork, flowChecks, norm, pseudoChecks, rowPass, runCode, splitInputs, stepDone, testRows, TEST_HELP, workText } from "./logic.js";
@@ -181,17 +181,18 @@ const hintProps = (sc, s, upd, key) => ({ list: sc.hints[key], n: s.hints[key] |
 const Painted = ({ src, paint }) => <pre dangerouslySetInnerHTML={{ __html: src.split("\n").map(paint).join("\n") }} />;
 
 // Editor with line numbers and coloured code, Tab to indent (Esc then Tab leaves) and auto-indent on Enter.
-// It's a transparent textarea over the coloured lines, like the other labs' editor. errLine: the line with an error
-const Editor = forwardRef(function Editor({ id, title, value, onChange, mode, rows, errLine = 0 }, ref) {
+// It's a transparent textarea over the coloured lines, like the other labs' editor. errLine: the line with an error, runId: changes on every run
+const Editor = forwardRef(function Editor({ id, title, value, onChange, mode, rows, errLine = 0, errName = "Error", runId = 0 }, ref) {
   const ta = useRef(null), box = useRef(null), caret = useRef(null), escaped = useRef(false);
   useLayoutEffect(() => {
     if (caret.current !== null && ta.current) { ta.current.selectionStart = ta.current.selectionEnd = caret.current; caret.current = null; }
   });
-  // Scroll the line with the error into view
+  // Scroll the line with the error into view after each run, even when it's the same line as last time
   useEffect(() => {
     const el = errLine && box.current && box.current.querySelector(".ed-line.err");
-    if (el) el.scrollIntoView({ block: "nearest" });
-  }, [errLine]);
+    // Centre it in the editor box (only the box scrolls, not the page)
+    if (el) box.current.scrollTop = el.offsetTop - (box.current.clientHeight - el.offsetHeight) / 2;
+  }, [errLine, runId]);
   const put = (text, a, b, at) => { caret.current = at === undefined ? a + text.length : at; onChange(value.slice(0, a) + text + value.slice(b)); };
   useImperativeHandle(ref, () => ({
     // Insert a keyword on its own line, with the caret in its gap ("IF | THEN")
@@ -227,7 +228,7 @@ const Editor = forwardRef(function Editor({ id, title, value, onChange, mode, ro
   const err = i => (errLine === i + 1 ? "err" : undefined);
   return (
     <div className="pc-editor">
-      <div className="pc-editor-bar"><span>{title}</span>{errLine ? <span className="pc-err-tag">Error on line {errLine}</span> : <span>Tab indents · Esc then Tab leaves</span>}</div>
+      <div className="pc-editor-bar"><span>{title}</span>{errLine ? <span className="pc-err-tag">{errName} on line {errLine}</span> : <span>Tab indents · Esc then Tab leaves</span>}</div>
       <div className="ed" ref={box}>
         <ol className="ed-gutter" aria-hidden="true">{lines.map((_, i) => <li key={i} className={err(i)}>{i + 1}</li>)}</ol>
         <div className="ed-stack" style={{ "--cols": width + "ch", "--rows": Math.max(lines.length, Number(rows) || 0) }}>
@@ -235,7 +236,7 @@ const Editor = forwardRef(function Editor({ id, title, value, onChange, mode, ro
             {lines.map((l, i) => <span key={i} className={"ed-line" + (err(i) ? " err" : "")} dangerouslySetInnerHTML={{ __html: (paint(l) || "") + "\n" }} />)}
           </pre>
           <textarea id={id} ref={ta} spellCheck={false} autoCapitalize="off" autoComplete="off" autoCorrect="off" wrap="off" value={value}
-            aria-label={title + (errLine ? `. Error on line ${errLine}` : "")} aria-invalid={errLine ? true : undefined}
+            aria-label={title + (errLine ? `. ${errName} on line ${errLine}` : "")} aria-invalid={errLine ? true : undefined}
             onChange={e => onChange(e.target.value)} onKeyDown={onKeyDown} onBlur={() => { escaped.current = false; }} />
         </div>
       </div>
@@ -393,6 +394,8 @@ function ErrorText({ run, code }) {
   const help = run.err ? (TEST_HELP[run.err.type] || errorHelp(run.err, code.split("\n"))) : "";
   return (
     <div className="pc-err-in">
+      {/* errorType returns escaped HTML: the kind of error and what it means */}
+      {run.err && <div className="pc-err-type" dangerouslySetInnerHTML={{ __html: errorType(run.err, code.split("\n")) }} />}
       <span className="pc-err">{run.error}</span>
       {/* errorHelp and TEST_HELP return escaped HTML with <code> and <strong> */}
       {help && <div className="pc-err-help" dangerouslySetInnerHTML={{ __html: help }} />}
@@ -414,7 +417,7 @@ function Code({ sc, s, upd, done }) {
       <p className="brief">Translate your plan one line at a time. Use <code>int(input("..."))</code> to read a number and <code>display.scroll(...)</code> to show a result. Run it with your own inputs before moving on to the tests.</p>
       <div className="split">
         <div className="pc-stack">
-          <Editor id="code" title="main.py" mode="py" rows="16" errLine={errLine} value={s.code} onChange={v => upd(x => { x.code = v; x.results = null; })} />
+          <Editor id="code" title="main.py" mode="py" rows="16" runId={run ? run.n : 0} errLine={errLine} errName={errLine ? errorKind(run.err, run.code.split("\n"))[0] : "Error"} value={s.code} onChange={v => upd(x => { x.code = v; x.results = null; })} />
           <div className="pc-row">
             <label htmlFor="run-in" className="pc-hint">Inputs, separated by commas</label>
             <input type="text" id="run-in" className="pc-mono-in" value={s.runIn} onChange={e => { const v = e.target.value; upd(x => { x.runIn = v; }); }} />

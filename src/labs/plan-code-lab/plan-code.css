@@ -120,6 +120,11 @@ main.pc-enter { display: grid; gap: 22px; }
 .pc-err { color: #ffb4ab; font-weight: 400; white-space: pre-wrap; display: block; }
 .pc-err-help { color: #d7e0dc; font: 400 .9rem/1.5 var(--f-body); margin-top: 6px; }
 .pc-err-help code { font-family: var(--f-mono); color: #fff; }
+/* the error type on the dark screen */
+.pc-err-type .err-type { display: block; font: 400 .85rem/1.5 var(--f-body); color: #b9c6c0; margin: 4px 0 8px; padding: 8px 10px; border-left: 3px solid #ffb4ab; background: rgba(255, 180, 171, .08); border-radius: 0 6px 6px 0; }
+.pc-err-type .err-kind { font-weight: 700; color: #ffb4ab; font-size: .95rem; }
+.pc-err-type code { font-family: var(--f-mono); color: #fff; }
+.pc-err-type .err-mean { display: block; color: #e4ebe7; margin-top: 2px; }
 .pc-led { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; max-width: 100%; width: calc(var(--n) * 1ch); animation: pc-type .45s steps(var(--n)) both; }
 .pc-fade-late { animation: pc-fade .3s ease-out both; }
 

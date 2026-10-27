@@ -173,6 +173,11 @@ input[type="range"] { accent-color: var(--accent); width: min(220px, 100%); }
 .feedback.bad { background: var(--bad-soft); color: var(--ink); border-left: 4px solid var(--bad); }
 .feedback.info { background: var(--accent-soft); color: var(--ink); border-left: 4px solid var(--accent); }
 .feedback strong { font-weight: 700; }
+/* the error type, above the help: what kind of error, when Python found it, what it means */
+.err-type { display: block; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid color-mix(in srgb, var(--bad) 30%, transparent); font-size: .88rem; color: var(--muted); }
+.err-kind { font-weight: 700; color: var(--bad); font-size: .95rem; }
+.err-type code { font-family: var(--f-mono); font-size: .85em; }
+.err-mean { display: block; color: var(--ink); margin-top: 2px; }
 
 .goals { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .92rem; }
 .goals li::before { content: "○"; display: inline-block; width: 1.4em; color: var(--muted); }

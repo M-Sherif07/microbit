@@ -4,7 +4,7 @@ import CodeEditor from "./CodeEditor.jsx";
 import { Feedback, Panel, Serial, Vars, cx, useOnHide, useRunner, useSerial } from "./ui.jsx";
 import { esc } from "../lib/highlight.js";
 import { execute } from "../lib/python.js";
-import { errorHelp } from "../lib/errorHelp.js";
+import { errorHelp, errorType } from "../lib/errorHelp.js";
 
 const SPEEDS = [["Slow", 350], ["Normal", 90], ["Fast", 5]];
 
@@ -95,7 +95,7 @@ const CodeLab = forwardRef(function CodeLab({ title, challenges, ids, store, vis
     if (res === "stopped") return;
     setRunning(false); setCur(0);
     if (res === "error") {
-      setFb({ kind: "bad", html: errorHelp(error, src.split("\n")) });
+      setFb({ kind: "bad", html: errorType(error, src.split("\n")) + errorHelp(error, src.split("\n")) });
       return;
     }
     const run = { ...rec, pressed: { ...presses.current }, lit: board.current.lit() };
