@@ -4,6 +4,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ThemeToggle from "../../components/ThemeToggle.jsx";
 import { errorHelp } from "../../lib/errorHelp.js";
+import { addPsKeywords, hl, psHl } from "../../lib/highlight.js";
 import FlowSvg from "./Flowchart.jsx";
 import { blankWork, flowChecks, norm, pseudoChecks, rowPass, runCode, splitInputs, stepDone, testRows, TEST_HELP, workText } from "./logic.js";
 import { KINDS, PLACEHOLDER, SCENARIOS, STEPS } from "./scenarios.js";
@@ -11,6 +12,7 @@ import { KINDS, PLACEHOLDER, SCENARIOS, STEPS } from "./scenarios.js";
 const WORK_KEY = "ictprg302-plan-code-lab";
 export const PROGRESS_KEY = "ictprg302-plan-code-progress";
 const NAME_KEY = "ictprg302-student-name";
+addPsKeywords(["FOR", "WHILE", "UNTIL"]);
 
 const newId = () => Math.random().toString(36).slice(2, 9);
 function addIds(list) { for (const n of list || []) { n.id = n.id || newId(); addIds(n.yes); addIds(n.no); addIds(n.body); } }
@@ -175,13 +177,21 @@ function Reveal({ open, tried, label = "Compare with a model answer", onToggle, 
 }
 const hintProps = (sc, s, upd, key) => ({ list: sc.hints[key], n: s.hints[key] || 0, onMore: () => upd(x => { x.hints[key] = (x.hints[key] || 0) + 1; }) });
 
-// Editor with line numbers, Tab to indent (Esc then Tab leaves) and auto-indent on Enter
-const Editor = forwardRef(function Editor({ id, title, value, onChange, mode, rows }, ref) {
-  const ta = useRef(null), gut = useRef(null), caret = useRef(null), escaped = useRef(false);
+// A read-only block of coloured code (hl and psHl escape the text)
+const Painted = ({ src, paint }) => <pre dangerouslySetInnerHTML={{ __html: src.split("\n").map(paint).join("\n") }} />;
+
+// Editor with line numbers and coloured code, Tab to indent (Esc then Tab leaves) and auto-indent on Enter.
+// It's a transparent textarea over the coloured lines, like the other labs' editor. errLine: the line with an error
+const Editor = forwardRef(function Editor({ id, title, value, onChange, mode, rows, errLine = 0 }, ref) {
+  const ta = useRef(null), box = useRef(null), caret = useRef(null), escaped = useRef(false);
   useLayoutEffect(() => {
     if (caret.current !== null && ta.current) { ta.current.selectionStart = ta.current.selectionEnd = caret.current; caret.current = null; }
-    if (gut.current && ta.current) gut.current.scrollTop = ta.current.scrollTop;
   });
+  // Scroll the line with the error into view
+  useEffect(() => {
+    const el = errLine && box.current && box.current.querySelector(".ed-line.err");
+    if (el) el.scrollIntoView({ block: "nearest" });
+  }, [errLine]);
   const put = (text, a, b, at) => { caret.current = at === undefined ? a + text.length : at; onChange(value.slice(0, a) + text + value.slice(b)); };
   useImperativeHandle(ref, () => ({
     // Insert a keyword on its own line, with the caret in its gap ("IF | THEN")
@@ -212,14 +222,22 @@ const Editor = forwardRef(function Editor({ id, title, value, onChange, mode, ro
       put("\n" + ind, a, b);
     }
   };
+  const lines = value.split("\n"), paint = mode === "py" ? hl : psHl;
+  const width = Math.max(...lines.map(l => l.length), 20) + 2;
+  const err = i => (errLine === i + 1 ? "err" : undefined);
   return (
     <div className="pc-editor">
-      <div className="pc-editor-bar"><span>{title}</span><span>Tab indents · Esc then Tab leaves</span></div>
-      <div className="pc-editor-body">
-        <div className="pc-gutter" ref={gut} aria-hidden="true">{Array.from({ length: value.split("\n").length }, (_, i) => i + 1).join("\n")}</div>
-        <textarea id={id} ref={ta} rows={rows} spellCheck={false} autoCapitalize="off" autoComplete="off" aria-label={title} value={value}
-          onChange={e => onChange(e.target.value)} onKeyDown={onKeyDown} onBlur={() => { escaped.current = false; }}
-          onScroll={e => { gut.current.scrollTop = e.target.scrollTop; }} />
+      <div className="pc-editor-bar"><span>{title}</span>{errLine ? <span className="pc-err-tag">Error on line {errLine}</span> : <span>Tab indents · Esc then Tab leaves</span>}</div>
+      <div className="ed" ref={box}>
+        <ol className="ed-gutter" aria-hidden="true">{lines.map((_, i) => <li key={i} className={err(i)}>{i + 1}</li>)}</ol>
+        <div className="ed-stack" style={{ "--cols": width + "ch", "--rows": Math.max(lines.length, Number(rows) || 0) }}>
+          <pre className="ed-hl" aria-hidden="true">
+            {lines.map((l, i) => <span key={i} className={"ed-line" + (err(i) ? " err" : "")} dangerouslySetInnerHTML={{ __html: (paint(l) || "") + "\n" }} />)}
+          </pre>
+          <textarea id={id} ref={ta} spellCheck={false} autoCapitalize="off" autoComplete="off" autoCorrect="off" wrap="off" value={value}
+            aria-label={title + (errLine ? `. Error on line ${errLine}` : "")} aria-invalid={errLine ? true : undefined}
+            onChange={e => onChange(e.target.value)} onKeyDown={onKeyDown} onBlur={() => { escaped.current = false; }} />
+        </div>
       </div>
     </div>
   );
@@ -279,7 +297,7 @@ function Pseudo({ sc, s, upd, done }) {
       </div>
       <Hints {...hintProps(sc, s, upd, "pseudo")} />
       <Reveal open={!!s.reveal.pseudo} tried={!!s.pseudo.trim()} onToggle={() => upd(x => { x.reveal.pseudo = !x.reveal.pseudo; })}>
-        <h4>Model pseudocode</h4><pre>{sc.pseudo}</pre>
+        <h4>Model pseudocode</h4><Painted src={sc.pseudo} paint={psHl} />
         <p>Yours can be worded differently and still be right. Check it covers every result in the brief, in an order that works.</p>
       </Reveal>
     </Step>
@@ -388,13 +406,15 @@ function Code({ sc, s, upd, done }) {
     setRun(prev => ({ ...r, code: s.code, n: (prev ? prev.n : 0) + 1 }));
     if (!r.error) upd(x => { x.codeRan = true; });
   };
+  // Mark the line the error is on until the code is changed
+  const errLine = run && run.err && run.code === s.code ? run.err.line || 0 : 0;
   let delay = 0;
   return (
     <Step n="4" id="code" title="Write the Python" done={done}>
       <p className="brief">Translate your plan one line at a time. Use <code>int(input("..."))</code> to read a number and <code>display.scroll(...)</code> to show a result. Run it with your own inputs before moving on to the tests.</p>
       <div className="split">
         <div className="pc-stack">
-          <Editor id="code" title="main.py" mode="py" rows="16" value={s.code} onChange={v => upd(x => { x.code = v; x.results = null; })} />
+          <Editor id="code" title="main.py" mode="py" rows="16" errLine={errLine} value={s.code} onChange={v => upd(x => { x.code = v; x.results = null; })} />
           <div className="pc-row">
             <label htmlFor="run-in" className="pc-hint">Inputs, separated by commas</label>
             <input type="text" id="run-in" className="pc-mono-in" value={s.runIn} onChange={e => { const v = e.target.value; upd(x => { x.runIn = v; }); }} />
@@ -432,7 +452,7 @@ function Code({ sc, s, upd, done }) {
       </div>
       <Hints {...hintProps(sc, s, upd, "code")} />
       <Reveal open={!!s.reveal.code} label="I'm stuck: show a model solution" tried={!!s.code.replace("from microbit import *", "").trim()} onToggle={() => upd(x => { x.reveal.code = !x.reveal.code; })}>
-        <h4>Model solution</h4><pre>{sc.code}</pre>
+        <h4>Model solution</h4><Painted src={sc.code} paint={hl} />
       </Reveal>
     </Step>
   );
