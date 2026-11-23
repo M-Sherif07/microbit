@@ -14,7 +14,8 @@ export default defineConfig({
         home: resolve(__dirname, "index.html"),
         "loops-lab": resolve(__dirname, "loops-lab/index.html"),
         "plan-code-lab": resolve(__dirname, "plan-code-lab/index.html"),
-        "practice-assessment": resolve(__dirname, "practice-assessment/index.html")
+        "practice-assessment": resolve(__dirname, "practice-assessment/index.html"),
+        "practice-assessment-2": resolve(__dirname, "practice-assessment-2/index.html")
       }
     }
   }

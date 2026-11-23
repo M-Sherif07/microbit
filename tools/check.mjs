@@ -84,12 +84,15 @@ for (const slug of labs) {
       if (kind === "BugHunt" || kind === "PseudoBug") {
         const lines = rd.lines || rd.ps, bug = typeof rd.bug === "string" ? lines.indexOf(rd.bug) + 1 : rd.bug;
         if (bug < 1) bad(`${at}: the bug line isn't in the code`);
+        if (typeof rd.bug === "string" && lines.filter(l => l === rd.bug).length > 1) bad(`${at}: the bug line "${rd.bug.trim()}" appears more than once, so give its line number instead`);
         if (new Set(rd.fixes).size !== rd.fixes.length) bad(`${at}: two fixes are the same`);
         if (kind === "BugHunt" && bug > 0) { const fixed = lines.slice(); fixed[bug - 1] = rd.fixes[0]; try { compile(fixed); } catch (e) { bad(`${at}: the fixed code has a ${e.type}`); } }
       }
       if (kind === "LinePick") for (const k of ["track", "check", "update"]) if (!(rd[k] >= 1 && rd[k] <= rd.lines.length && rd.lines[rd[k] - 1].trim())) bad(`${at}: the ${k} line (${rd[k]}) isn't a line of code`);
       if (["Predict", "PseudoTrace", "Quiz"].includes(kind) && !(rd.a >= 0 && rd.a < rd.opts.length)) bad(`${at}: the answer isn't one of the options`);
       if (kind === "CodeMatch" && !(rd.a >= 0 && rd.a < rd.options.length)) bad(`${at}: the answer isn't one of the options`);
+      if (rd.opts && new Set(rd.opts).size !== rd.opts.length) bad(`${at}: two options are the same`);
+      if (kind === "PseudoTrace") for (const st of rd.steps) if (!(st.l >= 1 && st.l <= rd.ps.length && rd.ps[st.l - 1].trim())) bad(`${at}: a dry-run step points at line ${st.l}, which isn't a line of the plan`);
       if (kind === "PseudoTranslate" && rd.py.length !== rd.ps.length) bad(`${at}: ps and py have different numbers of lines`);
       if (kind === "FlowTrace") {
         const L = fcLayout(rd.chart);

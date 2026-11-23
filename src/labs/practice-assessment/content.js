@@ -124,7 +124,7 @@ export const topics = [
     "label": "Types",
     "eyebrow": "Topics 08 and 09",
     "title": "Data types and strings",
-    "lead": "Every value has a type: int, float, str or bool. + adds numbers but joins strings, and input() always gives you a string. Strings can be measured, sliced and changed with string functions.",
+    "lead": "Every value has a type: int, float, str or bool. + adds numbers but joins strings, and input() always gives you a string. Strings also have their own tools, like len(), slicing and .upper().",
     "acts": [
       { "id": "pd1", "tag": "Question 21", "title": "What type is it?", "brief": "Pick the type of each value or result. Answer all of them correctly to finish." },
       { "id": "pd2", "tag": "Question 22", "title": "Add or join?", "brief": "Pick what each program prints. Watch out for quotes. Then run it to check.", "roundLabel": "Program", "nextLabel": "Next program →" },
@@ -413,7 +413,7 @@ export const activities = {
     { goal: "Ask for an age and scroll Adult if it's 18 or more.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: unsupported types for __ge__: 'str', 'int'",
       lines: ["from microbit import *", "", 'age = input("Age? ")', "if age >= 18:", '    display.scroll("Adult")'],
       bug: 'age = input("Age? ")', fixes: ['age = int(input("Age? "))', 'age = str(input("Age? "))', 'age = input(int("Age? "))'], why: "input() gives a string. Wrap it in int() to compare it with a number.", out: ["Adult"] },
-    { goal: "Scroll Score: 7.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: unsupported types for __add__: 'str', 'int'",
+    { goal: "Scroll Score: 7.", symptom: "Traceback (most recent call last):\n  File \"main.py\", line 4, in <module>\nTypeError: can't convert 'int' object to str implicitly",
       lines: ["from microbit import *", "", "score = 7", 'display.scroll("Score: " + score)'],
       bug: 'display.scroll("Score: " + score)', fixes: ['display.scroll("Score: " + str(score))', 'display.scroll("Score: " + int(score))', 'display.scroll("Score: " + "score")'], why: "You can only join a string to a string. str(score) turns 7 into \"7\".", out: ["Score: 7"] },
     { goal: "Ask for two numbers and show their total.", symptom: "Typing 2 and 3 shows 23.",
