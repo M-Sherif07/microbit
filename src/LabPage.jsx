@@ -100,6 +100,13 @@ export default function LabPage({ lab }) {
               <p className="eyebrow">{t.eyebrow}</p>
               <h2>{t.title}</h2>
               <p className="lead">{t.lead}</p>
+              {t.reqs && (
+                // Scenario labs list the client's requirements, numbered R1, R2 … so activities can refer to them
+                <div className="reqs">
+                  <h3>Client requirements</h3>
+                  <ol>{t.reqs.map((r, i) => <li key={i}><b>R{i + 1}</b> {r}</li>)}</ol>
+                </div>
+              )}
             </div>
           </div>
           {t.acts.map(a => {

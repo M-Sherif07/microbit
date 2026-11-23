@@ -4,6 +4,7 @@
    "builds on the previous lab" note. */
 import { SCENARIOS, STEPS } from "../labs/plan-code-lab/scenarios.js";
 import { meta as PA_META, topics as PA_TOPICS } from "../labs/practice-assessment/content.js";
+import { meta as PA2_META, topics as PA2_TOPICS } from "../labs/practice-assessment-2/content.js";
 
 const PLAN_STEPS = {
   understand: ["Understand the problem", "Pick out the inputs, the processing and the outputs from the client brief."],
@@ -50,6 +51,26 @@ export default [
     before: "This covers the whole course. Finish the other labs first, then use it to check what you need to revise.",
     ids: PA_TOPICS.flatMap(t => t.acts.map(a => a.id)),
     topics: PA_TOPICS.map(t => ({
+      id: t.id, tab: t.label, title: t.title, lead: t.lead,
+      acts: t.acts.map(({ id, tag, title, brief }) => ({ id, tag, title, brief }))
+    }))
+  },
+  {
+    folder: "practice-assessment-2",
+    title: "Practice Assessment 2",
+    key: PA2_META.key,
+    blurb: "Three client briefs: a greenhouse monitor, a cross-country lap counter and a trivia buzzer. Each one needs every topic in the course.",
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>★</text></svg>",
+    slides: ["01 Intro and Variables", "02 Functions", "03 Event Loop", "04 Selection", "05 Selection in Event Loop", "06 Loops and Conditions", "08 Data Types", "09 Strings", "10 Lists", "11 File Manipulation"],
+    outcomes: [
+      "Match each client requirement to the Python feature that meets it",
+      "Follow and dry run the plan for a complete program",
+      "Find bugs that stop a program meeting its requirements",
+      "Write parts of a real program that combine variables, selection, loops, strings and input"
+    ],
+    before: "Each scenario uses every topic, from variables to files. Do Practice Assessment 1 first.",
+    ids: PA2_TOPICS.flatMap(t => t.acts.map(a => a.id)),
+    topics: PA2_TOPICS.map(t => ({
       id: t.id, tab: t.label, title: t.title, lead: t.lead,
       acts: t.acts.map(({ id, tag, title, brief }) => ({ id, tag, title, brief }))
     }))
