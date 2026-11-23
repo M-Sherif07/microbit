@@ -1,4 +1,4 @@
-// Content for Practice Assessment 2: three client scenarios, each needing every topic in the course.
+// Content for Practice 2: three client scenarios, each needing every topic in the course.
 // Each topic is one scenario. Its `reqs` are the client's requirements (shown as R1, R2 … on the
 // page), and every activity brief says which requirements it covers.
 // Same shape as loops-lab/content.js. Run `npm run check` after editing.
@@ -13,8 +13,8 @@ import { shown, expectShown, usesFor } from "../../lib/checks.js";
 
 export const meta = {
   "slug": "practice-assessment-2",
-  "brand": "ICTPRG302 Practice Assessment 2",
-  "title": "Practice Assessment 2",
+  "brand": "ICTPRG302 Practice 2",
+  "title": "Practice 2",
   "key": "ictprg302-assessment2-progress",
   "chKey": "ictprg302-assessment2-challenges",
   "next": {

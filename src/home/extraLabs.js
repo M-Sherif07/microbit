@@ -37,7 +37,7 @@ export default [
   },
   {
     folder: "practice-assessment",
-    title: "Practice Assessment 1",
+    title: "Practice 1",
     key: PA_META.key,
     blurb: "Every topic from variables to files, in course order. Check you're ready before the real assessment.",
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>✓</text></svg>",
@@ -57,7 +57,7 @@ export default [
   },
   {
     folder: "practice-assessment-2",
-    title: "Practice Assessment 2",
+    title: "Practice 2",
     key: PA2_META.key,
     blurb: "Three client briefs: a greenhouse monitor, a cross-country lap counter and a trivia buzzer. Each one needs every topic in the course.",
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>★</text></svg>",
@@ -68,7 +68,7 @@ export default [
       "Find bugs that stop a program meeting its requirements",
       "Write parts of a real program that combine variables, selection, loops, strings and input"
     ],
-    before: "Each scenario uses every topic, from variables to files. Do Practice Assessment 1 first.",
+    before: "Each scenario uses every topic, from variables to files. Do Practice 1 first.",
     ids: PA2_TOPICS.flatMap(t => t.acts.map(a => a.id)),
     topics: PA2_TOPICS.map(t => ({
       id: t.id, tab: t.label, title: t.title, lead: t.lead,
