@@ -49,7 +49,9 @@ a { color: var(--accent); }
 /* ---------- sticky nav ---------- */
 .labnav { position: sticky; top: 0; z-index: 10; background: var(--bg); border-block: 1px solid var(--line); display: flex; align-items: center; gap: 10px; max-width: 100%; padding-right: 16px; }
 .labnav-inner { flex: 1 1 auto; min-width: 0; }
-.labnav ol { list-style: none; margin: 0 auto; max-width: 1120px; padding: 8px 16px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.labnav ol { list-style: none; margin: 0 auto; max-width: 1120px; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+/* On phones, keep the sticky menu to one row and scroll it sideways instead */
+@media (max-width: 700px) { .labnav ol { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } }
 .labnav .theme-btn { flex: none; }
 .labnav a { display: block; white-space: nowrap; font: 600 .8rem var(--f-mono); color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
 .labnav a:hover, .labnav a[aria-current="true"] { border-color: var(--accent); color: var(--accent); }

@@ -3,6 +3,7 @@
    Each entry has the same shape as a labs.json entry; "before" replaces the usual
    "builds on the previous lab" note. */
 import { SCENARIOS, STEPS } from "../labs/plan-code-lab/scenarios.js";
+import { meta as PA_META, topics as PA_TOPICS } from "../labs/practice-assessment/content.js";
 
 const PLAN_STEPS = {
   understand: ["Understand the problem", "Pick out the inputs, the processing and the outputs from the client brief."],
@@ -31,6 +32,26 @@ export default [
     topics: SCENARIOS.map(sc => ({
       id: sc.id, tab: sc.tab, title: sc.title, lead: sc.lead,
       acts: STEPS.map(([k], i) => ({ id: `${sc.id}-${k}`, tag: `Step ${i + 1}`, title: PLAN_STEPS[k][0], brief: PLAN_STEPS[k][1] }))
+    }))
+  },
+  {
+    folder: "practice-assessment",
+    title: "Practice Assessment 1",
+    key: PA_META.key,
+    blurb: "Every topic from variables to files, in course order. Check you're ready before the real assessment.",
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231b5fa8'/><text x='32' y='43' font-family='Menlo,Consolas,monospace' font-size='30' font-weight='700' fill='white' text-anchor='middle'>✓</text></svg>",
+    slides: ["01 Intro and Variables", "02 Functions", "03 Event Loop", "04 Selection", "05 Selection in Event Loop", "06 Loops and Conditions", "08 Data Types", "09 Strings", "10 Lists", "11 File Manipulation"],
+    outcomes: [
+      "Read code line by line and predict what it does",
+      "Find and fix bugs in Python and in pseudocode plans",
+      "Follow flowcharts and dry run plans with a trace table",
+      "Write short micro:bit programs that use variables, selection, loops and type conversion"
+    ],
+    before: "This covers the whole course. Finish the other labs first, then use it to check what you need to revise.",
+    ids: PA_TOPICS.flatMap(t => t.acts.map(a => a.id)),
+    topics: PA_TOPICS.map(t => ({
+      id: t.id, tab: t.label, title: t.title, lead: t.lead,
+      acts: t.acts.map(({ id, tag, title, brief }) => ({ id, tag, title, brief }))
     }))
   }
 ];
