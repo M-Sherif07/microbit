@@ -1,4 +1,4 @@
-// Content for Practice Assessment 1: one topic per part of the course, in course order.
+// Content for Practice 1: one topic per part of the course, in course order.
 // Same shape as loops-lab/content.js. Each activity is { kind, data }: kind picks the component
 // in src/activities, data is its rounds or questions. Run `npm run check` after editing.
 //
@@ -12,8 +12,8 @@ import { nums, shown, listText, expectShown, usesFor } from "../../lib/checks.js
 
 export const meta = {
   "slug": "practice-assessment",
-  "brand": "ICTPRG302 Practice Assessment 1",
-  "title": "Practice Assessment 1",
+  "brand": "ICTPRG302 Practice 1",
+  "title": "Practice 1",
   "key": "ictprg302-assessment-progress",
   "chKey": "ictprg302-assessment-challenges",
   "next": {
